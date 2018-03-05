@@ -7,7 +7,6 @@
  */
 package work.model.dao;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,8 +16,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
+import java.sql.PreparedStatement;
+
 
 import work.model.dto.Member;
 
@@ -140,7 +139,6 @@ public class MemberDao {
 				e.printStackTrace();
 			}
 		}
-		
 		return 0;
 	}
 	/**

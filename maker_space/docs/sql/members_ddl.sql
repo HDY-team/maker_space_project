@@ -59,7 +59,7 @@ add (constraint members_mobile_uk unique(mobile));
 -- 사업분야 테이블
 create table business (
 
-    business_idx int NOT NULL
+    business_idx int NOT NULL AUTO_INCREMENT
 ); 
 
 alter table business
@@ -69,7 +69,7 @@ add (constraint business_businessidx_pk primary key(business_idx));
 create table business_boards (
 
     business_idx int NOT NULL,
-    business_boards_idx int NOT NULL,
+    business_boards_idx int NOT NULL AUTO_INCREMENT,
     title varchar(255)NOT NULL,
     content varchar(255),
     result varchar(255),
@@ -142,7 +142,7 @@ add (constraint hashtags_businessboardsidx_fk FOREIGN KEY (business_boards_idx) 
 -- 꿀팁 게시판 테이블
 create table tip_boards (
 
-    tip_idx int NOT NULL,
+    tip_idx int NOT NULL AUTO_INCREMENT,
     title varchar(255)NOT NULL,
     content varchar(255),
     result varchar(255),
@@ -195,7 +195,7 @@ add (constraint tiphashtags_tipidx_fk FOREIGN KEY (tip_idx) REFERENCES tip_board
 -- 정보통신 게시판 테이블
 create table it_boards (
 
-    it_boards_idx int NOT NULL,	
+    it_boards_idx int NOT NULL AUTO_INCREMENT,	
     title varchar(255)NOT NULL,
     content varchar(255),
     result varchar(255),
@@ -211,7 +211,7 @@ add (constraint itboards_itboardsidx_pk primary key(it_boards_idx));
 -- 미디어 게시판 테이블
 create table media_boards (
 
-    media_boards_idx int NOT NULL,	
+    media_boards_idx int NOT NULL AUTO_INCREMENT,	
     title varchar(255)NOT NULL,
     content varchar(255),
     result varchar(255),
@@ -227,7 +227,7 @@ add (constraint mediaboards_mediaboardsidx_pk primary key(media_boards_idx));
 -- 영업/마켓팅 테이블
 create table market_boards (
 
-    market_boards_idx int NOT NULL,	
+    market_boards_idx int NOT NULL AUTO_INCREMENT,	
     title varchar(255)NOT NULL,
     content varchar(255),
     result varchar(255),
@@ -243,7 +243,7 @@ add (constraint marketboards_marketboardsidx_pk primary key(market_boards_idx));
 -- 기타 테이블
 create table etc_boards (
 
-    etc_boards_idx int NOT NULL,	
+    etc_boards_idx int NOT NULL AUTO_INCREMENT,	
     title varchar(255)NOT NULL,
     content varchar(255),
     result varchar(255),

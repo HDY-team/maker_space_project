@@ -24,7 +24,7 @@ public class IdeaBoard {
 	 * email: 이메일
 	 * writeDate: 작성일
 	 */
-	private String index;
+	private int index;
 	private String title;
 	private String content;
 	private String result;
@@ -48,7 +48,7 @@ public class IdeaBoard {
 	 * @param email
 	 * @param write_date
 	 */
-	public IdeaBoard(String index, String title, String content, String result, String files, int hits, String email,
+	public IdeaBoard(int index, String title, String content, String result, String files, int hits, String email,
 			String writeDate) {
 		this.index = index;
 		this.title = title;
@@ -85,10 +85,10 @@ public class IdeaBoard {
 	/**
 	 * get/set 메서드
 	 */
-	public String getIndex() {
+	public int getIndex() {
 		return index;
 	}
-	public void setIndex(String index) {
+	public void setIndex(int index) {
 		this.index = index;
 	}
 	public String getTitle() {
