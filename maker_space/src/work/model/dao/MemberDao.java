@@ -86,9 +86,7 @@ public class MemberDao {
 		Connection conn= null;
 		PreparedStatement pstmt = null;
 		try {
-			//conn = DriverManager.getConnection(url, user, password);
 			conn = ds.getConnection();
-			
 			String sql = "insert into members values(?, ?, ?, ?, ?, ?, ?)";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -200,7 +198,6 @@ public class MemberDao {
 	 * @return
 	 */
 	public String loginMember(String email, String password) {
-		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

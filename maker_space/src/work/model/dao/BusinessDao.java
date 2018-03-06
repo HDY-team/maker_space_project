@@ -326,16 +326,14 @@ public class BusinessDao implements InterfaceBoard{
         String sql;
         try {
            conn = ds.getConnection();
-           for(int i = 1 ; i <= 5 ; i ++) {
-        	   sql = "select business_boards_idx from hashtags where hash_tag'" + i + "'=? like '%?%'";
-               pstmt = conn.prepareStatement(sql);
-               pstmt.setString(1, hashTag);
-               rs = pstmt.executeQuery();	
-               while(rs.next()) {
-            	   integer = new Integer(rs.getInt("business_boards_idx"));
-            	   indexBoards.add(integer);
-               }
-           }
+           sql = "select business_boards_idx from hashtags where hash_tag like '%?%'";
+           pstmt = conn.prepareStatement(sql);
+           pstmt.setString(1, hashTag);
+           rs = pstmt.executeQuery();	
+           while(rs.next()) {
+        	   integer = new Integer(rs.getInt("business_boards_idx"));
+        	   indexBoards.add(integer);
+           }       
            for(int i = 0 ; i < indexBoards.size(); i++) {
         	   sql = "select * from business_boards where business_boards_idx =?";
                pstmt = conn.prepareStatement(sql);
