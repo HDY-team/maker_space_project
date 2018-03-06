@@ -24,7 +24,7 @@ import work.model.service.MemberService;
 /**
  * Business Idea Board Dao
  * - 기능 : 글 등록, 수정, 삭제, 조회
- * 
+ * - test
  */
 public class BusinessDao implements InterfaceBoard{
 	
