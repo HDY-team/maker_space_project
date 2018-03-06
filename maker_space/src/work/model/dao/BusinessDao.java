@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 
 import work.model.dto.IdeaBoard;
 import work.model.interface_package.InterfaceBoard;
+import work.model.service.MemberService;
 
 /**
  * Business Idea Board Dao
@@ -28,6 +29,8 @@ import work.model.interface_package.InterfaceBoard;
 public class BusinessDao implements InterfaceBoard{
 	
 	private DataSource ds;
+	private static BusinessDao instance;
+
 	/**
 	 * 기본생성자
 	 */
@@ -39,6 +42,17 @@ public class BusinessDao implements InterfaceBoard{
 			System.out.println("ERROR: " + e.getMessage());
 		}
 	}
+	/**
+	 * Singleton 패턴
+	 * @return
+	 */
+	public static BusinessDao getInstance() {
+		if(instance == null) {
+			instance = new BusinessDao();
+		}
+		return instance;
+	}
+	
    /**
 	* 글 등록 메서드.
 	* index: 테이블 index(사업분야 인덱스)

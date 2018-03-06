@@ -29,17 +29,30 @@ import work.model.interface_package.InterfaceBoard;
 public class TipDao implements InterfaceBoard{
 
 	private DataSource ds;
+	private static TipDao instance;
 	/**
 	 * 기본생성자
+	 * context 환경 정보 가져오기.
 	 */
 	public TipDao() {
 		try {
 			Context context = new InitialContext();
-	         ds = (DataSource)context.lookup("java:comp/env/jdbc/mysql");
-		} catch(NamingException e) {
-			System.out.println("ERROR: " + e.getMessage());
-		}
+			ds = (DataSource)context.lookup("java:comp/env/jdbc/mysql");
+			} catch(NamingException e){
+				System.out.println("ERROR: " + e.getMessage());
+			}	
 	}
+	/**
+	 * Singleton 패턴
+	 * @return
+	 */
+	public static TipDao getInstance() {
+		if(instance == null) {
+			instance = new TipDao();
+		}
+		return instance;
+	}
+	
    /**
 	* 글 등록 메서드.
 	* index: 테이블 index(꿀팁 인덱스)

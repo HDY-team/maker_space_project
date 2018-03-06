@@ -35,15 +35,17 @@ import work.model.dto.Member;
  * ## 기능
  * 1. 회원추가
  * 2. 회원삭제
- * 3. 회원정보수정 (비밀번호, 휴대폰번호)
+ * 3. 회원정보수정 (비밀번호, 휴대폰번호, 소속)
  * 4. 로그인
- * 5. 이메일찾기
- * 6. 비밀번호찾기
- * 4. 전체회원조회(관리자 영역)
- * 5. 상세회원조회(관리자 영역)
+ * 5. 이메일찾기 (사용 X)
+ * 6. 비밀번호변경
+ * 7. 회원정보조회
+ * 8. 회원삭제(관리자)
  */
 public class MemberDao {
 	private DataSource ds;
+	private static MemberDao instance;
+
 	/**
 	 * 기본생성자
 	 * context 환경 정보 가져오기.
@@ -56,6 +58,17 @@ public class MemberDao {
 				System.out.println("ERROR: " + e.getMessage());
 			}	
 	}
+	/**
+	 * Singleton 패턴
+	 * @return
+	 */
+	public static MemberDao getInstance() {
+		if(instance == null) {
+			instance = new MemberDao();
+		}
+		return instance;
+	}
+	
 	/**
 	 * 회원추가
 	 * @param dto
@@ -148,16 +161,17 @@ public class MemberDao {
 	 * @param mobile
 	 * @return
 	 */
-	public int changeMemberInfo(String email, String password, String mobile) {
+	public int changeMemberInfo(String email, String password, String mobile, String company) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = ds.getConnection();
-			String sql = "update members set password =?, mobile=? where email=?";
+			String sql = "update members set password =?, mobile=? company=? where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, password);
 			pstmt.setString(2, mobile);
-			pstmt.setString(3, email);
+			pstmt.setString(3, company);
+			pstmt.setString(4, email);
 			pstmt.executeUpdate();
 			return 1;
 		} catch(SQLException e){
@@ -221,7 +235,7 @@ public class MemberDao {
 	}
 	
 	/**
-	 * 이메일 찾기 
+	 * 이메일 찾기 (사용 x)
 	 * @param name
 	 * @param mobile
 	 * @return
@@ -259,25 +273,23 @@ public class MemberDao {
 		return null;
 	}
 	/**
-	 * 비밀번호 찾기
+	 * 비밀번호 변경
 	 * @param email
 	 * @param password
 	 * @return
 	 */
-	public String findMemberPw(String email, String password) {
+	public int setPassword(String email, String password) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
-			String sql = "update members set password =?where email=?";
+			String sql = "update members set password =? where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
 			pstmt.setString(2, password);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				return rs.getString(1);
-			}
+			pstmt.executeUpdate();
+			return 1;
+			
 		} catch(SQLException e) {
 			System.out.println("Error: " + e.getMessage() + "// 비밀번호 찾기 오류");
 			e.printStackTrace();
@@ -294,8 +306,51 @@ public class MemberDao {
 				e.printStackTrace();
 			}
 		}	
-		return null;
+		return 0;
 	}
+	/**
+	 * 회원정보조회
+	 * @param email
+	 * @return
+	 */
+	public Member getMemberOne(String email) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ds.getConnection();
+			String sql = "select * from members where email=?";
+			pstmt = (PreparedStatement) conn.prepareStatement(sql);
+			pstmt.setString(1, email);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				String password = rs.getString(2);
+				String name = rs.getString(3);
+				String mobile = rs.getString(4);
+				String company = rs.getString(5);
+				String grade = rs.getString(6);
+				int point = rs.getInt(7);
+				return new Member(email, password, name, mobile, company, grade, point);
+			}
+		} catch(SQLException e) {
+				System.out.println("Error: " + e.getMessage() + "// 상세회원조회 오류");
+				e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null) { 
+					conn.close();
+				}
+			} catch(SQLException e) {
+				System.out.println("Error : 상세회원조회 자원해제 오류");
+				e.printStackTrace();
+			}
+		}	
+		return null;
+	}		
 	
 	/**
 	 * 전체회원조회(관리자영역)
@@ -345,47 +400,40 @@ public class MemberDao {
 		}	
 		return null;
 	}
+	
 	/**
-	 * 상세회원조회
+	 * 회원삭제 (관리자)
 	 * @param email
+	 * @param password
 	 * @return
 	 */
-	public Member getMemberOne(String email) {
-		Connection conn = null;
+	public int removeMemberByAdmin(String email) {
+		
+		Connection conn= null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
-			String sql = "select * from members where email=?";
+			String sql = "delete members where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				String password = rs.getString(2);
-				String name = rs.getString(3);
-				String mobile = rs.getString(4);
-				String company = rs.getString(5);
-				String grade = rs.getString(6);
-				int point = rs.getInt(7);
-				return new Member(email, password, name, mobile, company, grade, point);
-			}
-		} catch(SQLException e) {
-				System.out.println("Error: " + e.getMessage() + "// 상세회원조회 오류");
-				e.printStackTrace();
+			pstmt.executeUpdate();
+			return 1;
+		} catch(SQLException e){
+			System.out.println("Error: " + e.getMessage() + "// 회원 삭제(관리자) 오류");
+			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
+					if(pstmt != null) {
+						pstmt.close();
+					}
+					if(conn != null) { 
+						conn.close();
+					}
 			} catch(SQLException e) {
-				System.out.println("Error : 상세회원조회 자원해제 오류");
+				System.out.println("Error : 회원삭제(관리자)자원해제 오류");
 				e.printStackTrace();
 			}
-		}	
-		return null;
-	}		
+		}
+		return 0;
+	}
 }
