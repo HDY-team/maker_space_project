@@ -65,8 +65,9 @@ public class TipDao implements InterfaceBoard{
 		PreparedStatement pstmt = null;
 	      try {
 	         conn = ds.getConnection();
-	         String sql = "insert into tip_boards "
-	         		+ "values(?, ?, ?, ?, ?, 0, 0, ?, date_format(sysdate(),'%Y.%m.%d'))";
+	         String sql = "insert into business_boards "
+		         		+ "(title, content, result, files, hits, scraps, email, write_date)"
+		         		+ "values(?, ?, ?, ?, 0, 0, ?, date_format(sysdate(),'%Y.%m.%d'))";
 	         pstmt = conn.prepareStatement(sql);
 	         pstmt.setInt(1, index);
 	         pstmt.setString(2, title);

@@ -65,14 +65,14 @@ public class BusinessDao implements InterfaceBoard{
 	      try {
 	         conn = ds.getConnection();
 	         String sql = "insert into business_boards "
-	         		+ "values(?, ?, ?, ?, ?, 0, ?, date_format(sysdate(),'%Y.%m.%d'))";
+	         		+ "(title, content, result, files, hits, email, write_date)"
+	         		+ "values(?, ?, ?, ?, 0, ?, date_format(sysdate(),'%Y.%m.%d'))";
 	         pstmt = conn.prepareStatement(sql);
-	         pstmt.setInt(1, index);
-	         pstmt.setString(2, title);
-	         pstmt.setString(3, content);
-	         pstmt.setString(4, result);
-	         pstmt.setString(5, files);
-	         pstmt.setString(6, email);
+	         pstmt.setString(1, title);
+	         pstmt.setString(2, content);
+	         pstmt.setString(3, result);
+	         pstmt.setString(4, files);
+	         pstmt.setString(5, email);
 	         pstmt.executeUpdate();
 	         return 1;
 	      }catch (SQLException e){
@@ -104,7 +104,8 @@ public class BusinessDao implements InterfaceBoard{
 		PreparedStatement pstmt = null;
 		try {
 			conn = ds.getConnection();
-			String sql = "update business_boards set title=?, content=?, result=?, files=? where business_boards_idx =?";
+			String sql = "update business_boards set "
+					+ "title=?, content=?, result=?, files=? where business_boards_idx =?";
 			pstmt = conn.prepareStatement(sql);     
 			pstmt.setString(1, title);
 			pstmt.setString(2, content);
@@ -306,7 +307,7 @@ public class BusinessDao implements InterfaceBoard{
         Connection conn =null;
         PreparedStatement pstmt = null;
         ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-        ArrayList<Integer> hashTags = new ArrayList<Integer>();
+        ArrayList<Integer> indexBoards = new ArrayList<Integer>();
         Integer integer;
         String sql;
         try {
@@ -318,13 +319,13 @@ public class BusinessDao implements InterfaceBoard{
                rs = pstmt.executeQuery();	
                while(rs.next()) {
             	   integer = new Integer(rs.getInt("business_boards_idx"));
-            	   hashTags.add(integer);
+            	   indexBoards.add(integer);
                }
            }
-           for(int i = 0 ; i < hashTags.size(); i++) {
+           for(int i = 0 ; i < indexBoards.size(); i++) {
         	   sql = "select * from business_boards where business_boards_idx =?";
                pstmt = conn.prepareStatement(sql);
-               pstmt.setInt(1, hashTags.get(i).intValue());
+               pstmt.setInt(1, indexBoards.get(i).intValue());
                rs = pstmt.executeQuery();	
                while(rs.next()) {
                   int index = rs.getInt("business_boards_idx");

@@ -38,6 +38,26 @@ public class IdeaBoard {
 	public IdeaBoard() {
 	}	
 	/**
+	 * 게시판 생성 시 생성자
+	 * @param title
+	 * @param content
+	 * @param result
+	 * @param files
+	 * @param hits
+	 * @param email
+	 * @param writeDate
+	 */
+	public IdeaBoard(String title, String content, String result, String files, int hits, String email,
+			String writeDate) {
+		this.title = title;
+		this.content = content;
+		this.result = result;
+		this.files = files;
+		this.hits = hits;
+		this.email = email;
+		this.writeDate = writeDate;
+	}
+	/**
 	 * 클래스 변수 전체 생성자
 	 * @param index
 	 * @param title
@@ -50,14 +70,8 @@ public class IdeaBoard {
 	 */
 	public IdeaBoard(int index, String title, String content, String result, String files, int hits, String email,
 			String writeDate) {
+		this(title, content, result, files, hits, email, writeDate);
 		this.index = index;
-		this.title = title;
-		this.content = content;
-		this.result = result;
-		this.files = files;
-		this.hits = hits;
-		this.email = email;
-		this.writeDate = writeDate;
 	}
 	/**
 	 * toString 오버라이드 Setting 

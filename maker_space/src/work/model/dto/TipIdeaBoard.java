@@ -15,9 +15,9 @@ public class TipIdeaBoard extends IdeaBoard {
 	 * 기본생성자
 	 */
 	public TipIdeaBoard() {
-		// TODO Auto-generated constructor stub
 	}
 	/**
+	 * 전체 생성자
 	 * @param index
 	 * @param title 
 	 * @param content
@@ -30,13 +30,19 @@ public class TipIdeaBoard extends IdeaBoard {
 	public TipIdeaBoard(int index, String title, String content, String result, String files, int hits, String email,
 			String writeDate) {
 		super(index, title, content, result, files, hits, email, writeDate);
-		// TODO Auto-generated constructor stub
 	}
 	public TipIdeaBoard(int index, String title, String content, String result, String files, int hits, String email,
 			String writeDate, int scraps) {
 		super(index, title, content, result, files, hits, email, writeDate);
 		this.scraps = scraps;
-		// TODO Auto-generated constructor stub
+	}
+	/**
+	 * 게시판 생성 생성자
+	 */
+	public TipIdeaBoard(String title, String content, String result, String files, int hits, String email,
+			String writeDate, int scraps) {
+		super(title, content, result, files, hits, email, writeDate);
+		this.scraps = scraps;
 	}
 	/**
 	 * get, set 메서드
