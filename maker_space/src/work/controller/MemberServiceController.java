@@ -26,16 +26,22 @@ public class MemberServiceController extends HttpServlet {
 		System.out.println("process");
     	String action = request.getParameter("action");	
 		System.out.println(action);
-		switch(action) {
-		case "login":
-			login(request, response);
-			break;
-		case "join" :
-			join(request, response);
-			break;
-    	default :
-    		System.out.println("\n## 서비스 준비중입니다.");
-    		break;
+		try {
+			switch(action) {
+			case "login":
+				login(request, response);
+				break;
+			case "join" :
+				join(request, response);
+				break;
+	    	default :
+	    		System.out.println("\n## 서비스 준비중입니다.");
+	    		break;
+			}
+		} catch(NullPointerException e){
+			e.printStackTrace();
+		} finally {
+			
 		}
 	}
 	private void join(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -67,6 +73,7 @@ public class MemberServiceController extends HttpServlet {
 			request.setAttribute("mobile", mobile);
 			request.setAttribute("company", company);		
 			request.getRequestDispatcher("index.jsp").forward(request, response);;
+			
 		} else {
 			request.setAttribute("message", "회원가입에 실패했습니다.");
 			request.getRequestDispatcher("error.jsp").forward(request, response);

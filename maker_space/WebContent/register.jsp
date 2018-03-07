@@ -28,9 +28,10 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#joinBtn").click(function(){
-			$("#name").html("<div>asd</div>");
+			//var data2222 = $("#name").val("2222");
+			//console.log(data2222);
 			
- 			$.ajax({
+/* 			$.ajax({
 					type : "POST",
 					url : "member/controller",
 					data : "action=login&memberId=" + data2222,
@@ -42,7 +43,7 @@
 					error : function(data){
 						alert()
 					}
-			});
+			}); */
 		});
 	});
 
@@ -95,8 +96,8 @@
             </div>
           </div>
           <input type="hidden" name="action" value ="join">
-          <input id="joinBtn" class="btn btn-primary btn-block" value ="회원가입"> 
-          <a class="btn btn-primary btn-block" type="submit" href="member/controller">Register</a>
+          <input id="joinBtn" type="submit"  class="btn btn-primary btn-block"  value ="회원가입">
+          <a class="btn btn-primary btn-block" type="submit" href="member/controller?action=join">Register</a>
         <div class="text-center">
           <a class="d-block small mt-3" href="login.jsp">Login Page</a>
           <a class="d-block small" href="forgot-password.jsp">Forgot Password?</a>
