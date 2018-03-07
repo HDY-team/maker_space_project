@@ -31,7 +31,9 @@ public class BoardService {
 	/**
 	 * 기본생성자
 	 */
-	private BoardService() {
+	public BoardService() {
+		businessDao = BusinessDao.getInstance();
+		hashTagDao = HashTagDao.getInstance();
 	}
 	/**
 	 * Singleton 패턴

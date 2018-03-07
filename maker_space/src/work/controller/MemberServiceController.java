@@ -23,7 +23,7 @@ public class MemberServiceController extends HttpServlet {
     	service = MemberService.getInstance();
 	}
     protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		System.out.println("process");
     	String action = request.getParameter("action");	
 		System.out.println(action);
 		switch(action) {
@@ -58,7 +58,7 @@ public class MemberServiceController extends HttpServlet {
 		if(errorGenerate(request, response, mobile, "휴대전화번호를 입력해주세요.") != true ) {
 			return;
 		}
-		int result = service.join(new Member(email, password,name,mobile,company));
+		int result = service.join(new Member(email, password, name, mobile, company, "G", 0));
 		System.out.println("쿼리실행결과 :" + result);
 		if(result!=0) {
 			request.setAttribute("email", email);

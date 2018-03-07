@@ -16,6 +16,37 @@
   <link href="./Resource/mms/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <!-- Custom styles for this template-->
   <link href="./Resource/mms/css/sb-admin.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<style type="text/css">
+	.div22222{
+		width: 100px;
+		height : 100px;
+		background-color: red;
+	}
+
+</style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#joinBtn").click(function(){
+			$("#name").html("<div>asd</div>");
+			
+ 			$.ajax({
+					type : "POST",
+					url : "member/controller",
+					data : "action=login&memberId=" + data2222,
+					success : function(data){
+						// "asdf";
+						$("#name").val(data);
+						location.href = "www.naver.com";
+					},
+					error : function(data){
+						alert()
+					}
+			});
+		});
+	});
+
+</script>
 </head>
 
 <body class="bg-dark">
@@ -23,12 +54,13 @@
     <div class="card card-register mx-auto mt-5">
       <div class="card-header">Register an Account</div>
       <div class="card-body">
+      
         <form method ="post" action ="member/controller">
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-6">
                 <label for="exampleInputName">Name</label>
-                <input class="form-control" name ="name" type="text" aria-describedby="nameHelp" placeholder="Enter name">
+                <input id="name" class="form-control" name ="name" type="text" aria-describedby="nameHelp" placeholder="Enter name">
               </div>
               <div class="col-md-6">
                 <label for="exampleInputLastName">Phone Number</label>
@@ -63,14 +95,15 @@
             </div>
           </div>
           <input type="hidden" name="action" value ="join">
-          <input type="submit" value ="회원가입"> 
-          <a class="btn btn-primary btn-block" type ="submit" href="login.jsp">Register</a>
-       
+          <input id="joinBtn" class="btn btn-primary btn-block" value ="회원가입"> 
+          <a class="btn btn-primary btn-block" type="submit" href="member/controller">Register</a>
         <div class="text-center">
           <a class="d-block small mt-3" href="login.jsp">Login Page</a>
           <a class="d-block small" href="forgot-password.jsp">Forgot Password?</a>
         </div>
          </form>
+         <div id ="testDiv" class = "div22222"></div>
+         <div class = "div22222"></div>
       </div>
     </div>
   </div>

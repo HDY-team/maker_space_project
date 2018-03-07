@@ -27,7 +27,6 @@ import work.model.service.MemberService;
 public class BoardServiceController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BoardService boardService;
-	
     /**
      * 기본 생성자
      */

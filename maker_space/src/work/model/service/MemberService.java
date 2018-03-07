@@ -33,7 +33,8 @@ public class MemberService {
 	/**
 	 * 기본생성자
 	 */
-	private MemberService() {
+	public MemberService() {
+		 dao = MemberDao.getInstance();
 	}
 	/**
 	 * Singleton 패턴
@@ -57,12 +58,11 @@ public class MemberService {
 	 * @return
 	 */
 	public int join(Member member) {
-		System.out.println(dao.getMemberOne(member.getEmail()));
+		System.out.println(member.toString());
+		dao.getMemberOne(member.getEmail());
 		if(dao.getMemberOne(member.getEmail()) != null) {
 			return 0;
 		}
-		System.out.println(">>" + member.getEmail()); // log
-		System.out.println(">>" + dao.insertMember(member));
 		return dao.insertMember(member);
 	}
 	/**
