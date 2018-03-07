@@ -30,5 +30,6 @@
   <servlet-mapping>
     <servlet-name>MemberServiceController</servlet-name>
     <url-pattern>/member/controller</url-pattern>
+    <url-pattern>/member_controller</url-pattern>
   </servlet-mapping>
 </web-app>

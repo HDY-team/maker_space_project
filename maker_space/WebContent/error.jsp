@@ -7,8 +7,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h3>Error Message
-			<%= request.getAttribute("message") %>
-	</h3>
+
+
+<h3>응답결과</h3>
+<hr>
+<h3>Message : <%= request.getAttribute("message") %></h3>
+
 </body>
 </html>
