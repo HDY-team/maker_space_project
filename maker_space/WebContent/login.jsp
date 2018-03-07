@@ -24,27 +24,22 @@
       <div class="card-header">Login</div>
  
       <div class="card-body">
-        <form>
+        <form method = "post" action = "member_controller">
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" placeholder="Enter email">
+            <input class="form-control" name="email" type="email" aria-describedby="emailHelp" placeholder="Enter email">
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input class="form-control" id="exampleInputPassword1" type="password" placeholder="Password">
+            <input class="form-control" name="password" type="password" placeholder="Password">
           </div>
-          <div class="form-group">
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="checkbox"> Remember Password</label>
-            </div>
-          </div>
-          <a class="btn btn-primary btn-block" href="index.jsp">Login</a>
+          <div class="text-center">
+           <input type="hidden" name="action" value ="login">
+           <button type ="submit" class="btn btn-primary btn-sm">Login</button>
+           <a class="d-block small mt-3" href="register.jsp">Register an Account</a>
+           <a class="d-block small" href="forgot_password.jsp">Forgot Password?</a>
+         </div>
         </form>
-        <div class="text-center">
-          <a class="d-block small mt-3" href="register.jsp">Register an Account</a>
-          <a class="d-block small" href="forgot_password.jsp">Forgot Password?</a>
-        </div>
       </div>
     </div>
   </div>

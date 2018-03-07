@@ -23,7 +23,7 @@
     <div class="card card-register mx-auto mt-5">
       <div class="card-header">Register an Account</div>
       <div class="card-body">
-        <form method ="post" action ="member/controller">
+        <form method ="post" action ="member_controller">
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-6">
@@ -45,7 +45,9 @@
               </div>
               <div class="col-md-4">
                 <label for="exampleInputEmail1">&nbsp;</label><br>
-                <button type="button" class="btn btn-primary btn-sm">중복확인</button>
+                <!-- <input type="hidden" name="action" value ="checkOverlap">  -->
+          		
+                <!--  button type="submit" class="btn btn-primary btn-sm">중복확인</button> -->
 
               </div>
             </div>
@@ -62,11 +64,21 @@
               </div>
             </div>
           </div>
-          <input type="hidden" name="action" value ="join">
-          <input type="submit" value ="회원가입"> 
-          <a class="btn btn-primary btn-block" type ="submit" href="login.jsp">Register</a>
-       
+          
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <label for="exampleInputPassword1">Company</label>
+                <input class="form-control" name="company" type="text" placeholder="company">
+              </div>
+             </div>
+          </div>
+          
+         
         <div class="text-center">
+         <input type="hidden" name="action" value ="join">
+          <button type ="submit" class="btn btn-primary btn-sm">register</button>
+       
           <a class="d-block small mt-3" href="login.jsp">Login Page</a>
           <a class="d-block small" href="forgot-password.jsp">Forgot Password?</a>
         </div>
