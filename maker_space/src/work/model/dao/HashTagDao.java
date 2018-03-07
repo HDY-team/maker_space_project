@@ -28,28 +28,18 @@ import work.model.dto.Member;
  */
 public class HashTagDao {
 
-	private DataSource ds;
-	private static HashTagDao instance;
-
+	private FactoryDao factory = FactoryDao.getInstance();
+	private static HashTagDao instance = new HashTagDao();
 	/**
 	 * 기본생성자
 	 */
-	public HashTagDao() {
-		try {
-			Context context = new InitialContext();
-	         ds = (DataSource)context.lookup("java:comp/env/jdbc/mysql");
-		} catch(NamingException e) {
-			System.out.println("ERROR: " + e.getMessage());
-		}
+	private HashTagDao() {
 	}
 	/**
 	 * Singleton 패턴
 	 * @return
 	 */
 	public static HashTagDao getInstance() {
-		if(instance == null) {
-			instance = new HashTagDao();
-		}
 		return instance;
 	}
 	/**
@@ -58,14 +48,14 @@ public class HashTagDao {
 	 * @param hashTag
 	 * @return
 	 */
-	public int insertHashTag(String boardIdx, String hashTag) {
+	public int insertHashTag(int boardIdx, String hashTag) {
 		Connection conn= null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();		
+			conn = factory.getConnection();		
 			String sql = "insert into hashtags values(?, ?)";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
-			pstmt.setString(1, boardIdx);
+			pstmt.setInt(1, boardIdx);
 			pstmt.setString(2, hashTag);
 			pstmt.executeUpdate();
 			return 1;
@@ -73,17 +63,7 @@ public class HashTagDao {
 			System.out.println("Error: " + e.getMessage() + "// 해시태그추가 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 해시태그추가 자원 해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}
@@ -93,14 +73,14 @@ public class HashTagDao {
 	 * @param hashTag
 	 * @return
 	 */
-	public int deleteHashTag(String boardIdx, String hashTag) {
+	public int deleteHashTag(int boardIdx, String hashTag) {
 		Connection conn= null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "delete hashtags where boardIdx=? and hashTag=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
-			pstmt.setString(1, boardIdx);
+			pstmt.setInt(1, boardIdx);
 			pstmt.setString(2, hashTag);
 			pstmt.executeUpdate();
 			return 1;
@@ -108,17 +88,7 @@ public class HashTagDao {
 			System.out.println("Error: " + e.getMessage() + "// 해시태그 삭제 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-					if(pstmt != null) {
-						pstmt.close();
-					}
-					if(conn != null) { 
-						conn.close();
-					}
-			} catch(SQLException e) {
-				System.out.println("Error : 해시태그 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}
@@ -127,15 +97,15 @@ public class HashTagDao {
 	 * @param boardIdx
 	 * @return
 	 */
-	public int countHashTagInBoard(String boardIdx) {
+	public int countHashTagInBoard(int boardIdx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = ds.getConnection();
-			String sql = "select count(*) from hashtags where business_boards_idx=?";
+			conn = factory.getConnection();
+			String sql = "select count(*) from hashtags where business_boarfactory_idx=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
-			pstmt.setString(1, boardIdx);
+			pstmt.setInt(1, boardIdx);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				int count= rs.getInt(1);
@@ -145,17 +115,7 @@ public class HashTagDao {
 				System.out.println("Error: " + e.getMessage() + "// 게시판 당 해시태그 개수 오류");
 				e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 게시판 당 해시태그 개수 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt, rs);
 		}	
 		return 0;
 	}

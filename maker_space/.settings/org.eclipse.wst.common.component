@@ -2,7 +2,7 @@
     <wb-module deploy-name="maker_space">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="maker_space"/>
         <property name="java-output-path" value="/maker_space/build/classes"/>
+        <property name="context-root" value="makerspace"/>
     </wb-module>
 </project-modules>

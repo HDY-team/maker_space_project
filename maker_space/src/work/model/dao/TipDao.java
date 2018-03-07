@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 
 import work.model.dto.IdeaBoard;
 import work.model.dto.TipIdeaBoard;
-import work.model.interface_package.InterfaceBoard;
+import work.model.interfaces.InterfaceBoard;
 
 /**
  * @author DONGHYUNLEE
@@ -28,28 +28,19 @@ import work.model.interface_package.InterfaceBoard;
  */
 public class TipDao implements InterfaceBoard{
 
-	private DataSource ds;
-	private static TipDao instance;
+	private FactoryDao factory = FactoryDao.getInstance();
+	private static TipDao instance = new TipDao();
 	/**
 	 * 기본생성자
 	 * context 환경 정보 가져오기.
 	 */
-	public TipDao() {
-		try {
-			Context context = new InitialContext();
-			ds = (DataSource)context.lookup("java:comp/env/jdbc/mysql");
-			} catch(NamingException e){
-				System.out.println("ERROR: " + e.getMessage());
-			}	
+	private TipDao() {
 	}
 	/**
 	 * Singleton 패턴
 	 * @return
 	 */
 	public static TipDao getInstance() {
-		if(instance == null) {
-			instance = new TipDao();
-		}
 		return instance;
 	}
 	
@@ -66,6 +57,7 @@ public class TipDao implements InterfaceBoard{
 	* @param dto
 	* @return
 	*/
+	@SuppressWarnings("resource")
 	public int registerBoard(IdeaBoard dto) {
 		// TODO Auto-generated method stub
 		int index = dto.getIndex();
@@ -74,11 +66,12 @@ public class TipDao implements InterfaceBoard{
 		String result = dto.getResult();
 		String files = dto.getFiles();
 		String email = dto.getEmail();
-		Connection conn =null;
+		ResultSet rs = null;
+		Connection conn = null;
 		PreparedStatement pstmt = null;
 	      try {
-	         conn = ds.getConnection();
-	         String sql = "insert into business_boards "
+	         conn = factory.getConnection();
+	         String sql = "insert into business_boarfactory "
 		         		+ "(title, content, result, files, hits, scraps, email, write_date)"
 		         		+ "values(?, ?, ?, ?, 0, 0, ?, date_format(sysdate(),'%Y.%m.%d'))";
 	         pstmt = conn.prepareStatement(sql);
@@ -89,21 +82,17 @@ public class TipDao implements InterfaceBoard{
 	         pstmt.setString(5, files);
 	         pstmt.setString(6, email);
 	         pstmt.executeUpdate();
-	         return 1;
+	         sql = "select last_insert_id() 'business_boarfactory_idx'"; 
+	         pstmt = conn.prepareStatement(sql);
+	         rs = pstmt.executeQuery();
+	         if(rs.next()) {
+	        	 return rs.getInt("business_boarfactory_idx");
+	         }
 	      }catch (SQLException e){
 	         System.out.println("Error : 글 등록 오류");
 	         e.printStackTrace();
 	      }finally {
-	         try {
-	            if(pstmt !=null) {
-	               pstmt.close();
-	            } if(conn != null) { 
-	                  conn.close();
-	               }
-	            } catch(SQLException e) {
-	               System.out.println("Error : 글 등록 자원해제 오류");
-	            }
-	
+	    	  factory.close(conn, pstmt, rs);
 	      }
 	      return 0;
 	}
@@ -114,33 +103,25 @@ public class TipDao implements InterfaceBoard{
     * @param dto
     * @return
     */
-	public int changeBoard(String boardIdx, String title, String content, String result, String files) {
+	public int changeBoard(int boardIdx, String title, String content, String result, String files) {
 		Connection conn =null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
-			String sql = "update tip_boards set title=?, content=?, result=?, files=? where tip_idx =?";
+			conn = factory.getConnection();
+			String sql = "update tip_boarfactory set title=?, content=?, result=?, files=? where tip_idx =?";
 			pstmt = conn.prepareStatement(sql);     
 			pstmt.setString(1, title);
 			pstmt.setString(2, content);
 			pstmt.setString(3, result);
 			pstmt.setString(4, files);
-			pstmt.setString(5, boardIdx);
+			pstmt.setInt(5, boardIdx);
 			pstmt.executeUpdate();
 			return 1;
 		}catch (SQLException e){
 			System.out.println("Error : 글 수정 오류");
 			e.printStackTrace();
 		}finally {
-			try {
-				if(pstmt !=null) {
-					pstmt.close();
-				} if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 글 수정 자원해제 오류");
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}
@@ -149,31 +130,21 @@ public class TipDao implements InterfaceBoard{
 	 * @param boardIdx
 	 * @return
 	 */
-	public int removeBoard(String boardIdx) {
+	public int removeBoard(int boardIdx) {
 		Connection conn= null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
-			String sql = "delete tip_boards where tip_idx=?";
+			conn = factory.getConnection();
+			String sql = "delete tip_boarfactory where tip_idx=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, boardIdx);
+			pstmt.setInt(1, boardIdx);
 			pstmt.executeUpdate();
 			return 1;
 		} catch(SQLException e){
 			System.out.println("Error: " + e.getMessage() + "// 테이블 삭제 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-					if(pstmt != null) {
-						pstmt.close();
-					}
-					if(conn != null) { 
-						conn.close();
-					}
-			} catch(SQLException e) {
-				System.out.println("Error : 테이블 삭제 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}
@@ -195,14 +166,14 @@ public class TipDao implements InterfaceBoard{
         ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
         
         try {
-           conn = ds.getConnection();
+           conn = factory.getConnection();
            String sql = "select email from members where name=?";
            pstmt = conn.prepareStatement(sql);
            pstmt.setString(1, name);
            rs = pstmt.executeQuery();
            if(rs.next()) {
         	   String email = rs.getString(name);
-        	   sql = "select * from tip_boards where email like '%?%'";
+        	   sql = "select * from tip_boarfactory where email like '%?%'";
                pstmt = conn.prepareStatement(sql);
                pstmt.setString(1, name);
                rs = pstmt.executeQuery();	
@@ -223,16 +194,7 @@ public class TipDao implements InterfaceBoard{
            System.out.println("Error : 글 이름 검색 오류");
            e.printStackTrace();
         }finally {
-           try {
-              if(pstmt !=null) {
-                 pstmt.close();
-              }
-                 if(conn != null) {
-                    conn.close();
-                 }
-              } catch(SQLException e) {
-                 System.out.println("Error : 글 이름 검색 자원해제 오류");
-              }
+        	factory.close(conn, pstmt, rs);
         }
         return null;
 	}
@@ -244,8 +206,8 @@ public class TipDao implements InterfaceBoard{
         ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
         
         try {
-           conn = ds.getConnection();
-           String sql = "select * from tip_boards where title like '%?%'";
+           conn = factory.getConnection();
+           String sql = "select * from tip_boarfactory where title like '%?%'";
            pstmt = conn.prepareStatement(sql);
            pstmt.setString(1, title);
            rs = pstmt.executeQuery();	
@@ -265,16 +227,7 @@ public class TipDao implements InterfaceBoard{
            System.out.println("Error : 글 제목 검색 오류");
            e.printStackTrace();
         }finally {
-           try {
-              if(pstmt !=null) {
-                 pstmt.close();
-              }
-                 if(conn != null) {
-                    conn.close();
-                 }
-              } catch(SQLException e) {
-                 System.out.println("Error : 글 제목 검색 자원해제 오류");
-              }
+        	factory.close(conn, pstmt, rs);
         }
         return null;
 	}
@@ -285,8 +238,8 @@ public class TipDao implements InterfaceBoard{
         ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
         
         try {
-           conn = ds.getConnection();
-           String sql = "select * from business_boards where content like '%?%'";
+           conn = factory.getConnection();
+           String sql = "select * from business_boarfactory where content like '%?%'";
            pstmt = conn.prepareStatement(sql);
            pstmt.setString(1, content);
            rs = pstmt.executeQuery();	
@@ -306,16 +259,7 @@ public class TipDao implements InterfaceBoard{
            System.out.println("Error : 글 내용 검색 오류");
            e.printStackTrace();
         }finally {
-           try {
-              if(pstmt !=null) {
-                 pstmt.close();
-              }
-                 if(conn != null) {
-                    conn.close();
-                 }
-              } catch(SQLException e) {
-                 System.out.println("Error : 글 내용 검색 자원해제 오류");
-              }
+        	factory.close(conn, pstmt, rs);
         }
         return null;
 	}
@@ -324,11 +268,11 @@ public class TipDao implements InterfaceBoard{
         Connection conn =null;
         PreparedStatement pstmt = null;
         ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-        ArrayList<Integer> indexBoards = new ArrayList<Integer>();
+        ArrayList<Integer> indexBoarfactory = new ArrayList<Integer>();
         Integer integer;
         String sql;
         try {
-           conn = ds.getConnection();
+           conn = factory.getConnection();
            for(int i = 1 ; i <= 5 ; i++) {
         	   sql = "select tip_idx from tip_hashtags where hash_tag'" + i + "'=? like '%?%'";
                
@@ -337,13 +281,13 @@ public class TipDao implements InterfaceBoard{
                rs = pstmt.executeQuery();	
                while(rs.next()) {
             	   integer = new Integer(rs.getInt("tip_idx"));
-            	   indexBoards.add(integer);
+            	   indexBoarfactory.add(integer);
                }
            }
-           for(int i = 0 ; i < indexBoards.size(); i++) {
-        	   sql = "select * from tip_boards where tip_idx =?";
+           for(int i = 0 ; i < indexBoarfactory.size(); i++) {
+        	   sql = "select * from tip_boarfactory where tip_idx =?";
                pstmt = conn.prepareStatement(sql);
-               pstmt.setInt(1, indexBoards.get(i).intValue());
+               pstmt.setInt(1, indexBoarfactory.get(i).intValue());
                rs = pstmt.executeQuery();	
                while(rs.next()) {
                   int index = rs.getInt("tip_idx");
@@ -365,16 +309,7 @@ public class TipDao implements InterfaceBoard{
            System.out.println("Error : 글 해시태그  이름 검색 오류");
            e.printStackTrace();
         }finally {
-           try {
-              if(pstmt !=null) {
-                 pstmt.close();
-              }
-                 if(conn != null) {
-                    conn.close();
-                 }
-              } catch(SQLException e) {
-                 System.out.println("Error : 글 해시태그 검색 자원해제 오류");
-              }
+        	factory.close(conn, pstmt, rs);
         }
         return null;
 	}

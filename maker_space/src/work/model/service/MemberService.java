@@ -28,22 +28,18 @@ import work.model.dto.Member;
  */
 public class MemberService {
 
-	private static MemberService instance;
+	private static MemberService instance = new MemberService();
 	private MemberDao dao;
 	/**
 	 * 기본생성자
 	 */
 	private MemberService() {
-		dao = MemberDao.getInstance();
 	}
 	/**
 	 * Singleton 패턴
 	 * @return
 	 */
 	public static MemberService getInstance() {
-		if(instance == null) {
-			instance = new MemberService();
-		}
 		return instance;
 	}
 	/**
@@ -61,10 +57,12 @@ public class MemberService {
 	 * @return
 	 */
 	public int join(Member member) {
+		System.out.println(dao.getMemberOne(member.getEmail()));
 		if(dao.getMemberOne(member.getEmail()) != null) {
 			return 0;
 		}
-		System.out.println(member.getEmail()); // log
+		System.out.println(">>" + member.getEmail()); // log
+		System.out.println(">>" + dao.insertMember(member));
 		return dao.insertMember(member);
 	}
 	/**
