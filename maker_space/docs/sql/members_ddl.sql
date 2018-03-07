@@ -105,11 +105,7 @@ create table select_complete_boards (
 create table hashtags (
 
     business_boards_idx int NOT NULL,
-    hash_tag1 varchar(10),
-    hash_tag2 varchar(10),
-    hash_tag3 varchar(10),
-    hash_tag4 varchar(10),
-    hash_tag5 varchar(10),
+    hash_tag varchar(10),
     INDEX(business_boards_idx),
   	FOREIGN KEY(business_boards_idx) REFERENCES business_boards(business_boards_idx) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB; 

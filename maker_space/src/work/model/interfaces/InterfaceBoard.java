@@ -5,7 +5,7 @@
  * @since jdk1.8
  * </pre>
  */
-package work.model.interface_package;
+package work.model.interfaces;
 
 import java.util.ArrayList;
 
@@ -38,13 +38,13 @@ public interface InterfaceBoard {
 	 * @param files
 	 * @return
 	 */
-	public int changeBoard(String boardIdx, String title, String content, String result, String files);
+	public int changeBoard(int boardIdx, String title, String content, String result, String files);
 	/**
 	 * 3. 삭제
 	 * @param boardIdx
 	 * @return
 	 */
-	public int removeBoard(String boardIdx);
+	public int removeBoard(int boardIdx);
 	/**
 	 * 4. 조회
 	 * @param name

@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 
 
 import work.model.dto.Member;
+import work.model.service.MemberService;
 
 /**
  * * 회원테이블에 대한 DAO(Data Access Object)클래스
@@ -43,29 +44,20 @@ import work.model.dto.Member;
  * 8. 회원삭제(관리자)
  */
 public class MemberDao {
-	private DataSource ds;
-	private static MemberDao instance;
 
+	private FactoryDao factory = FactoryDao.getInstance();
+	private static MemberDao instance = new MemberDao();
 	/**
 	 * 기본생성자
 	 * context 환경 정보 가져오기.
 	 */
-	public MemberDao() {
-		try {
-			Context context = new InitialContext();
-			ds = (DataSource)context.lookup("java:comp/env/jdbc/mysql");
-			} catch(NamingException e){
-				System.out.println("ERROR: " + e.getMessage());
-			}	
+	private MemberDao() {
 	}
 	/**
 	 * Singleton 패턴
 	 * @return
 	 */
 	public static MemberDao getInstance() {
-		if(instance == null) {
-			instance = new MemberDao();
-		}
 		return instance;
 	}
 	
@@ -75,6 +67,7 @@ public class MemberDao {
 	 * @return
 	 */
 	public int insertMember(Member dto) {
+		System.out.println("dto: " + dto.toString());
 		String email = dto.getEmail();
 		String password = dto.getPassword();
 		String name = dto.getName();
@@ -86,7 +79,7 @@ public class MemberDao {
 		Connection conn= null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "insert into members values(?, ?, ?, ?, ?, ?, ?)";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -102,17 +95,7 @@ public class MemberDao {
 			System.out.println("Error: " + e.getMessage() + "// 회원추가 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 회원추가 자원 해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}
@@ -127,7 +110,7 @@ public class MemberDao {
 		Connection conn= null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "delete members where email=? and password=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -138,17 +121,7 @@ public class MemberDao {
 			System.out.println("Error: " + e.getMessage() + "// 회원 삭제 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-					if(pstmt != null) {
-						pstmt.close();
-					}
-					if(conn != null) { 
-						conn.close();
-					}
-			} catch(SQLException e) {
-				System.out.println("Error : 회원삭제 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}
@@ -163,7 +136,7 @@ public class MemberDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "update members set password =?, mobile=? company=? where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, password);
@@ -176,17 +149,7 @@ public class MemberDao {
 			System.out.println("Error: " + e.getMessage() + "// 회원수정 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-					if(pstmt != null) {
-						pstmt.close();
-					}
-					if(conn != null) { 
-						conn.close();
-					}
-			} catch(SQLException e) {
-				System.out.println("Error : 회원수정 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}
@@ -202,7 +165,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "select grade from members where email=? and password=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -216,17 +179,7 @@ public class MemberDao {
 				System.out.println("Error: " + e.getMessage() + "// 로그인 오류");
 				e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 로그인 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt, rs);
 		}	
 		return null;
 	}
@@ -242,7 +195,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "select email from members where name=? and mobile=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, name);
@@ -255,17 +208,7 @@ public class MemberDao {
 			System.out.println("Error: " + e.getMessage() + "// 이메일찾기 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 이메일찾기 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt, rs);
 		}	
 		return null;
 	}
@@ -279,7 +222,7 @@ public class MemberDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "update members set password =? where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -291,17 +234,7 @@ public class MemberDao {
 			System.out.println("Error: " + e.getMessage() + "// 비밀번호 찾기 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 비밀번호찾기 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}	
 		return 0;
 	}
@@ -311,11 +244,12 @@ public class MemberDao {
 	 * @return
 	 */
 	public Member getMemberOne(String email) {
+		System.out.println("email:" + email );
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "select * from members where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -334,17 +268,7 @@ public class MemberDao {
 				System.out.println("Error: " + e.getMessage() + "// 상세회원조회 오류");
 				e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 상세회원조회 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt, rs);
 		}	
 		return null;
 	}		
@@ -359,7 +283,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "select * from members";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -383,17 +307,7 @@ public class MemberDao {
 						System.out.println("Error: " + e.getMessage() + "// 전체회원조회 오류");
 						e.printStackTrace();
 		} finally {
-			try {
-				if(pstmt != null) {
-					pstmt.close();
-				}
-				if(conn != null) { 
-					conn.close();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error : 회원전체조회 자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt, rs);
 		}	
 		return null;
 	}
@@ -409,7 +323,7 @@ public class MemberDao {
 		Connection conn= null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = ds.getConnection();
+			conn = factory.getConnection();
 			String sql = "delete members where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -419,17 +333,7 @@ public class MemberDao {
 			System.out.println("Error: " + e.getMessage() + "// 회원 삭제(관리자) 오류");
 			e.printStackTrace();
 		} finally {
-			try {
-					if(pstmt != null) {
-						pstmt.close();
-					}
-					if(conn != null) { 
-						conn.close();
-					}
-			} catch(SQLException e) {
-				System.out.println("Error : 회원삭제(관리자)자원해제 오류");
-				e.printStackTrace();
-			}
+			factory.close(conn, pstmt);
 		}
 		return 0;
 	}

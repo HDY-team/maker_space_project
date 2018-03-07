@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Context reloadable="true" privileged="true">
-<!-- Connection Pool -->
 	<Resource name="jdbc/mysql" 
 		auth="Container" 
 		type="javax.sql.DataSource"
-		factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
-		maxActive="100" 
-		maxIdle="30" 
-		maxWait="1000"
+		maxActive="100"
+		maxIdle="30"
 		username="root" 
 		password="root" 
 		driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://localhost:3307/space"
-	/>
-
+		url="jdbc:mysql://localhost:3307/space"	/>
 </Context>
