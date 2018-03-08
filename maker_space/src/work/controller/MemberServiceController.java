@@ -1,6 +1,7 @@
 package work.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -18,7 +19,7 @@ import work.model.service.MemberService;
  */
 public class MemberServiceController extends HttpServlet {
 
-	int unusedEmail = 0;
+	String code;
     private MemberService service;
 
     public MemberServiceController(){
@@ -30,6 +31,9 @@ public class MemberServiceController extends HttpServlet {
 		System.out.println(action);
 		
 		switch(action) {
+		case "confirmEmail":
+			confirmEmail(request,response);
+			break;
 		case "login":
 			login(request, response);
 			break;
@@ -39,9 +43,6 @@ public class MemberServiceController extends HttpServlet {
 		case "join" :
 			join(request, response);
 			break;
-		case "checkOverlap" :
-			checkOverlap(request, response);
-			break;
 		case "removeMember" :
 			removeMember(request, response);
 			break;
@@ -50,6 +51,9 @@ public class MemberServiceController extends HttpServlet {
 			break;
 		case "forgotPassword" :
 			forgotPassword(request, response);
+			break;
+		case "createNewPassword" :
+			createNewPassword(request, response);
 			break;
 		case "getMyInfo" :
 			getMyInfo(request, response);
@@ -68,6 +72,41 @@ public class MemberServiceController extends HttpServlet {
     		break;
 		}
 	}
+    private void createNewPassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	String email=request.getParameter("email");
+    	int result = service.checkOverlap(email); // 메일이 db에 있을 떄 0 리턴
+    	PrintWriter out=response.getWriter();
+    	if(result==0) {
+    		code=service.confirmEmail(email);
+    		out.print(code);
+    		out.close();
+    		
+    	}else {
+    		out.println("Create your new Account");
+    		out.close();
+    	}
+	}
+    
+	private void confirmEmail(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	String email=request.getParameter("email");
+    	int result = service.checkOverlap(email);
+    	PrintWriter out=response.getWriter();
+    	if(result!=0) {
+    		code=service.confirmEmail(email);
+    		out.print(code);
+    		out.close();
+    		
+    	}else {
+    		out.println("Duplicated Email");
+    		out.close();
+    	}
+    	
+    	
+    }
+    
+    
+    
+    
     private void getAllInfoByAdmin(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("\n## 관리자 :: 전체 회원 조회 요청");
 		
@@ -81,10 +120,10 @@ public class MemberServiceController extends HttpServlet {
 	private void getInfoByAdmin(HttpServletRequest request, HttpServletResponse response) {
 		
 	}
-	private void getMyInfo(HttpServletRequest request, HttpServletResponse response) {
+	private void getMyInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	System.out.println("\n## 내 정보 조회 요청");
 		
-		HttpSession session = request.getSession(false); // false는 기존 세션을 달라.
+		HttpSession session = request.getSession(false); 
 		
 		Member member = new Member();
 		member = service.getMyInfo((String)session.getAttribute("email"));
@@ -98,8 +137,8 @@ public class MemberServiceController extends HttpServlet {
 		request.setAttribute("grade", member.getGrade());
 		request.setAttribute("point", member.getPoint());
 		
-		//request.getRequestDispatcher("").forward(request, response); 
-		// 보낼 페이지 jsp로 전송
+		request.getRequestDispatcher("myAccount.jsp").forward(request, response); 
+
 	}
 	/**
      * 비밀번호 변경 메서드
@@ -111,24 +150,40 @@ public class MemberServiceController extends HttpServlet {
      */
     private void forgotPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    	String originCode =code;
     	String email = request.getParameter("email");
     	String password = request.getParameter("password");
-    	
-    	int result = service.forgotPassword(email, password);
-    	
-    	if(result != 0) {
-			//탈퇴 성공
-			System.out.println("비밀번호 변경 성공");
-			String message = "변경 되었습니다";
-			//회원전용 서비스 페이지 이동
+    	String comparedCode = request.getParameter("code");
+    	String confirmedPassword = request.getParameter("confirmedPassword");
+    	System.out.println();
+    	if(!originCode.equals(comparedCode) || comparedCode == null) {
+    		System.out.println("인증코드 오류");
+			String message = "인증 코드를 확인해주세요.";
 			request.setAttribute("message", message);
-			request.getRequestDispatcher("index.jsp").forward(request, response);
-		} else {
-			
-			request.setAttribute("message", "변경에 실패했습니다.");
-			request.getRequestDispatcher("error.jsp").forward(request, response);
-		}	
-	}
+			request.getRequestDispatcher("forgot_password.jsp").forward(request, response);
+			return ;
+		}
+    	System.out.println("생성 코드"+originCode +" :: 입력 코드 :"+comparedCode);
+    	if(password.equals(confirmedPassword))
+    	{
+    		int result = service.forgotPassword(email, password);
+        	
+        	if(result != 0) {
+    			System.out.println("비밀번호 변경 성공");
+    			String message = "변경 되었습니다";
+    			request.setAttribute("message", message);
+    			request.getRequestDispatcher("index.jsp").forward(request, response);
+    		} else {
+    			
+    			request.setAttribute("message", "변경에 실패했습니다.");
+    			request.getRequestDispatcher("error.jsp").forward(request, response);
+    		}	
+
+    	}else {
+    		request.setAttribute("message", "변경에 실패했습니다.");
+    		request.getRequestDispatcher("forgot_password.jsp").forward(request, response);
+    	}
+    }
 	/**
      * 회원 정보 수정 메서드
      * 이메일, 패스워드, 전화번호, 이메일 수정 가능 ---> 이메일도 수정가능하게할것인가?
@@ -138,26 +193,52 @@ public class MemberServiceController extends HttpServlet {
      * @throws IOException
      */
     private void updateMember(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	String email = request.getParameter("email");
-    	String password = request.getParameter("password");
+    	
+    	HttpSession session = request.getSession(false);
+    	
+    	String password = session.getAttribute("password").toString();
+    	String name = session.getAttribute("name").toString();
+		String email = session.getAttribute("email").toString();
+    	String originalPassword = request.getParameter("originalPassword");
+    	String newPassword = request.getParameter("newPassword");
     	String mobile = request.getParameter("mobile");
     	String company = request.getParameter("company");
     	
-    	int result = service.updateMember(email, password, mobile, company);
+    	if(newPassword == null || originalPassword== null || mobile == null) {
+    		request.getRequestDispatcher("editMyAccount.jsp").forward(request, response);;
+    		return;
+    	}
     	
-    	if(result != 0) {
-			//탈퇴 성공
-			System.out.println("수정 성공");
-			String message = "수정 되었습니다";
-			//회원전용 서비스 페이지 이동
-			request.setAttribute("message", message);
-			request.getRequestDispatcher("index.jsp").forward(request, response);
-		} else {
-			
-			request.setAttribute("message", "수정에 실패했습니다.");
+    	System.out.println(password);
+    	if(password.equals(originalPassword)) {
+    		int result = service.updateMember(email, newPassword, mobile, company);
+        	
+        	if(result != 0) {
+    			
+    			System.out.println("수정 성공");
+    			String message = "수정 되었습니다";
+    			session.setAttribute("name", name);
+    			session.setAttribute("email", email);
+    			session.setAttribute("password", newPassword);
+    			session.setAttribute("mobile", mobile);
+    			session.setAttribute("company", company);
+    			
+    			request.setAttribute("message", message);
+    			request.getRequestDispatcher("mainService.jsp").forward(request, response);
+    		} else {
+    			
+    			request.setAttribute("message", "수정에 실패했습니다.");
+    			request.getRequestDispatcher("error.jsp").forward(request, response);
+    		}	
+
+
+    	}else{
+    		request.setAttribute("message", "수정에 실패했습니다.");
 			request.getRequestDispatcher("error.jsp").forward(request, response);
-		}	
-	}
+    		
+    	}
+    	   	
+    }
     /**
      * 회원 탈퇴 요청 메서드
      * 회원이 직접 탈퇴를 원할 떄 사용되는 메서드
@@ -171,7 +252,13 @@ public class MemberServiceController extends HttpServlet {
     	String email = request.getParameter("email");
     	String password = request.getParameter("password");
     	
+    	if(email == null || password== null) {
+    		request.getRequestDispatcher("deleteMyAccount.jsp").forward(request, response);;
+    		return ;
+    	}
+    	
     	int result = service.removeMember(email, password);
+    	
     	
     	if(result != 0) {
 			//탈퇴 성공
@@ -233,46 +320,7 @@ public class MemberServiceController extends HttpServlet {
      * -- 완료된 응답이면 설정되어있는 dto 객체의 속성을 가져와서
      * -- 회원가입페이지 입력양식의 해당 항목의 value="<%= dto.getEmail() %> 기본값으로 설정
      */
-    private void checkOverlap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	System.out.println("\n## 메일 중복확인 요청");
-    	Member member = new Member();
-    	
-    	String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String confirmPassword = request.getParameter("confirmPassword");
-		String name = request.getParameter("name");
-		String mobile = request.getParameter("mobile");
-		String company = request.getParameter("company");
-		
-		
-    	if(email==null || email.trim().length()==0)
-		{
-			String message = "이메일을 입력해주세요.";
-			request.setAttribute("message", message);
-			RequestDispatcher nextView = request.getRequestDispatcher("error.jsp");
-			nextView.forward(request, response);
-			
-		}
-    	int result =0; //service.checkOverlap(email);
-    	
-    	if(result !=0) {
-    		request.setAttribute("email", email);
-			request.setAttribute("password", password);
-			request.setAttribute("name", name);
-			request.setAttribute("mobile", mobile);
-			request.setAttribute("company", company);
-			
-			
-			unusedEmail = 999;
-			System.out.println(unusedEmail);
-			
-		} else {
-			unusedEmail = 0;
-			request.setAttribute("message", "중복된 이메일입니다.");
-			request.getRequestDispatcher("error.jsp").forward(request, response);
-			
-		}
-	}
+    
 	/**
      * 로그인 요청메서드
      * 세션을 이용해 로그인.
@@ -307,10 +355,19 @@ public class MemberServiceController extends HttpServlet {
 		if(grade !=null) {
 			
 			HttpSession session = request.getSession(true);
+			session.setAttribute("email", email);
 			session.setAttribute("grade", grade);
 			
-			request.getRequestDispatcher("logout.jsp").forward(request, response);
-			// 로그인 후 화면이 나와야함.
+			Member member = service.getMyInfo(email);
+
+			if(member != null) {
+				session.setAttribute("name", member.getName());
+				session.setAttribute("company", member.getCompany());
+				session.setAttribute("password", member.getPassword());
+				session.setAttribute("mobile", member.getMobile());
+			}
+			request.getRequestDispatcher("mainService.jsp").forward(request, response);
+			
 			System.out.println("로그인 성공");
 		} else {
 			request.setAttribute("message", "로그인에 실패했습니다.");
@@ -352,21 +409,29 @@ public class MemberServiceController extends HttpServlet {
 	private void join(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("\n## 회원가입 요청");
 		
+		String originCode =code  ;
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String confirmPassword = request.getParameter("confirmPassword");
+		String comparedCode = request.getParameter("code");
 		String name = request.getParameter("name");
 		String mobile = request.getParameter("mobile");
 		String company = request.getParameter("company");
 		
-		if(! password.equals(confirmPassword)) {
+		if(! password.equals(confirmPassword) ) {
 			String message = "비밀번호를 확인해 주세요.";
 			request.setAttribute("message", message);
 			RequestDispatcher nextView = request.getRequestDispatcher("error.jsp");
 			nextView.forward(request, response);
 			return ;
 		}
-		
+		if(!originCode.equals(comparedCode) || comparedCode == null) {
+			String message = "인증 코드를 확인해주세요.";
+			request.setAttribute("message", message);
+			RequestDispatcher nextView = request.getRequestDispatcher("error.jsp");
+			nextView.forward(request, response);
+			return ;
+		}
 		if(email==null || email.trim().length()==0)
 		{
 			String message = "이메일을 입력해주세요.";

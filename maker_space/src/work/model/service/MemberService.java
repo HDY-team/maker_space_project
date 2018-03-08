@@ -8,6 +8,7 @@
 package work.model.service;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import work.model.dao.MemberDao;
 import work.model.dto.Member;
@@ -30,6 +31,7 @@ public class MemberService {
 
    private static MemberService instance;
    private MemberDao dao;
+   private String code ;
    /**
     * 기본생성자
     */
@@ -46,6 +48,35 @@ public class MemberService {
       }
       return instance;
    }
+   
+   
+   
+   
+   public String confirmEmail(String email) {
+	   JavaMail mail= new JavaMail(email);
+	   String title="이메일 인증코드입니다";
+	   
+	   int[] numArr = new int[4];
+		StringBuffer sb = new StringBuffer();
+		for(int i=0; i<4; i++) {
+			
+			Random num = new Random();
+			
+			numArr[i] = num.nextInt(9);
+			
+			sb.append(numArr[i]);
+		}
+		
+	   
+	   code=sb.toString();
+	   String contents="코드는 " + code +"입니다";
+	   mail.sendMail(title, contents, false);
+	   
+	   return code;
+	   
+   }
+   
+   
    /**
     * 로그인 서비스 (관리자: A, 일반회원: G)
     * @param email
@@ -113,10 +144,11 @@ public class MemberService {
 		   return 0; // 가입된 메일
 	   }
 	   else {
-		   
+		   System.out.println(email);
+		   return 1; 
 	   }
-	   System.out.println(email);
-	   return 1;
+	   
+	  
    }
    /**
     * 상세정보조회서비스 (관리자)
