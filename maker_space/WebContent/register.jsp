@@ -12,7 +12,7 @@
 <meta name="author" content="">
 <title>Register</title>
 <!-- Bootstrap core CSS-->
-<link href="./Resource/mms/vendor/bootstrap/css/bootstrap.min.css"
+<link href="./Resource/mms/vendor/bootstrap/css/bootstrap2.min.css"
 	rel="stylesheet">
 <!-- Custom fonts for this template-->
 <link href="./Resource/mms/vendor/font-awesome/css/font-awesome.min.css"
@@ -52,7 +52,7 @@ $(document).ready(function(){
 	<div class="container">
 		<div class="card card-register mx-auto mt-5">
 			<div class="card-header">
-				Register an Account
+				Create an Account
 				<button type="button" class="close" aria-label="Close"
 					onclick="javascript:history.back()">
 					<span aria-hidden="true">&times;</span>
@@ -118,7 +118,7 @@ $(document).ready(function(){
 
 					<div class="text-center">
 						<input type="hidden" name="action" value="join">
-						<button type="submit" class="btn btn-primary btn-block">register</button>
+						<button type="submit" class="btn btn-primary btn-block">Sign up</button>
 
 						<a class="d-block small mt-3" href="login.jsp">Login Page</a> <a
 							class="d-block small" href="forgot-password.jsp">Forgot

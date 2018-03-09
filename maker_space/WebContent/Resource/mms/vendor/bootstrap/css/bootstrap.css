@@ -571,6 +571,13 @@ pre code {
   margin-right: auto;
   margin-left: auto;
 }
+.container2 {
+  width: 100%;
+  padding-right: 40px;
+  padding-left: 40px;
+  margin-right: auto;
+  margin-left: auto;
+}
 
 @media (min-width: 576px) {
   .container {
@@ -9169,4 +9176,14 @@ label {
 
 .pagination .page-link:hover {
   text-decoration: none;
+}
+
+.pagination {
+  dispaly: block;
+  text-align: center;
+}
+
+.pagination > li > a {
+  float: none;
+  margin-left: -5px;
 }

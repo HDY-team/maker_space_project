@@ -336,7 +336,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		try {
 			conn = factory.getConnection();
-			String sql = "delete members where email=?";
+			String sql = "delete from members where email=?";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
 			pstmt.executeUpdate();

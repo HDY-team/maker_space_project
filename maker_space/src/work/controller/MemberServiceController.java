@@ -72,6 +72,13 @@ public class MemberServiceController extends HttpServlet {
     		break;
 		}
 	}
+    /**
+     * 비밀 번호 변경 서비스
+     * 데이터 베이스에 존재하는 이메일일 경우에 인증 코드를 제공한다.
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     private void createNewPassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String email=request.getParameter("email");
     	int result = service.checkOverlap(email); // 메일이 db에 있을 떄 0 리턴
@@ -86,7 +93,13 @@ public class MemberServiceController extends HttpServlet {
     		out.close();
     	}
 	}
-    
+    /**
+     * 가입 시 사용되는 이메일 인증 메서드
+     * 데이터 베이스에 존재하지 않는 회원인 경우 인증 코드를 제공한다.
+     * @param request
+     * @param response
+     * @throws IOException
+     */
 	private void confirmEmail(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String email=request.getParameter("email");
     	int result = service.checkOverlap(email);
@@ -103,23 +116,13 @@ public class MemberServiceController extends HttpServlet {
     	
     	
     }
-    
-    
-    
-    
-    private void getAllInfoByAdmin(HttpServletRequest request, HttpServletResponse response) {
-    	System.out.println("\n## 관리자 :: 전체 회원 조회 요청");
-		
-		ArrayList<Member> members = new ArrayList<>();
-		members = service.getAllInfoByAdmin();
-		request.setAttribute("members", members);
-		
-		//request.getRequestDispatcher("allInfo.jsp").forward(request, response);
-		// 전체 정보 조회 페이지로 전송
-	}
-	private void getInfoByAdmin(HttpServletRequest request, HttpServletResponse response) {
-		
-	}
+	/**
+	 * 내 정보 조회 메서드
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void getMyInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	System.out.println("\n## 내 정보 조회 요청");
 		
@@ -275,52 +278,7 @@ public class MemberServiceController extends HttpServlet {
     	
     	
 	}
-	/**
-     * 회원 탈퇴 요청메서드 (관리자)
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException
-     */
-    private void removeMemberByAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	System.out.println("\n## 관리자 - 회원 탈퇴 요청");
-		
-		String email = request.getParameter("email");
-		int result = service.removeMemberByAdmin(email);
-		
-		if(result != 0) {
-			//탈퇴 성공
-			System.out.println("탈퇴성공");
-			String message = "탈퇴 되었습니다";
-			//회원전용 서비스 페이지 이동
-			request.setAttribute("message", message);
-			request.getRequestDispatcher("index.jsp").forward(request, response);
-		} else {
-			
-			request.setAttribute("message", "탈퇴에 실패했습니다.");
-			request.getRequestDispatcher("error.jsp").forward(request, response);
-		}	
-	}
-	/**
-     * 이메일 중복확인 메서드
-     * 데이터베이스에서 메일을 확인해 가입유무를 파악한다.
-     * @param request
-     * @param response
-     * @return
-     * @throws ServletException
-     * @throws IOException
-     *  
-     * -- 가입요청페이지에서 가입정보 입력하고
-     * -- 이메일중복요청
-     * -- 가입정보 이메일 중복 검증을 해서
-     * -- 중복이 되지 않았으면 요청시 전달받은 정보를  전체가져와서 dto 객체 담고
-     * -- dto 객체를 응답위한 정보로 설정(응답페이지에서 검증완료된 정보로 초기화 값으로 설정)
-     * -- 응답페이지를 회원가입페이지로 응답해서
-     * -- 응답페이지에서는 이메일중복검증이 완료여부를 확인해서
-     * -- 완료된 응답이면 설정되어있는 dto 객체의 속성을 가져와서
-     * -- 회원가입페이지 입력양식의 해당 항목의 value="<%= dto.getEmail() %> 기본값으로 설정
-     */
-    
+	
 	/**
      * 로그인 요청메서드
      * 세션을 이용해 로그인.
@@ -366,6 +324,7 @@ public class MemberServiceController extends HttpServlet {
 				session.setAttribute("password", member.getPassword());
 				session.setAttribute("mobile", member.getMobile());
 			}
+			
 			request.getRequestDispatcher("mainService.jsp").forward(request, response);
 			
 			System.out.println("로그인 성공");
@@ -488,7 +447,67 @@ public class MemberServiceController extends HttpServlet {
 			}
 		
 	}
-	
+	/**
+     * 관리자 전용 메서드 - 회원 탈퇴 요청메서드 
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void removeMemberByAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	System.out.println("\n## 관리자 - 회원 탈퇴 요청");
+		
+		String email = request.getParameter("email");
+		int result = service.removeMemberByAdmin(email);
+		
+		if(result != 0) {
+			//탈퇴 성공
+			System.out.println("탈퇴성공");
+			String message = "탈퇴 되었습니다";
+			//회원전용 서비스 페이지 이동
+			request.setAttribute("message", message);
+			request.getRequestDispatcher("managerPage.jsp").forward(request, response);
+		} else {
+			
+			request.setAttribute("message", "탈퇴에 실패했습니다.");
+			request.getRequestDispatcher("error.jsp").forward(request, response);
+		}	
+	}
+    /**
+     * 관리자 전용 메서드 - 전체 회원 조회
+     * @param request
+     * @param response
+     * @throws IOException 
+     * @throws ServletException 
+     */
+    private void getAllInfoByAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	System.out.println("\n## 관리자 :: 전체 회원 조회 요청");
+		
+		ArrayList<Member> members = new ArrayList<>();
+		members = service.getAllInfoByAdmin();
+		request.setAttribute("members", members);
+		
+		request.getRequestDispatcher("manageMemberAccount.jsp").forward(request, response);
+		// 전체 정보 조회 페이지로 전송
+	}
+    /**
+     * 관리자 전용 메서드 - 한명의 회원 조회
+     * 
+     * @param request
+     * @param response
+     * @throws IOException 
+     * @throws ServletException 
+     */
+	private void getInfoByAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("\n## 회원 정보 조회 요청");
+		
+		String email = request.getParameter("email");
+		
+		Member dto = service.getMyInfo(email);
+		request.setAttribute("dto", dto);
+		request.getRequestDispatcher("memberAccount.jsp").forward(request, response);
+		
+	}
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */

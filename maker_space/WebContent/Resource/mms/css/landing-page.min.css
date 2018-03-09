@@ -10,7 +10,7 @@ h1, h2, h3, h4, h5, h6 {
 header.masthead {
 	position: relative;
 	background-color: #343a40;
-	/* background: url(../img/testimonials-1.jpg) no-repeat center center; */
+	background: url(../img/bg-masthead.jpg) no-repeat center center;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -19,7 +19,7 @@ header.masthead {
 	padding-bottom: 8rem
 }
 
-header.amasthead .overlay {
+header.masthead .overlay {
 	position: absolute;
 	background-color: #212529;
 	height: 100%;
@@ -35,6 +35,8 @@ header.masthead h1 {
 
 @media ( min-width :768px) {
 	header.masthead {
+		padding-top: 12rem;
+		padding-bottom: 12rem
 	}
 	header.masthead h1 {
 		font-size: 3rem
@@ -83,11 +85,11 @@ header.masthead h1 {
 }
 
 .testimonials .testimonial-item {
-	max-width: 18rem
+	max-width: 14rem
 }
 
 .testimonials .testimonial-item img {
-	max-width: 18rem;
+	max-width: 14rem;
 	box-shadow: 0 5px 5px 0 #adb5bd
 }
 

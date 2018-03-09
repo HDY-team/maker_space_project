@@ -48,10 +48,11 @@ public class MemberService {
       }
       return instance;
    }
-   
-   
-   
-   
+   /**
+    * 이메일 인증코드 전송 메서드
+    * @param email
+    * @return
+    */
    public String confirmEmail(String email) {
 	   JavaMail mail= new JavaMail(email);
 	   String title="이메일 인증코드입니다";
@@ -66,17 +67,12 @@ public class MemberService {
 			
 			sb.append(numArr[i]);
 		}
-		
-	   
 	   code=sb.toString();
 	   String contents="코드는 " + code +"입니다";
 	   mail.sendMail(title, contents, false);
 	   
 	   return code;
-	   
    }
-   
-   
    /**
     * 로그인 서비스 (관리자: A, 일반회원: G)
     * @param email
@@ -92,11 +88,8 @@ public class MemberService {
     * @return
     */
    public int join(Member member) {
-	  
-     
       return dao.insertMember(member);
    }
-  
    /**
     * 회원탈퇴 서비스
     * @param email
@@ -135,20 +128,18 @@ public class MemberService {
       return dao.getMemberOne(email);
    }
    /**
-    * 이메일 중복체크 서비스
-    * @param email
-    * @return
+    * 이메일 중복확인 메서드
+    * 데이터베이스에서 메일을 확인해 가입유무를 파악한다.
+    * 가입된 메일일 경우 0 반환
     */
    public int checkOverlap(String email) {
 	   if(dao.getMemberOne(email)!= null) {
-		   return 0; // 가입된 메일
+		   return 0; 
 	   }
 	   else {
 		   System.out.println(email);
 		   return 1; 
 	   }
-	   
-	  
    }
    /**
     * 상세정보조회서비스 (관리자)
