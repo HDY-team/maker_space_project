@@ -76,7 +76,7 @@ public class MyUtility {
 	 * @see java.util.Locale
 	 */
 	public static String dateGenerator() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ( "yyyy.MM.dd", Locale.KOREA );
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ( "yyyy.MM.dd hh:mm", Locale.KOREA );
 		Date currentTime = new Date ();
 		String time = simpleDateFormat.format ( currentTime );
 		return time;

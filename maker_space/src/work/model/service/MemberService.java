@@ -125,6 +125,5 @@ public class MemberService {
 	public int removeMemberByAdmin(String email) {
 		return dao.removeMemberByAdmin(email);
 	}
-
-	
+   
 }

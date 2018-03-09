@@ -58,14 +58,15 @@ public class TipDao implements InterfaceBoard{
 	* @return
 	*/
 	@SuppressWarnings("resource")
-	public int registerBoard(IdeaBoard dto) {
-		// TODO Auto-generated method stub
-		int index = dto.getIndex();
+	public int registerBoard(String category, TipIdeaBoard dto) {
 		String title = dto.getTitle();
 		String content = dto.getContent();
 		String result = dto.getResult();
 		String files = dto.getFiles();
+		int hits = dto.getHits();
+		int scraps = dto.getScraps();
 		String email = dto.getEmail();
+		String writeDate = dto.getWriteDate();
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -73,20 +74,22 @@ public class TipDao implements InterfaceBoard{
 	         conn = factory.getConnection();
 	         String sql = "insert into business_boarfactory "
 		         		+ "(title, content, result, files, hits, scraps, email, write_date)"
-		         		+ "values(?, ?, ?, ?, 0, 0, ?, date_format(sysdate(),'%Y.%m.%d'))";
+		         		+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	         pstmt = conn.prepareStatement(sql);
-	         pstmt.setInt(1, index);
-	         pstmt.setString(2, title);
-	         pstmt.setString(3, content);
-	         pstmt.setString(4, result);
-	         pstmt.setString(5, files);
-	         pstmt.setString(6, email);
+	         pstmt.setString(1, title);
+	         pstmt.setString(2, content);
+	         pstmt.setString(3, result);
+	         pstmt.setString(4, files);
+	         pstmt.setInt(5, hits);
+	         pstmt.setInt(6, scraps);
+	         pstmt.setString(7, email);
+	         pstmt.setString(8, writeDate);
 	         pstmt.executeUpdate();
-	         sql = "select last_insert_id() 'business_boarfactory_idx'"; 
+	         sql = "select last_insert_id() 'business_boards_idx'"; 
 	         pstmt = conn.prepareStatement(sql);
 	         rs = pstmt.executeQuery();
 	         if(rs.next()) {
-	        	 return rs.getInt("business_boarfactory_idx");
+	        	 return rs.getInt("business_boards_idx");
 	         }
 	      }catch (SQLException e){
 	         System.out.println("Error : 글 등록 오류");
@@ -186,7 +189,8 @@ public class TipDao implements InterfaceBoard{
                   int hits = rs.getInt("hits");
                   int scraps = rs.getInt("scraps");
                   String writeDate = rs.getString("write_date");
-                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps));
+                  
+                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
                }
                return list;
            }
@@ -220,7 +224,8 @@ public class TipDao implements InterfaceBoard{
               int scraps = rs.getInt("scraps");
               String email = rs.getString("email");
               String writeDate = rs.getString("write_date");
-              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps));
+              String name = rs.getString("name");
+              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
            }
            return list;
         }catch (SQLException e){
@@ -252,7 +257,8 @@ public class TipDao implements InterfaceBoard{
               int scraps = rs.getInt("scraps");
               String email = rs.getString("email");
               String writeDate = rs.getString("write_date");
-              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps));
+              String name = rs.getString("name");
+              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
            }
            return list;
         }catch (SQLException e){
@@ -299,7 +305,8 @@ public class TipDao implements InterfaceBoard{
                   int scraps = rs.getInt("scraps");
                   String email = rs.getString("email");
                   String writeDate = rs.getString("write_date");
-                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps));
+                  String name = rs.getString("name");
+                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
                }
            }
            if(list.size() != 0) {
@@ -313,4 +320,10 @@ public class TipDao implements InterfaceBoard{
         }
         return null;
 	}
+	@Override
+	public int registerBoard(String category, IdeaBoard dto) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -89,6 +89,7 @@ public class MemberDao {
 			pstmt.setString(5, company);
 			pstmt.setString(6, grade);
 			pstmt.setInt(7, point);
+			
 			pstmt.executeUpdate();
 			return 1;
 		} catch(SQLException e){

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+	pageEncoding="EUC-KR"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,7 +43,7 @@
 
 	<!-- Navigation -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="">
-		<a class="navbar-brand" href="#">MakerSpace</a>
+		<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarColor01" aria-controls="navbarColor01"
 			aria-expanded="false" aria-label="Toggle navigation">
@@ -52,13 +52,11 @@
 
 		<div class="collapse navbar-collapse" id="navbarColor01">
 			<ul class="navbar-nav mr-auto">
-
 			</ul>
+			<h7 class="navbar-brand" ><%= session.getAttribute("company")%> <%=session.getAttribute("name")%></h7>
 			<form class="form-inline my-2 my-lg-0">
 				<button type="button" class="btn btn-secondary my-2 my-sm-0"
-					onclick="location.href='login.jsp'">Logout</button>
-
-
+					onclick="location.href='membercontroller?action=logout'">Logout</button>
 			</form>
 		</div>
 	</nav>
@@ -74,16 +72,17 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xl-9 mx-auto">
-					<h1 class="mb-5">¥ÁΩ≈¿« æ∆¿ÃµæÓ∏¶ ∞¯¿Ø«œººø‰!</h1>
+					<h1 class="mb-5">Share your Idea!</h1>
 				</div>
 				<div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-					<form>
+					<form method="post" action="boardcontroller">
 						<div class="form-row">
 							<div class="col-12 col-md-9 mb-2 mb-md-0">
 								<input type="text" class="form-control form-control-lg"
-									placeholder="# 5G # 1µÓ KT ... ">
+									name="title" placeholder="#∫Ì∑œ√º¿Œ #DB∆©¥◊ ">
 							</div>
 							<div class="col-12 col-md-3">
+								<input type="hidden" name="action" value="findTitle">
 								<button type="submit" class="btn btn-block btn-lg btn-primary">Search</button>
 							</div>
 						</div>
@@ -93,7 +92,9 @@
 		</div>
 	</header>
 
-	<!-- ≤‹∆¡ table -->
+	
+
+	<!-- ∫Ò¡Ó¥œΩ∫ Icons Grid -->
 	<label for="exampleInputEmail1">&nbsp;</label>
 	<br>
 	<label for="exampleInputEmail1">&nbsp;</label>
@@ -103,7 +104,70 @@
 	<div class="container">
 		<div class="alert alert-dismissible alert-primary">
 			<h2 class="alert-heading">
-				<a href="#" class="alert-link">ø¿¥√¿« ≤‹∆¡ BEST 5</a>
+				<h3 class="alert-link">Business</h3>
+			</h2>
+		</div>
+	</div>
+	<section class="testimonials text-center bg-light">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="testimonial-item mx-auto mb-8 mb-lg-0">
+						<img class="img-fluid rounded-circle mb-5"
+							src="./Resource/mms/img/testimonials-4.PNG" alt="">
+						<h3>
+							<a href="boardcontroller?action=getBoards&category=it" class="alert-link">IT</a>
+						</h3>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="testimonial-item mx-auto mb-5 mb-lg-0">
+						<img class="img-fluid rounded-circle mb-5"
+							src="./Resource/mms/img/testimonials-5.PNG" alt="">
+						<h3>
+							<a href="businessSalesMarketing.jsp" class="alert-link">SALES & MARKETING</a>
+						</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="testimonials text-center bg-light">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="testimonial-item mx-auto mb-5 mb-lg-0">
+						<img class="img-fluid rounded-circle mb-3"
+							src="./Resource/mms/img/testimonials-6.jpg" alt="">
+						<h3>
+							<a href="businessMedia" class="alert-link">MEDIA</a>
+						</h3>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="testimonial-item mx-auto mb-5 mb-lg-0">
+						<img class="img-fluid rounded-circle mb-3"
+							src="./Resource/mms/img/testimonials-7.png" alt="">
+						<h3>
+							<a href="businessPlus" class="alert-link">PLUS</a>
+						</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<!-- ≤‹∆¡ table -->
+	<label for="exampleInputEmail1">&nbsp;</label>
+	<br>
+	<label for="exampleInputEmail1">&nbsp;</label>
+	<br>
+	<label for="exampleInputEmail1">&nbsp;</label>
+	<br>
+	<div class="container">
+		<div class="alert alert-dismissible alert-primary">
+			<h2 class="alert-heading">
+				<a href="coolTips.jsp" class="alert-link">Monthly Tips Best 5</a>
 			</h2>
 		</div>
 	</div>
@@ -152,101 +216,44 @@
 			</tbody>
 		</table>
 	</div>
-
-	<!-- ∫Ò¡Ó¥œΩ∫ Icons Grid -->
-	<label for="exampleInputEmail1">&nbsp;</label>
-	<br>
-	<label for="exampleInputEmail1">&nbsp;</label>
-	<br>
-	<label for="exampleInputEmail1">&nbsp;</label>
-	<br>
-	<div class="container">
-		<div class="alert alert-dismissible alert-primary">
-			<h2 class="alert-heading">
-				<a href="#" class="alert-link">∫Ò¡Ó¥œΩ∫</a>
-			</h2>
-		</div>
-	</div>
-	<section class="testimonials text-center bg-light">
+	<!-- Footer -->
+	<footer class="footer bg-light">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-6">
-					<div class="testimonial-item mx-auto mb-8 mb-lg-0">
-						<img class="img-fluid rounded-circle mb-5"
-							src="./Resource/mms/img/testimonials-4.PNG" alt="">
-						<h3><a href="#" class="alert-link">IT</a></h3>
-					</div>
+				<div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+					<ul class="list-inline mb-2">
+						<li class="list-inline-item"><a href="#">About</a></li>
+						<li class="list-inline-item">&sdot;</li>
+						<li class="list-inline-item"><a href="#">Contact</a></li>
+						<li class="list-inline-item">&sdot;</li>
+						<li class="list-inline-item"><a href="#">Terms of Use</a></li>
+						<li class="list-inline-item">&sdot;</li>
+						<li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+					</ul>
+					<p class="text-muted small mb-4 mb-lg-0">&copy; Your Website
+						2018. All Rights Reserved.</p>
 				</div>
-				<div class="col-lg-6">
-					<div class="testimonial-item mx-auto mb-5 mb-lg-0">
-						<img class="img-fluid rounded-circle mb-5"
-							src="./Resource/mms/img/testimonials-5.PNG" alt="">
-						<h3><a href="#" class="alert-link">SALES / MARKETING</a></h3>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="testimonials text-center bg-light">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6">
-					<div class="testimonial-item mx-auto mb-5 mb-lg-0">
-						<img class="img-fluid rounded-circle mb-3"
-							src="./Resource/mms/img/testimonials-6.jpg" alt="">
-						<h3><a href="#" class="alert-link">MEDIA</a></h3>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="testimonial-item mx-auto mb-5 mb-lg-0">
-						<img class="img-fluid rounded-circle mb-3"
-							src="./Resource/mms/img/testimonials-7.png" alt="">
-						<h3><a href="#" class="alert-link">PLUS</a></h3>
-					</div>
+				<div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+					<ul class="list-inline mb-0">
+						<li class="list-inline-item mr-3"><a href="#"> <i
+								class="fa fa-facebook fa-2x fa-fw"></i>
+						</a></li>
+						<li class="list-inline-item mr-3"><a href="#"> <i
+								class="fa fa-twitter fa-2x fa-fw"></i>
+						</a></li>
+						<li class="list-inline-item"><a href="#"> <i
+								class="fa fa-instagram fa-2x fa-fw"></i>
+						</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
-	</section>
-	
-			<!-- Footer -->
-		<footer class="footer bg-light">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-						<ul class="list-inline mb-2">
-							<li class="list-inline-item"><a href="#">About</a></li>
-							<li class="list-inline-item">&sdot;</li>
-							<li class="list-inline-item"><a href="#">Contact</a></li>
-							<li class="list-inline-item">&sdot;</li>
-							<li class="list-inline-item"><a href="#">Terms of Use</a></li>
-							<li class="list-inline-item">&sdot;</li>
-							<li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-						</ul>
-						<p class="text-muted small mb-4 mb-lg-0">&copy; Your Website
-							2018. All Rights Reserved.</p>
-					</div>
-					<div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-						<ul class="list-inline mb-0">
-							<li class="list-inline-item mr-3"><a href="#"> <i
-									class="fa fa-facebook fa-2x fa-fw"></i>
-							</a></li>
-							<li class="list-inline-item mr-3"><a href="#"> <i
-									class="fa fa-twitter fa-2x fa-fw"></i>
-							</a></li>
-							<li class="list-inline-item"><a href="#"> <i
-									class="fa fa-instagram fa-2x fa-fw"></i>
-							</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</footer>
+	</footer>
 
-		<!-- Bootstrap core JavaScript -->
-		<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
-		<script
-			src="./Resource/mms/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
+	<script
+		src="./Resource/mms/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

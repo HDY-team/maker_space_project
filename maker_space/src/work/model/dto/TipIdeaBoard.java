@@ -28,20 +28,16 @@ public class TipIdeaBoard extends IdeaBoard {
 	 * @param writeDates
 	 */
 	public TipIdeaBoard(int index, String title, String content, String result, String files, int hits, String email,
-			String writeDate) {
-		super(index, title, content, result, files, hits, email, writeDate);
-	}
-	public TipIdeaBoard(int index, String title, String content, String result, String files, int hits, String email,
-			String writeDate, int scraps) {
-		super(index, title, content, result, files, hits, email, writeDate);
+			String writeDate, int scraps, String name) {
+		super(index, title, content, result, files, hits, email, writeDate, name);
 		this.scraps = scraps;
 	}
 	/**
 	 * 霸矫魄 积己 积己磊
 	 */
 	public TipIdeaBoard(String title, String content, String result, String files, int hits, String email,
-			String writeDate, int scraps) {
-		super(title, content, result, files, hits, email, writeDate);
+			String writeDate, int scraps, String name) {
+		super(title, content, result, files, hits, email, writeDate, name);
 		this.scraps = scraps;
 	}
 	/**

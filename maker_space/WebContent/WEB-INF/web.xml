@@ -20,7 +20,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>BoardServiceController</servlet-name>
-    <url-pattern>/board/controller</url-pattern>
+    <url-pattern>/boardcontroller</url-pattern>
   </servlet-mapping>
   
   <servlet>
@@ -30,5 +30,10 @@
   <servlet-mapping>
     <servlet-name>MemberServiceController</servlet-name>
     <url-pattern>/member/controller</url-pattern>
+    <url-pattern>/membercontroller</url-pattern>
   </servlet-mapping>
+  
+  <listener>
+      <listener-class>work.controller.InitListener</listener-class>
+   </listener>
 </web-app>

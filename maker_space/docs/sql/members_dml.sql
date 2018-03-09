@@ -4,12 +4,11 @@ use space;
 show databases;
 show tables;
 
-shows  columns from 'table 이름';	
+insert into business (business_idx, business_name) values(1, 'it');
+insert into business (business_idx, business_name) values(2, 'media');
+insert into business (business_idx, business_name) values(3, 'market');
+insert into business (business_idx, business_name) values(4, 'etc');
 
-/*
-	각각의 서비스 쿼리
-*/
-select * from members;
 -- * 회원등록
 insert into members (MEMBER_ID, MEMBER_PW, NAME, MOBILE, EMAIL, ENTRY_DATE, GRADE, POSITION)
 values ('user00', 'pass00', '이동순', '01025613350', 'donghyun3350@gmail.com', to_char(sysdate, 'yyyy.mm.dd'), 'A', '관리자2');
