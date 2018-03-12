@@ -10,7 +10,11 @@ h1, h2, h3, h4, h5, h6 {
 header.masthead {
 	position: relative;
 	background-color: #343a40;
+<<<<<<< HEAD
 	/* background: url(../img/testimonials-1.jpg) no-repeat center center; */
+=======
+	background: url(../img/bg-masthead.jpg) no-repeat center center;
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -19,7 +23,11 @@ header.masthead {
 	padding-bottom: 8rem
 }
 
+<<<<<<< HEAD
 header.amasthead .overlay {
+=======
+header.masthead .overlay {
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 	position: absolute;
 	background-color: #212529;
 	height: 100%;
@@ -35,6 +43,11 @@ header.masthead h1 {
 
 @media ( min-width :768px) {
 	header.masthead {
+<<<<<<< HEAD
+=======
+		padding-top: 12rem;
+		padding-bottom: 12rem
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 	}
 	header.masthead h1 {
 		font-size: 3rem
@@ -83,11 +96,19 @@ header.masthead h1 {
 }
 
 .testimonials .testimonial-item {
+<<<<<<< HEAD
 	max-width: 18rem
 }
 
 .testimonials .testimonial-item img {
 	max-width: 18rem;
+=======
+	max-width: 14rem
+}
+
+.testimonials .testimonial-item img {
+	max-width: 14rem;
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 	box-shadow: 0 5px 5px 0 #adb5bd
 }
 

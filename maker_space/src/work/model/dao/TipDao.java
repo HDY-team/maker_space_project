@@ -19,6 +19,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import work.model.dto.IdeaBoard;
+import work.model.dto.Member;
 import work.model.dto.TipIdeaBoard;
 import work.model.interfaces.InterfaceBoard;
 
@@ -269,6 +270,7 @@ public class TipDao implements InterfaceBoard{
         }
         return null;
 	}
+	
 	public ArrayList<IdeaBoard> findBoardHashTag(String hashTag) {
 		ResultSet rs = null;
         Connection conn =null;
@@ -324,6 +326,11 @@ public class TipDao implements InterfaceBoard{
 	public int registerBoard(String category, IdeaBoard dto) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	@Override
+	public ArrayList<IdeaBoard> findBoardTitle(int currentPage, int listSize, String title, String category) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

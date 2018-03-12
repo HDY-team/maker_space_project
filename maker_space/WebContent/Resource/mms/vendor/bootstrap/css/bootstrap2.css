@@ -229,8 +229,8 @@ table {
 }
 
 caption {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
   color: #777;
   text-align: left;
   caption-side: bottom;
@@ -571,13 +571,6 @@ pre code {
   margin-right: auto;
   margin-left: auto;
 }
-.container2 {
-  width: 100%;
-  padding-right: 40px;
-  padding-left: 40px;
-  margin-right: auto;
-  margin-left: auto;
-}
 
 @media (min-width: 576px) {
   .container {
@@ -640,7 +633,7 @@ pre code {
 .col-xl-auto {
   position: relative;
   width: 100%;
-  min-height: 1px;
+  min-height: 2px;
   padding-right: 15px;
   padding-left: 15px;
 }
@@ -3665,7 +3658,7 @@ tbody.collapse.show {
 .custom-control {
   position: relative;
   display: block;
-  min-height: 1.5rem;
+  min-height: 2rem;
   padding-left: 1.5rem;
 }
 
@@ -9176,14 +9169,4 @@ label {
 
 .pagination .page-link:hover {
   text-decoration: none;
-}
-
-.pagination {
-  dispaly: block;
-  text-align: center;
-}
-
-.pagination > li > a {
-  float: none;
-  margin-left: -5px;
 }

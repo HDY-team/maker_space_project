@@ -27,7 +27,6 @@ public class BoardService {
 	private static BoardService instance = new BoardService();
 	private BusinessDao businessDao;
 	private HashTagDao hashTagDao;
-	private MemberDao memberDao;
 
 	/**
 	 * 기본생성자
@@ -35,7 +34,6 @@ public class BoardService {
 	public BoardService() {
 		businessDao = BusinessDao.getInstance();
 		hashTagDao = HashTagDao.getInstance();
-		memberDao = MemberDao.getInstance();
 	}
 
 	/**
@@ -57,6 +55,7 @@ public class BoardService {
 	public int businessWrite(String category, IdeaBoard dto) {
 		return businessDao.registerBoard(category, dto);
 	}
+
 	/**
 	 * 글삭제 서비스
 	 * 
@@ -91,48 +90,18 @@ public class BoardService {
 		return businessDao.findBoardName(name);
 	}
 
-	public ArrayList<IdeaBoard> businessFindByTitle(String title) {
-		return businessDao.findBoardTitle(title);
-	}
-
-	public ArrayList<IdeaBoard> businessFindByContent(String content) {
-		return businessDao.findBoardContent(content);
-	}
-
-	public ArrayList<IdeaBoard> businessFindByHashTag(String hashTag) {
-		return businessDao.findBoardHashTag(hashTag);
-	}
-
-	/**
-	 * 해시태그 등록 서비스
-	 * 
-	 * @param primaryKey
-	 * @param hashTag
-	 * @return
-	 */
-	public int businssRegisterHashTag(int primaryKey, String[] hashTag) {
-		if(hashTag!=null)
-		for (int index = 0; index < hashTag.length; index++) {
-			if (hashTagDao.insertHashTag(primaryKey, hashTag[index]) == 0) {
-				return 0;
-			}
-		}
-		return 1;
-	}
-
-	public Map<String, Object> getBoards(int currentPage, String category) {
+	public Map<String, Object> businessFindByTitle(int currentPage, String title, String category) {
 		// 1. 초기값 계산
-		int totalCount = businessDao.getTotalCount();	
+		int totalCount = businessDao.getSearchTitleCount(title);
 		int pageCount = (int) Math.ceil((double) totalCount / LIST_SIZE);
 		int blockCount = (int) Math.ceil((double) pageCount / PAGE_SIZE);
 		int currentBlock = (int) Math.ceil((double) currentPage / PAGE_SIZE);
 
-		System.out.println("totalcount = "+ totalCount);
-		System.out.println("pageCount = "+ pageCount);
-		System.out.println("blockCount = "+ blockCount);
-		System.out.println("currentBlock = "+ currentBlock);
-		
-		
+		System.out.println("totalcount = " + totalCount);
+		System.out.println("pageCount = " + pageCount);
+		System.out.println("blockCount = " + blockCount);
+		System.out.println("currentBlock = " + currentBlock);
+
 		// 2. 파라미터 page 값 검증
 		if (currentPage < 1) {
 			currentPage = 1;
@@ -148,11 +117,11 @@ public class BoardService {
 		int nextPage = (currentBlock < blockCount) ? currentBlock * PAGE_SIZE + 1 : 0;
 		int endPage = (nextPage > 0) ? (beginPage - 1) + PAGE_SIZE : pageCount;
 		System.out.println("beginPage : " + beginPage + ", endPage : " + endPage);
-		System.out.println("prevPage = "+ prevPage);
-		System.out.println("nextPage = "+ nextPage);
-		System.out.println("endPage = "+ endPage);
+		System.out.println("prevPage = " + prevPage);
+		System.out.println("nextPage = " + nextPage);
+		System.out.println("endPage = " + endPage);
 		// 4. 멤버 리스트 가져오기
-		ArrayList<IdeaBoard> lists = businessDao.getBoards(currentPage, LIST_SIZE, category);
+		ArrayList<IdeaBoard> lists = businessDao.findBoardTitle(currentPage, LIST_SIZE, title, category);
 		// 5. 리스트 정보를 맵에 저장
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("lists", lists);
@@ -171,7 +140,86 @@ public class BoardService {
 		map.put("nextPage", nextPage);
 		return map;
 	}
-	public IdeaBoard getBoard(int businessBoardsIndex) {
-		return businessDao.getBoard(businessBoardsIndex);
+
+	public ArrayList<IdeaBoard> businessFindByContent(String content) {
+		return businessDao.findBoardContent(content);
+	}
+
+	public ArrayList<IdeaBoard> businessFindByHashTag(String hashTag) {
+		return businessDao.findBoardHashTag(hashTag);
+	}
+	/**
+	 * 해시태그 등록 서비스
+	 * 
+	 * @param primaryKey
+	 * @param hashTag
+	 * @return
+	 */
+	public int businssRegisterHashTag(int primaryKey, String[] hashTag) {
+		if (hashTag != null)
+			for (int index = 0; index < hashTag.length; index++) {
+				if (hashTagDao.insertHashTag(primaryKey, hashTag[index]) == 0) {
+					return 0;
+				}
+			}
+		return 1;
+	}
+
+	public Map<String, Object> getBoards(int currentPage, String category) {
+		// 1. 초기값 계산
+		int totalCount = businessDao.getTotalCount();
+		int pageCount = (int) Math.ceil((double) totalCount / LIST_SIZE);
+		int blockCount = (int) Math.ceil((double) pageCount / PAGE_SIZE);
+		int currentBlock = (int) Math.ceil((double) currentPage / PAGE_SIZE);
+
+		System.out.println("totalcount = " + totalCount);
+		System.out.println("pageCount = " + pageCount);
+		System.out.println("blockCount = " + blockCount);
+		System.out.println("currentBlock = " + currentBlock);
+
+		// 2. 파라미터 page 값 검증
+		if (currentPage < 1) {
+			currentPage = 1;
+			currentBlock = 1;
+		} else if (currentPage > pageCount) {
+			currentPage = pageCount;
+			currentBlock = (int) Math.ceil((double) currentPage / PAGE_SIZE);
+		}
+
+		// 3. view에서 페이지 리스트를 렌더링 하기위한 데이터 값 계산
+		int beginPage = currentBlock == 0 ? 1 : (currentBlock - 1) * PAGE_SIZE + 1;
+		int prevPage = (currentBlock > 1) ? (currentBlock - 1) * PAGE_SIZE : 0;
+		int nextPage = (currentBlock < blockCount) ? currentBlock * PAGE_SIZE + 1 : 0;
+		int endPage = (nextPage > 0) ? (beginPage - 1) + PAGE_SIZE : pageCount;
+		System.out.println("beginPage : " + beginPage + ", endPage : " + endPage);
+		System.out.println("prevPage = " + prevPage);
+		System.out.println("nextPage = " + nextPage);
+		System.out.println("endPage = " + endPage);
+		// 4. 멤버 리스트 가져오기
+		ArrayList<IdeaBoard> lists = businessDao.getBoards(currentPage, LIST_SIZE, category);
+		// 5. 리스트 정보를 맵에 저장
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("lists", lists);
+		// 6. 각종 페이지 정보 맵에 저장
+		map.put("totalCount", totalCount);
+		map.put("pageSize", PAGE_SIZE);
+		map.put("listSize", LIST_SIZE);
+		map.put("pageCount", pageCount);
+		map.put("blockCount", blockCount);
+		map.put("currentPage", currentPage);
+		map.put("beginPage", beginPage);
+		map.put("endPage", endPage);
+		map.put("prevPage", prevPage);
+		map.put("nextPage", nextPage);
+		map.put("nextPage", nextPage);
+		return map;
+	}
+
+	public IdeaBoard getBoard(int businessBoardsIdx, String category) {
+		return businessDao.getBoard(businessBoardsIdx, category);
+	}
+
+	public int updateHits(int businessBoardsIdx) {
+		return businessDao.updateHits(businessBoardsIdx);
 	}
 }

@@ -29,7 +29,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>MemberServiceController</servlet-name>
-    <url-pattern>/member/controller</url-pattern>
     <url-pattern>/membercontroller</url-pattern>
   </servlet-mapping>
   

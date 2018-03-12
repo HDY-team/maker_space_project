@@ -51,7 +51,7 @@ public interface InterfaceBoard {
 	 * @return
 	 */
 	public ArrayList<IdeaBoard> findBoardName(String name);
-	public ArrayList<IdeaBoard> findBoardTitle(String title);
+	public ArrayList<IdeaBoard> findBoardTitle(int currentPage, int listSize, String title, String category);
 	public ArrayList<IdeaBoard> findBoardContent(String content);
 	public ArrayList<IdeaBoard> findBoardHashTag(String hashTag);
 }

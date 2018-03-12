@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+    pageEncoding="EUC-KR"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,20 +47,19 @@
 	<!-- Navigation -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+			<% if(session.getAttribute("name")!=null) { %>
+		<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
+		<% 	}else { %>
+		<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+		<%	}  %>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarResponsive" aria-controls="navbarResponsive"
 				aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarColor01">
-				<ul class="navbar-nav mr-auto">
-
-				</ul>
-				<form class="form-inline my-2 my-lg-0">
-					<button type="button" class="btn btn-secondary my-2 my-sm-0"
-						onclick="location.href='index.jsp'">Logout</button>
-				</form>
+				<ul class="navbar-nav mr-auto">	</ul>
+				<%@include file="./include/loginInfo.jsp" %>
 			</div>
 		</div>
 	</nav>
@@ -105,51 +104,14 @@
 					<small id="fileHelp" class="form-text text-muted">File max
 						capacity</small>
 				</div>
-
 				<div class="text-center">
-					<button type="submit" class="btn btn-primary btn-lg"
-						onclick="location.href='#'">Correction</button>
-					<button type="submit" class="btn btn-primary btn-lg"
-						onclick="location.href='#'">delete</button>
+					<button type="submit" class="btn btn-primary btn-lg">Scrap</button>
 				</div>
 			</fieldset>
 		</form>
 	</div>
 
-	<!-- Footer -->
-	<footer class="footer bg-light">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-					<ul class="list-inline mb-2">
-						<li class="list-inline-item"><a href="#">About</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Contact</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Terms of Use</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-					</ul>
-					<p class="text-muted small mb-4 mb-lg-0">&copy; Your Website
-						2018. All Rights Reserved.</p>
-				</div>
-				<div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-					<ul class="list-inline mb-0">
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-facebook fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-twitter fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item"><a href="#"> <i
-								class="fa fa-instagram fa-2x fa-fw"></i>
-						</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</footer>
-
+	<%@include file="./include/footer.jsp" %>
 
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>

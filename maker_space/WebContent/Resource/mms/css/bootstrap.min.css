@@ -76,8 +76,13 @@ body {
 	font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
 		Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
 		"Segoe UI Emoji", "Segoe UI Symbol";
+<<<<<<< HEAD
 	font-size: 0.8125rem;
 	font-weight: 400;
+=======
+	font-size: 1rem;
+	font-weight: 700;
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 	line-height: 1.5;
 	color: #212529;
 	text-align: left;
@@ -2068,6 +2073,7 @@ select.form-control-sm:not ([size] ):not ([multiple] ), .input-group-sm>select.f
 	line-height: 1.5;
 	border-radius: 0.3rem
 }
+<<<<<<< HEAD
 .form-control-lg-in, .input-group-lg>.form-control, .input-group-lg>.input-group-prepend>.input-group-text,
 	.input-group-lg>.input-group-append>.input-group-text, .input-group-lg>.input-group-prepend>.btn,
 	.input-group-lg>.input-group-append>.btn {
@@ -2077,6 +2083,8 @@ select.form-control-sm:not ([size] ):not ([multiple] ), .input-group-sm>select.f
 	border-radius: 0.3rem
 }
 
+=======
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 
 select.form-control-lg:not ([size] ):not ([multiple] ), .input-group-lg>select.form-control:not
 	([size] ):not ([multiple] ), .input-group-lg>.input-group-prepend>select.input-group-text:not
@@ -2555,6 +2563,10 @@ a.btn.disabled, fieldset:disabled a.btn {
 	background-color: #fff;
 	border-color: #fff
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 .btn-secondary:hover {
 	color: #212529;
 	background-color: #ececec;
@@ -4783,9 +4795,15 @@ tbody.collapse.show {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+<<<<<<< HEAD
 	padding-left: 35%;
 	list-style: none;
 	border-radius: 0.25rem;
+=======
+	padding-left: 0;
+	list-style: none;
+	border-radius: 0.25rem
+>>>>>>> 9664d1a3f90ad2ddbbf339c43de00f2b21504e89
 }
 
 .page-link {

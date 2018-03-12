@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+	pageEncoding="EUC-KR"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,11 +43,16 @@
 </head>
 
 <body>
-
+	<%
+		String CONTEXT_PATH = application.getContextPath();
+	%>
 	<!-- Navigation -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-		<div class="container">
-			<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+			<% if(session.getAttribute("name")!=null) { %>
+		<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
+		<% 	}else { %>
+		<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+		<%	}  %>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarResponsive" aria-controls="navbarResponsive"
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -55,14 +60,9 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarColor01">
 				<ul class="navbar-nav mr-auto">
-
 				</ul>
-				<form class="form-inline my-2 my-lg-0">
-					<button type="button" class="btn btn-secondary my-2 my-sm-0"
-						onclick="location.href='index.jsp'">Logout</button>
-				</form>
+				 <%@include file="./include/loginInfo.jsp" %>
 			</div>
-		</div>
 	</nav>
 
 	<!-- Page Content -->
@@ -70,67 +70,20 @@
 		<div class="row">
 			<!-- Side Menu -->
 			<div class="col-lg-3">
-				<h1 class="my-4">Main Menu</h1>
-				<div class="list-group">
-					<a class="list-group-item">◎  Business</a> <a href="businessIt.jsp"
-						class="list-group-item">&emsp;&emsp;▶  IT</a> <a href="businessSalesMarketing.jsp"
-						class="list-group-item">&emsp;&emsp;▶  Sales / Marketing</a> <a href="businessMedia.jsp"
-						class="list-group-item">&emsp;&emsp;▶  Media</a> <a href="businessPlus.jsp"
-						class="list-group-item">&emsp;&emsp;▶  Plus</a> <a href="coolTips.jsp"
-						class="list-group-item">◎  Cool Tips</a> <a href="mypage.jsp"
-						class="list-group-item">◎  My Page</a> 
-				</div> 
+				<h1 class="my-4">My Idea</h1>
+				<%@include file="./include/sideMenu.jsp" %>
 			</div>
 			<!-- /.Side Menu -->
 
-			<!-- Search bar -->
 			<div class="col-lg-9">
-				<label for="exampleInputEmail1">&nbsp;</label> <br> <label
-					for="exampleInputEmail1">&nbsp;</label> <br>
-				<form>
-					<div class="form-row">
-						<div class="col-12 col-md-2">
-							<div class="dropdown">
-								<button type="button" class="btn btn-primary dropdown-toggle"
-									data-toggle="dropdown">선택</button>
-								<div class="dropdown-menu">
-									<a class="dropdown-item" href="#">제목</a> <a
-										class="dropdown-item" href="#">내용</a> <a class="dropdown-item"
-										href="#">작성자</a>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-12 col-md-8 mb-2 mb-md-0">
-							<input type="text" class="form-control form-control-lg"
-								placeholder="# 5G # 1등 KT ... ">
-						</div>
-
-						<div class="col-12 col-md-2">
-							<input type="button" class="btn btn-block btn-lg btn-primary"
-									onclick="location.href='search.jsp'" value="search">
-						</div>
-					</div>
-				</form>
-				<div class="form-row">
-					<div class="float-right">
-						<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
-							Tag</button>
-					</div>
-				</div>
-
-				<!-- /.Search -->
-
 				<!-- Table -->
-				<label for="exampleInputEmail1">&nbsp;</label> <br> <label
-					for="exampleInputEmail1">&nbsp;</label> <br> <label
-					for="exampleInputEmail1">&nbsp;</label> <br>
+				<h1 class="my-4">&nbsp;</h1>
 				<div class="container">
 					<ol class="breadcrumb">
-						<li class="breadcrumb-item">Business</li>
-						<li class="breadcrumb-item active">Media</li>
+						<li class="breadcrumb-item">My Page</li>
+						<li class="breadcrumb-item active">My Idea</li>
 					</ol>
-					
+
 				</div>
 				<div class="container">
 					<table class="table table-hover">
@@ -145,8 +98,7 @@
 						<tbody>
 							<tr>
 								<th scope="row">1</th>
-								<td><a href="#" class="alert-link"> 아이고 세상에 이런일이 이렇게 하니
-										정말 좋구나 만세다만세 이렇게 하다간 내</a></td>
+								<td><a href="#" class="alert-link"> 아이고 세상에 </a></td>
 								<td>황보영</td>
 								<td>11</td>
 							</tr>
@@ -210,9 +162,45 @@
 				<!-- /.Table -->
 
 				<!-- 글쓰기 버튼 -->
-				<a class="btn btn-block btn-lg btn-primary pull-right" onclick="location.href='writing.jsp'">아이디어 공유하기</a> <label
+				<a class="btn btn-block btn-lg btn-primary pull-right"
+					onclick="location.href='writing.jsp'">아이디어 공유하기</a> <label
 					for="exampleInputEmail1">&nbsp;</label> <br> <label
 					for="exampleInputEmail1">&nbsp;</label> <br>
+
+				<!-- Search bar -->
+				<form>
+					<div class="form-row">
+						<div class="col-12 col-md-2">
+							<div class="dropdown">
+								<button type="button" class="btn btn-primary dropdown-toggle"
+									data-toggle="dropdown">선택</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="#">제목</a> <a
+										class="dropdown-item" href="#">내용</a> <a class="dropdown-item"
+										href="#">작성자</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12 col-md-8 mb-2 mb-md-0">
+							<input type="text" class="form-control form-control-lg"
+								placeholder="# 5G # 1등 KT ... ">
+						</div>
+
+						<div class="col-12 col-md-2">
+							<input type="button" class="btn btn-block btn-lg btn-primary"
+								onclick="location.href='search.jsp'" value="search">
+
+						</div>
+					</div>
+				</form>
+				<div class="form-row">
+					<div class="float-right">
+						<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
+							Tag</button>
+					</div>
+				</div>
+
 
 				<!-- Paginatoin -->
 				<div class="text-center">
@@ -232,41 +220,8 @@
 			</div>
 		</div>
 	</div>
-	
-	<!-- Footer -->
-	<footer class="footer bg-light">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-					<ul class="list-inline mb-2">
-						<li class="list-inline-item"><a href="#">About</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Contact</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Terms of Use</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-					</ul>
-					<p class="text-muted small mb-4 mb-lg-0">&copy; Your Website
-						2018. All Rights Reserved.</p>
-				</div>
-				<div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-					<ul class="list-inline mb-0">
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-facebook fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-twitter fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item"><a href="#"> <i
-								class="fa fa-instagram fa-2x fa-fw"></i>
-						</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</footer>
-	
+
+	<%@include file="./include/footer.jsp" %>
 
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
@@ -275,5 +230,4 @@
 		src="./Resource/mms/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="./Resource/mms/vendor/bootstrap/js/bootstrap.min.js"></script>
 </body>
-
 </html>

@@ -138,8 +138,7 @@ public class BusinessDao implements InterfaceBoard {
 			pstmt.setString(3, result);
 			pstmt.setString(4, files);
 			pstmt.setInt(5, businessBoardsIdx);
-			pstmt.executeUpdate();
-			return 1;
+			return pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error : 글 수정 오류");
 			e.printStackTrace();
@@ -160,7 +159,7 @@ public class BusinessDao implements InterfaceBoard {
 		PreparedStatement pstmt = null;
 		try {
 			conn = factory.getConnection();
-			String sql = "delete business_boards where business_boards_idx=?";
+			String sql = "delete from business_boards where business_boards_idx=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, businessBoardsIdx);
 			pstmt.executeUpdate();
@@ -221,32 +220,54 @@ public class BusinessDao implements InterfaceBoard {
 		return null;
 	}
 
-	public ArrayList<IdeaBoard> findBoardTitle(String title) {
+	@SuppressWarnings("unused")
+	public ArrayList<IdeaBoard> findBoardTitle(int currentPage, int listSize, String title, String category) {
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-
+		ArrayList<IdeaBoard> lists = new ArrayList<IdeaBoard>();
 		try {
 			conn = factory.getConnection();
-			String sql = "select * from business_boards where title like '%?%'";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, title);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				int index = rs.getInt("business_boards_idx");
-				String content = rs.getString("content");
-				String result = rs.getString("result");
-				String files = rs.getString("files");
-				int hits = rs.getInt("hits");
-				String email = rs.getString("email");
-				String writeDate = rs.getString("write_date");
-				String name = rs.getString("name");
-				list.add(new IdeaBoard(index, title, content, result, files, hits, email, writeDate, name));
+			if (category.equals("it")) {
+				String sql = "select * from business_boards where business_idx=1 and title like ? order by business_boards_idx desc ";
+				pstmt = conn.prepareStatement(sql);
+			} else if (category.equals("media")) {
+				String sql = "select * from business_boards where business_idx=2 and title like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			} else if (category.equals("market")) {
+				String sql = "select * from business_boards where business_idx=3 and title like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			} else {
+				String sql = "select * from business_boards where business_idx=4 and title like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
 			}
-			return list;
+			pstmt.setString(1, "%" + title + "%");
+			rs = pstmt.executeQuery();
+			int abPage = (currentPage - 1) * listSize + 1;
+			if (!rs.next()) {
+				listSize = 0;
+			} else {
+				rs.absolute(abPage);
+			}
+			for (int i = 0; i < listSize; i++) {
+				if (!rs.next()) {
+					break;
+				} else {
+					
+					int businessBoardsIdx = rs.getInt("business_boards_idx");
+					String content = rs.getString("content");
+					String result = rs.getString("result");
+					String files = rs.getString("files");
+					int hits = rs.getInt("hits");
+					String email = rs.getString("email");
+					String writeDate = rs.getString("write_date");
+					String name = rs.getString("name");
+					lists.add(
+							new IdeaBoard(businessBoardsIdx, title, content, result, files, hits, email, writeDate, name));
+				}
+			}
+			return lists;
 		} catch (SQLException e) {
-			System.out.println("Error : 글 제목 검색 오류");
 			e.printStackTrace();
 		} finally {
 			factory.close(conn, pstmt, rs);
@@ -396,9 +417,14 @@ public class BusinessDao implements InterfaceBoard {
 		} finally {
 			factory.close(conn, pstmt, rs);
 		}
-		return lists;
+		return null;
 	}
 
+	/**
+	 * boards count 메서드
+	 * 
+	 * @return
+	 */
 	public int getTotalCount() {
 		ResultSet result;
 
@@ -423,6 +449,34 @@ public class BusinessDao implements InterfaceBoard {
 	}
 
 	/**
+	 * boards count 메서드
+	 * 
+	 * @return
+	 */
+	public int getSearchTitleCount(String title) {
+		ResultSet result;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = factory.getConnection();
+			String sql = "select count(*) from business_boards where title like '%?%'";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			result = pstmt.executeQuery();
+			if (result.next()) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	/**
 	 * business 테이블
 	 * 
 	 * @param tableName
@@ -430,7 +484,7 @@ public class BusinessDao implements InterfaceBoard {
 	 * @param listSize
 	 * @return
 	 */
-	public IdeaBoard getBoard(int businessBoardsIndex) {
+	public IdeaBoard getBoard(int businessBoardsIdx, String category) {
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -438,11 +492,10 @@ public class BusinessDao implements InterfaceBoard {
 			conn = factory.getConnection();
 			String sql = "select * from business_boards where business_boards_idx=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, businessBoardsIndex);
+			pstmt.setInt(1, businessBoardsIdx);
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				int businessBoardsIdx = rs.getInt("business_boards_idx");
 				String title = rs.getString("title");
 				String content = rs.getString("content");
 				String result = rs.getString("result");
@@ -451,7 +504,22 @@ public class BusinessDao implements InterfaceBoard {
 				String email = rs.getString("email");
 				String writeDate = rs.getString("write_date");
 				String name = rs.getString("name");
-				return new IdeaBoard(businessBoardsIdx, title, content, result, files, hits, email, writeDate, name);
+				if (category.equals("it")) {
+					return new IdeaBoard(1, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
+							name);
+				} else if (category.equals("media")) {
+					return new IdeaBoard(2, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
+							name);
+				} else if (category.equals("market")) {
+					return new IdeaBoard(3, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
+							name);
+				} else if (category.equals("etc")) {
+					return new IdeaBoard(4, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
+							name);
+				} else {
+					return null;
+				}
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -459,6 +527,42 @@ public class BusinessDao implements InterfaceBoard {
 			factory.close(conn, pstmt, rs);
 		}
 		return null;
+	}
+
+	/**
+	 * hits 업데이트 메서드
+	 * 
+	 * @param businessBoardsIdx
+	 * @return
+	 */
+	@SuppressWarnings("resource")
+	public int updateHits(int businessBoardsIdx) {
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = factory.getConnection();
+			String sql;
+			int hits = 0;
+			sql = "select hits from business_boards where business_boards_idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, businessBoardsIdx);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				hits = rs.getInt("hits");
+			}
+			sql = "update business_boards set " + "hits=? where business_boards_idx =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ++hits);
+			pstmt.setInt(2, businessBoardsIdx);
+			pstmt.executeUpdate();
+			return hits;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt, rs);
+		}
+		return 0;
 	}
 
 }

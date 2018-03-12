@@ -8,7 +8,6 @@
 <html lang="en">
 
 <head>
-<meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
@@ -51,29 +50,43 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+.writeBtnLoca {
+	text-algin: right;
+}
+
+.floatRight {
+	float: right;
+}
 </style>
-
 </head>
-
 <body>
-
+	<%
+		String CONTEXT_PATH = application.getContextPath();
+	%>
 	<!-- Navigation -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<%
+			if (session.getAttribute("name") != null) {
+		%>
 		<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
+		<%
+			} else {
+		%>
+		<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+		<%
+			}
+		%>
+
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			data-target="#navbarColor01" aria-controls="navbarColor01"
+			data-target="#navbarResponsive" aria-controls="navbarResponsive"
 			aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-
 		<div class="collapse navbar-collapse" id="navbarColor01">
 			<ul class="navbar-nav mr-auto">
 			</ul>
-			<h7 class="navbar-brand"><%=session.getAttribute("company")%> <%=session.getAttribute("name")%></h7>
-			<form class="form-inline my-2 my-lg-0">
-				<button type="button" class="btn btn-secondary my-2 my-sm-0"
-					onclick="location.href='membercontroller?action=logout'">Logout</button>
-			</form>
+			<%@include file="./include/loginInfo.jsp"%>
 		</div>
 	</nav>
 
@@ -82,21 +95,10 @@
 		<div class="row">
 			<!-- Side Menu -->
 			<div class="col-lg-3">
-				<h1 class="my-4">Main Menu</h1>
-				<div class="list-group">
-					<a class="list-group-item">¡Ý Business</a> <a href="businessIt.jsp"
-						class="list-group-item">&emsp;&emsp;¢º IT</a> <a
-						href="businessSalesMarketing.jsp" class="list-group-item">&emsp;&emsp;¢º
-						Sales / Marketing</a> <a href="businessMedia.jsp"
-						class="list-group-item">&emsp;&emsp;¢º Media</a> <a
-						href="businessPlus.jsp" class="list-group-item">&emsp;&emsp;¢º
-						Plus</a> <a href="coolTips.jsp" class="list-group-item">¡Ý Cool
-						Tips</a> <a href="mypage.jsp" class="list-group-item">¡Ý My Page</a>
-				</div>
+				<h1 class="my-4">IT</h1>
+				<%@include file="./include/sideMenu.jsp"%>
 			</div>
-			<!-- /.Side Menu -->
 
-			<!-- Search bar -->
 			<div class="col-lg-9">
 				<!-- Table -->
 				<label for="exampleInputEmail1">&nbsp;</label> <br> <label
@@ -109,10 +111,18 @@
 					</ol>
 				</div>
 
-				<!-- Writig Form -->
 				<div class="container">
+					<!-- writed form -->
 
+					<div class="container">
 						<fieldset>
+						<div class="floatRight">
+							<form method="post" action="write.jsp">
+								<input type="hidden" name="category" value="it"> <input
+									type="submit" class="btn btn-block-lg btn-lg btn-primary"
+									style="display: inline-block;" value="Scrap" />
+							</form>
+						</div>
 							<div class="form-group">
 								<label for="exampleSelect1">Title</label> <input type="text"
 									readonly="readonly" class="form-control" name="title"
@@ -140,43 +150,47 @@
 									class="form-text text-muted">File max capacity</small>
 							</div>
 						</fieldset>
+					</div>
+				</div>
+
+			</div>
+			<!-- Search bar -->
+			<form>
+				<div class="form-row">
+					<div class="col-12 col-md-2">
+						<select name="select" class="btn btn-secondary my-2 my-sm-0">
+							<option selected value=0>Select
+							<option value=1>ì œëª©
+							<option value=2>ë‚´ìš©
+						</select>
+					</div>
+
+					<div class="col-12 col-md-8 mb-2 mb-md-0">
+						<input type="text" class="form-control form-control-lg"
+							placeholder="# 5G # 1ë“± KT ... ">
+					</div>
+					<div class="col-12 col-md-2">
+						<button type="button" class="btn btn-secondary my-2 my-sm-0"
+							onclick="location.href='search.jsp'">Search</button>
+					</div>
+				</div>
+			</form>
+			<div class="form-row">
+				<div class="float-right">
+					<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
+						Tag</button>
 				</div>
 			</div>
+
+			<!-- /.Search -->
 		</div>
 	</div>
-	<!-- Footer -->
-	<footer class="footer bg-light">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-					<ul class="list-inline mb-2">
-						<li class="list-inline-item"><a href="#">About</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Contact</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Terms of Use</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-					</ul>
-					<p class="text-muted small mb-4 mb-lg-0">&copy; Your Website
-						2018. All Rights Reserved.</p>
-				</div>
-				<div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-					<ul class="list-inline mb-0">
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-facebook fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-twitter fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item"><a href="#"> <i
-								class="fa fa-instagram fa-2x fa-fw"></i>
-						</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</footer>
+
+	</div>
+
+
+	<%@include file="./include/footer.jsp"%>
+
 
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>

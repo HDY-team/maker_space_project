@@ -1,29 +1,26 @@
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="">
 <title>MakerSpace</title>
-
 <link rel="stylesheet" href="./Resource/mms/vendor/bootstrap/css/my.css" />
 <!-- Bootstrap core CSS -->
 <link href="./Resource/mms/vendor/bootstrap/css/bootstrap.min.css"
 	rel="stylesheet">
-
 <!-- Bootstrap side-bar menu -->
 <link href="./Resource/mms/vendor/bootstrap/css/shop-homepage.css"
 	rel="stylesheet">
-
 <!-- Custom fonts for this template -->
 <link href="./Resource/mms/vendor/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
@@ -35,7 +32,6 @@
 <link
 	href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic"
 	rel="stylesheet" type="text/css">
-
 <!-- Custom styles for this template -->
 <link href="./Resource/mms/css/landing-page.min.css" rel="stylesheet">
 <script
@@ -51,29 +47,42 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+.writeBtnLoca {
+	text-algin: right;
+}
+
+.floatRight {
+	float: right;
+}
 </style>
 
+
 </head>
-
 <body>
-
 	<!-- Navigation -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<%
+			if (session.getAttribute("name") != null) {
+		%>
 		<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
+		<%
+			} else {
+		%>
+		<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+		<%
+			}
+		%>
+
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			data-target="#navbarColor01" aria-controls="navbarColor01"
+			data-target="#navbarResponsive" aria-controls="navbarResponsive"
 			aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-
 		<div class="collapse navbar-collapse" id="navbarColor01">
 			<ul class="navbar-nav mr-auto">
 			</ul>
-			<h7 class="navbar-brand"><%=session.getAttribute("company")%> <%=session.getAttribute("name")%></h7>
-			<form class="form-inline my-2 my-lg-0">
-				<button type="button" class="btn btn-secondary my-2 my-sm-0"
-					onclick="location.href='membercontroller?action=logout'">Logout</button>
-			</form>
+			<%@include file="./include/loginInfo.jsp"%>
 		</div>
 	</nav>
 
@@ -82,21 +91,10 @@
 		<div class="row">
 			<!-- Side Menu -->
 			<div class="col-lg-3">
-				<h1 class="my-4">Main Menu</h1>
-				<div class="list-group">
-					<a class="list-group-item">◎ Business</a> <a href="businessIt.jsp"
-						class="list-group-item">&emsp;&emsp;▶ IT</a> <a
-						href="businessSalesMarketing.jsp" class="list-group-item">&emsp;&emsp;▶
-						Sales / Marketing</a> <a href="businessMedia.jsp"
-						class="list-group-item">&emsp;&emsp;▶ Media</a> <a
-						href="businessPlus.jsp" class="list-group-item">&emsp;&emsp;▶
-						Plus</a> <a href="coolTips.jsp" class="list-group-item">◎ Cool
-						Tips</a> <a href="mypage.jsp" class="list-group-item">◎ My Page</a>
-				</div>
+				<h1 class="my-4">IT</h1>
+				<%@include file="./include/sideMenu.jsp"%>
 			</div>
-			<!-- /.Side Menu -->
 
-			<!-- Search bar -->
 			<div class="col-lg-9">
 				<!-- Table -->
 				<label for="exampleInputEmail1">&nbsp;</label> <br> <label
@@ -107,6 +105,14 @@
 						<li class="breadcrumb-item">Business</li>
 						<li class="breadcrumb-item active">IT</li>
 					</ol>
+				</div>
+				<div class="floatRight">
+					<form method="post" action="write.jsp">
+						<input type="hidden" name="category"
+							value=<%=request.getAttribute("category")%>> <input
+							type="submit" class="btn btn-lg btn-primary"
+							style="display: inline-block;" value="Write" />
+					</form>
 				</div>
 				<div class="container">
 					<table class="table table-hover" style="border: solid 2px #cccccc">
@@ -132,11 +138,12 @@
 							</tfoot>
 						</c:if>
 						<tbody>
-							<c:forEach items="${map.lists}" var="dto">
+							<c:forEach items="${map.lists}" var="dto" varStatus="status">
 								<tr>
-									<td width="5"><c:out value="${dto.businessIdx}" /></td>
+									<td width="5"><c:out
+											value="${fn:length(map.lists) - status.index}" /></td>
 									<td width="250"><a
-										href="boardcontroller?action=getBoard&category=it&boardIndex=${dto.businessIdx}"><c:out
+										href="boardcontroller?action=getBoard&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.businessIdx}"><c:out
 												value="${dto.title}" /></a></td>
 									<td width="50"><c:out value="${dto.name}" /></td>
 									<td width="10"><c:out value="${dto.writeDate}" /></td>
@@ -156,7 +163,7 @@
 							</c:if>
 							<c:if test="${map.prevPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoards&page=${map.prevPage}&category=it&field=${map.field }">&laquo;</a>
+									href="boardcontroller?action=getBoards&page=${map.prevPage}&category=<%=request.getAttribute("category")%>>&field=${map.field }">&laquo;</a>
 								</li>
 							</c:if>
 							<c:if test="${map.pageCount <= 5}">
@@ -169,7 +176,7 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=it">${page}</a></li>
+												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -184,7 +191,7 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=it">${page}</a></li>
+												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -195,83 +202,49 @@
 							</c:if>
 							<c:if test="${map.nextPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoards&page=${map.nextPage}&field=${map.field }&category=it">&raquo;</a>
+									href="boardcontroller?action=getBoards&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
 								</li>
 							</c:if>
 						</ul>
 					</div>
-					<form method="post" action="write.jsp">
-						<input type="hidden" name="category" value="it"> <input
-							type="submit" class="btn btn-block-sm btn-lg btn-primary"
-							style="display: inline-block;" value="Write" />
-					</form>
-				</div>
-				<div align="center">
-					<input type="text" class="form-control-my"
-						placeholder="# 5G # 1등 KT ... "
-						style="margin-right: 20px; vertical-align: middle; display: inline-block;">
-					<button type="button" class="btn btn-primary dropdown-toggle"
-						data-toggle="dropdown">선택</button>
-					<div class="dropdown-menu" style="display: inline-block;">
-						<a class="dropdown-item" href="#">제목</a> <a class="dropdown-item"
-							href="#">내용</a> <a class="dropdown-item" href="#">작성자</a>
-					</div>
-					<input type="button" class="btn btn-block-sm btn-lg-my btn-primary"
-						onclick="location.href='search.jsp'" value="Search"
-						style="margin-right: 20px; display: inline-block;"> <label>&nbsp;</label>
-					<br>
-				</div>
 
-				<form>
-					<div align="right">
-						<button type="submit"
-							class="btn btn-block-sm btn-lg-my btn-primary"
-							style="display: inline-block;">HashTag</button>
+				</div>
+				<!-- Search bar -->
+				<form id="searchForm" name="searchForm" method="post" action="boardcontroller">
+					<div class="form-row">
+						<div class="col-12 col-md-2">
+							<select id="searchMethod" name="searchMethod"
+								class="btn btn-secondary my-2 my-sm-0">
+								<option selected value=0>title
+								<option value=1>content
+								<option value=2>name
+							</select>
+						</div>
+
+						<div class="col-12 col-md-8 mb-2 mb-md-0">
+							<input id="searchContent" type="text"
+								class="form-control form-control-lg"
+								placeholder="# 5G # 1등 KT ... ">
+						</div>
+						<div class="col-12 col-md-2">
+							<button id="searchBtn" type="button" onClick="search();"
+								class="btn btn-secondary my-2 my-sm-0">Search</button>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="float-right">
+							<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
+								Tag</button>
+						</div>
 					</div>
 				</form>
 			</div>
 		</div>
-
 	</div>
-
-
 	<!-- Footer -->
-	<footer class="footer bg-light">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-					<ul class="list-inline mb-2">
-						<li class="list-inline-item"><a href="#">About</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Contact</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Terms of Use</a></li>
-						<li class="list-inline-item">&sdot;</li>
-						<li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-					</ul>
-					<p class="text-muted small mb-4 mb-lg-0">&copy; Your Website
-						2018. All Rights Reserved.</p>
-				</div>
-				<div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-					<ul class="list-inline mb-0">
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-facebook fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item mr-3"><a href="#"> <i
-								class="fa fa-twitter fa-2x fa-fw"></i>
-						</a></li>
-						<li class="list-inline-item"><a href="#"> <i
-								class="fa fa-instagram fa-2x fa-fw"></i>
-						</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</footer>
-
+	<%@include file="./include/footer.jsp"%>
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
-	<script src="./Resource/mms/vendor/jquery/jquery.slim.min.js"></script>
 	<script
 		src="./Resource/mms/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="./Resource/mms/vendor/bootstrap/js/bootstrap.min.js"></script>

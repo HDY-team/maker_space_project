@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS hashtags;
 -- 3. ²ÜÆÁÅ×ÀÌºí °ü·Ã ÃÑ 4°³
 DROP TABLE IF EXISTS tip_boards;
 DROP TABLE IF EXISTS tip_scraps_boards;
-DROP TABLE IF EXISTS tip_my_idea_boards;
+DROP TABLE IF EXISTS tip_my_boards;
 DROP TABLE IF EXISTS tip_hashtags;
 SET foreign_key_checks = 1;
 
@@ -134,7 +134,7 @@ create table tip_scraps_boards (
 ) ENGINE = InnoDB;  
 
 -- ²ÜÆÁ ³ªÀÇ ½ºÅ©·¦ °Ô½ÃÆÇ Å×ÀÌºí
-create table tip_my_idea_boards (
+create table tip_my_boards (
 
     tip_idx int NOT NULL,
     INDEX(tip_idx),
