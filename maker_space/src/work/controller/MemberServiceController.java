@@ -15,15 +15,15 @@ import work.model.dto.Member;
 import work.model.service.MemberService;
 
 /**
- * Servlet implementation class MemberServiceController
+ * Servlet implementation class MembermemberServiceController
  */
 public class MemberServiceController extends HttpServlet {
 
 	String code;
-    private MemberService service;
+    private MemberService memberService;
 
     public MemberServiceController(){
-    	service = MemberService.getInstance();
+    	memberService = MemberService.getInstance();
 	}
     protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -81,10 +81,10 @@ public class MemberServiceController extends HttpServlet {
      */
     private void createNewPassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String email=request.getParameter("email");
-    	int result = service.checkOverlap(email); // 메일이 db에 있을 떄 0 리턴
+    	int result = memberService.checkOverlap(email); // 메일이 db에 있을 떄 0 리턴
     	PrintWriter out=response.getWriter();
     	if(result==0) {
-    		code=service.confirmEmail(email);
+    		code=memberService.confirmEmail(email);
     		out.print(code);
     		out.close();
     		
@@ -102,10 +102,10 @@ public class MemberServiceController extends HttpServlet {
      */
 	private void confirmEmail(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String email=request.getParameter("email");
-    	int result = service.checkOverlap(email);
+    	int result = memberService.checkOverlap(email);
     	PrintWriter out=response.getWriter();
     	if(result!=0) {
-    		code=service.confirmEmail(email);
+    		code=memberService.confirmEmail(email);
     		out.print(code);
     		out.close();
     		
@@ -129,7 +129,7 @@ public class MemberServiceController extends HttpServlet {
 		HttpSession session = request.getSession(false); 
 		
 		Member member = new Member();
-		member = service.getMyInfo((String)session.getAttribute("email"));
+		member = memberService.getMyInfo((String)session.getAttribute("email"));
 		//System.out.println(member.getMemberId());
 		
 		request.setAttribute("email", member.getEmail());
@@ -169,7 +169,7 @@ public class MemberServiceController extends HttpServlet {
     	System.out.println("생성 코드"+originCode +" :: 입력 코드 :"+comparedCode);
     	if(password.equals(confirmedPassword))
     	{
-    		int result = service.forgotPassword(email, password);
+    		int result = memberService.forgotPassword(email, password);
         	
         	if(result != 0) {
     			System.out.println("비밀번호 변경 성공");
@@ -214,7 +214,7 @@ public class MemberServiceController extends HttpServlet {
     	
     	System.out.println(password);
     	if(password.equals(originalPassword)) {
-    		int result = service.updateMember(email, newPassword, mobile, company);
+    		int result = memberService.updateMember(email, newPassword, mobile, company);
         	
         	if(result != 0) {
     			
@@ -260,7 +260,7 @@ public class MemberServiceController extends HttpServlet {
     		return ;
     	}
     	
-    	int result = service.removeMember(email, password);
+    	int result = memberService.removeMember(email, password);
     	
     	
     	if(result != 0) {
@@ -309,14 +309,14 @@ public class MemberServiceController extends HttpServlet {
 			return ;
 		}
 		
-		String grade = service.login(email, password);
+		String grade = memberService.login(email, password);
 		if(grade !=null) {
 			
 			HttpSession session = request.getSession(true);
 			session.setAttribute("email", email);
 			session.setAttribute("grade", grade);
 			
-			Member member = service.getMyInfo(email);
+			Member member = memberService.getMyInfo(email);
 
 			if(member != null) {
 				session.setAttribute("name", member.getName());
@@ -431,7 +431,7 @@ public class MemberServiceController extends HttpServlet {
 		}
 		
 		
-		int result =service.join(new Member(email, password, name, mobile, company));
+		int result =memberService.join(new Member(email, password, name, mobile, company));
 		System.out.println("회원가입디버깅 :: "+result+" 0 이 아니면 성공");
 		
 			if(result !=0) {
@@ -458,7 +458,7 @@ public class MemberServiceController extends HttpServlet {
     	System.out.println("\n## 관리자 - 회원 탈퇴 요청");
 		
 		String email = request.getParameter("email");
-		int result = service.removeMemberByAdmin(email);
+		int result = memberService.removeMemberByAdmin(email);
 		
 		if(result != 0) {
 			//탈퇴 성공
@@ -484,7 +484,7 @@ public class MemberServiceController extends HttpServlet {
     	System.out.println("\n## 관리자 :: 전체 회원 조회 요청");
 		
 		ArrayList<Member> members = new ArrayList<>();
-		members = service.getAllInfoByAdmin();
+		members = memberService.getAllInfoByAdmin();
 		request.setAttribute("members", members);
 		
 		request.getRequestDispatcher("manageMemberAccount.jsp").forward(request, response);
@@ -503,7 +503,7 @@ public class MemberServiceController extends HttpServlet {
 		
 		String email = request.getParameter("email");
 		
-		Member dto = service.getMyInfo(email);
+		Member dto = memberService.getMyInfo(email);
 		request.setAttribute("dto", dto);
 		request.getRequestDispatcher("memberAccount.jsp").forward(request, response);
 		

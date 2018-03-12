@@ -69,14 +69,14 @@ public class MemberDao {
 		String name = dto.getName();
 		String mobile = dto.getMobile();
 		String company = dto.getCompany();
-		String grade = "G";
-		int point = 0;
+		String grade = dto.getGrade();
+		int point = dto.getPoint();
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = factory.getConnection();
-			String sql = "insert into members values(?, ?, ?, ?, ?, ?, 0)";
+			String sql = "insert into members values(?, ?, ?, ?, ?, ?, ?)";
 			pstmt = (PreparedStatement) conn.prepareStatement(sql);
 			pstmt.setString(1, email);
 			pstmt.setString(2, password);
@@ -84,6 +84,7 @@ public class MemberDao {
 			pstmt.setString(4, mobile);
 			pstmt.setString(5, company);
 			pstmt.setString(6, grade);
+			pstmt.setInt(7, point);
 
 			pstmt.executeUpdate();
 			return 1;

@@ -29,7 +29,7 @@ public interface InterfaceBoard {
 	 * @param dto
 	 * @return
 	 */
-	public int registerBoard(IdeaBoard dto);
+	public int registerBoard(String category, IdeaBoard dto);
 	/**
 	 * 2. ¼öÁ¤
 	 * @param title
