@@ -200,7 +200,7 @@
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/it.png" alt="">
                      <h3>
-                        <a href="businessIt.jsp" class="alert-link">IT</a>
+                       <a href="boardcontroller?action=getBoards&category=it" class="alert-link">IT</a>
                      </h3>
                   </div>
                </div>

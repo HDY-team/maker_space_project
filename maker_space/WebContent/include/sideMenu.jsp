@@ -12,7 +12,7 @@ if(session.getAttribute("grade").equals("A")) {
 } else {}
 %>
 	<li class="nav-item"><a class="nav-link active">Business</a></li>
-	<li class="table-active"><a class="nav-link" href="businessIt.jsp">IT</a></li>
+	<li class="table-active"><a class="nav-link" href="boardcontroller?action=getBoards&category=it">IT</a></li>
 	<li class="table-active"><a class="nav-link"
 		href="businessSalesMarketing.jsp">Sales / Marketing</a></li>
 	<li class="table-active"><a class="nav-link"
@@ -21,15 +21,14 @@ if(session.getAttribute("grade").equals("A")) {
 		href="businessPlus.jsp">Plus</a></li>
 	<br>
 	<li class="nav-item"><a class="nav-link active"
-		href="coolTips.jsp">Cool Tips</a></li>
+		href="boardcontroller?action=getTipBoards&category=tips">Cool Tips</a></li>
 	<br>
 	<li class="nav-item"><a class="nav-link active" href="myPage.jsp">My
 			Page</a>
-	<li class="table-active"><a class="nav-link" href="myIdea.jsp">My
-			Idea</a></li>
-	<li class="table-active"><a class="nav-link" href="myScraps.jsp">My
+	<li class="table-active"><a class="nav-link" href="boardcontroller?action=getBoards&category=myIdea" >My Idea</a>
+	<li class="table-active"><a class="nav-link" href="boardcontroller?action=getBoards&category=scrap">My
 			Scraps</a></li>
-	<li class="table-active"><a class="nav-link" href="myProcess.jsp">My
+	<li class="table-active"><a class="nav-link" href="boardcontroller?action=getBoards&category=select">My
 			Process</a></li>
 	<li class="table-active"><a class="nav-link"
 		href="membercontroller?action=getMyInfo">My Account</a>

@@ -41,23 +41,17 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 </head>
-
+<
 <body>
 
 	<!-- Navigation -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 		<div class="container">
-			<%
-				if (session.getAttribute("name") != null) {
-			%>
-			<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
-			<%
-				} else {
-			%>
-			<a class="navbar-brand" href="index.jsp">MakerSpace</a>
-			<%
-				}
-			%>
+			 <% if(session.getAttribute("name")!=null) { %>
+		<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
+		<% 	}else { %>
+		<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+		<%	}  %>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarResponsive" aria-controls="navbarResponsive"
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -65,8 +59,9 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarColor01">
 				<ul class="navbar-nav mr-auto">
+
 				</ul>
-				<%@include file="./include/loginInfo.jsp" %>
+ 			<%@include file="./include/loginInfo.jsp" %>
 			</div>
 		</div>
 	</nav>
@@ -76,53 +71,49 @@
 	<div class="container">
 		<label for="exampleInputEmail1">&nbsp;</label> <br> <label
 			for="exampleInputEmail1">&nbsp;</label> <br>
-		<form>
+		<form id="writeForm" method="post" action="boardcontroller">
 			<fieldset>
 				<legend>Writing</legend>
-				<label for="exampleInputEmail1">&nbsp;</label> <br>
 				<div class="form-group">
-					<label for="exampleInputEmail1">Email address</label> <input
-						type="email" class="form-control" id="email"
-						aria-describedby="emailHelp" placeholder="Enter email">
+					<label for="exampleSelect1">Title</label> <input type="text"
+						class="form-control" name="title" placeholder="Enter title">
 				</div>
 				<div class="form-group">
-					<label for="exampleSelect1">Title</label> <input type="email"
-						class="form-control" id="title" aria-describedby="emailHelp"
-						placeholder="Enter title">
-				</div>
-				<div class="form-group">
-					<label for="exampleSelect1">Hash Tag</label> <input type="email"
-						class="form-control" id="hash_tag" aria-describedby="emailHelp"
-						placeholder="Enter hash tag">
+					<label for="exampleSelect1">Hash Tag</label> <input type="text"
+						class="form-control" name="hash_tag" placeholder="Enter hash tag">
 				</div>
 				<div class="form-group">
 					<label for="exampleTextarea">Expectation Effectiveness</label>
-					<textarea class="form-control" id="result" rows="6"
-						placeholder="Enter expectation effectiveness"></textarea>
+					<textarea class="form-control" name="result" rows="6"
+						form="writeForm" placeholder="Enter expectation effectiveness"></textarea>
 				</div>
 				<div class="form-group">
 					<label for="exampleTextarea">Content</label>
-					<textarea class="form-control" id="content" rows="10"
-						placeholder="Enter content"></textarea>
+					<textarea class="form-control" name="content" rows="10"
+						form="writeForm" placeholder="Enter content"></textarea>
 				</div>
 				<div class="form-group">
 					<label for="exampleInputFile">File input</label> <input type="file"
-						class="form-control-file" id="file" aria-describedby="fileHelp">
+						class="form-control-file" name="file" aria-describedby="fileHelp">
 					<small id="fileHelp" class="form-text text-muted">File max
 						capacity</small>
 				</div>
 				<div class="text-center">
-					<button type="submit" class="btn btn-primary btn-lg">Submit</button>
+					<input type="hidden" name="category" value=<%=request.getParameter("category")%>>
+					<input type="hidden" name="action" value="write">
+					<button type="submit" class="btn btn-block-sm btn-lg btn-primary"
+						style="display: inline-block;">Submit</button>
 				</div>
 			</fieldset>
 		</form>
 	</div>
-
+	
+	<!-- Footer -->
 	<%@include file="./include/footer.jsp" %>
-
+	<!-- /.Footer -->
+	
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
-	<script src="./Resource/mms/vendor/jquery/jquery.slim.min.js"></script>
 	<script
 		src="./Resource/mms/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="./Resource/mms/vendor/bootstrap/js/bootstrap.min.js"></script>

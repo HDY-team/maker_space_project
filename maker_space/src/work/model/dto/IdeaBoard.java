@@ -13,6 +13,7 @@ import work.util.MyUtility;
  * Idea 게시판 dto 부모클래스
  */
 public class IdeaBoard {
+	private int businessIdx;
 	/**
 	 * 멤버변수
 	 * index: 테이블 index
@@ -32,11 +33,34 @@ public class IdeaBoard {
 	private int hits;
 	private String email;
 	private String writeDate;
+	private String name;
 	/**
 	 * 기본 생성자
 	 */
 	public IdeaBoard() {
 	}	
+	/**
+	 * 상속
+	 * @param businessIdx
+	 * @param index
+	 * @param title
+	 * @param content
+	 * @param result
+	 * @param files
+	 * @param hits
+	 * @param email
+	 * @param writeDate
+	 */
+	public IdeaBoard(String title, String content, String result, String files, int hits, String email, String writeDate, String name) {
+		this.title = title;
+		this.content = content;
+		this.result = result;
+		this.files = files;
+		this.hits = hits;
+		this.email = email;
+		this.writeDate = writeDate;
+		this.name = name;
+	}
 	/**
 	 * 게시판 생성 시 생성자
 	 * @param title
@@ -47,16 +71,11 @@ public class IdeaBoard {
 	 * @param email
 	 * @param writeDate
 	 */
-	public IdeaBoard(String title, String content, String result, String files, int hits, String email,
-			String writeDate) {
-		this.title = title;
-		this.content = content;
-		this.result = result;
-		this.files = files;
-		this.hits = hits;
-		this.email = email;
-		this.writeDate = writeDate;
+	public IdeaBoard(int businessIdx, String title, String content, String result, String files, int hits, String email, String writeDate, String name) {
+		this(title, content, result, files, hits, email, writeDate, name);
+		this.businessIdx = businessIdx;
 	}
+
 	/**
 	 * 클래스 변수 전체 생성자
 	 * @param index
@@ -68,17 +87,19 @@ public class IdeaBoard {
 	 * @param email
 	 * @param write_date
 	 */
-	public IdeaBoard(int index, String title, String content, String result, String files, int hits, String email,
-			String writeDate) {
-		this(title, content, result, files, hits, email, writeDate);
+	public IdeaBoard(int businessIdx, int index, String title, String content, String result, String files, int hits, String email, String writeDate, String name) {
+		this(businessIdx, title, content, result, files, hits, email, writeDate, name);
 		this.index = index;
 	}
+	
 	/**
 	 * toString 오버라이드 Setting 
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
+		builder.append(businessIdx);
+		builder.append(", ");
 		builder.append(index);
 		builder.append(", ");
 		builder.append(title);
@@ -99,6 +120,18 @@ public class IdeaBoard {
 	/**
 	 * get/set 메서드
 	 */
+	public int getBusinessIdx() {
+		return businessIdx;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public void setBusinessIdx(int businessIdx) {
+		this.businessIdx = businessIdx;
+	}
 	public int getIndex() {
 		return index;
 	}

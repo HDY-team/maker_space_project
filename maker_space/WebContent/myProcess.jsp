@@ -1,5 +1,9 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+   pageEncoding="EUC-KR"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<% int flag =0 ; %>   
 <!DOCTYPE html>
 <html lang="en">
 
@@ -114,45 +118,105 @@
 				<!-- Table -->
 				<label for="exampleInputEmail1">&nbsp;</label> <br>
 				<div class="container">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item">My page</li>
-						<li class="breadcrumb-item active">My processing</li>
-					</ol>
-				</div>
-				<div class="container" class="jumbotron">
+					<div class="container">
+               <ol class="breadcrumb">
+                  <li class="breadcrumb-item">My page</li>
+                  <li class="breadcrumb-item active">My process</li>
+               </ol>
+
+            </div>
+				<div class="container">
 					<table class="table table-hover">
 						<thead>
 							<tr class="table-active">
-								<th scope="col">최신순</th>
-								<th scope="col">제목</th>
-								<th scope="col">작성자</th>
-								<th scope="col">조회수</th>
+								<th scope="col"></th>
+								<th scope="col">Title</th>
+								<th scope="col">Name</th>
+								<th scope="col">Write date</th>
+								<th scope="col">Hits</th>
 							</tr>
 						</thead>
+
+						<c:if test="${map.lists.size()==0 }">
+							<tfoot>
+								<tr align="center">
+									<td width="5"></td>
+									<td width="250">현재 게시글이 존재하지 않습니다!</td>
+									<td width="50"></td>
+									<td width="10"></td>
+									<td width="5"></td>
+								</tr>
+							</tfoot>
+						</c:if>
 						<tbody>
-							<tr>
-								<th scope="row">1</th>
-								<td><a href="#" class="alert-link"> 스크랩 파일이 들어와야함!</a></td>
-								<td>황보영</td>
-								<td>11</td>
-							</tr>
-							<tr>
-								<th scope="row">2</th>
-								<td><a href="#" class="alert-link">Column content</a></td>
-								<td>Column content</td>
-								<td>Column content</td>
-							</tr>
-							<tr>
-								<th scope="row">3</th>
-								<td><a href="#" class="alert-link">Column content</a></td>
-								<td>Column content</td>
-								<td>Column content</td>
-							</tr>
+							<c:forEach items="${map.lists}" var="dto">
+								<tr>
+									<td width="5"><c:out value="${dto.businessIdx}" /></td>
+									<td width="250"><a
+										href="boardcontroller?action=getBoard&category=select&boardIndex=${dto.businessIdx}"><c:out
+												value="${dto.title}" /></a></td>
+									<td width="50"><c:out value="${dto.name}" /></td>
+									<td width="10"><c:out value="${dto.writeDate}" /></td>
+									<td width="5"><c:out value="${dto.hits}" /></td>
+								</tr>
+							</c:forEach>
 						</tbody>
 					</table>
-					<button type="submit" class="btn btn-block btn-lg btn-primary"
-						onclick="location.href=myProcessing.jsp">See more</button>
 				</div>
+				<div align="center">
+					<!-- Paginatoin -->
+					<div style="display: inline-block; vertical-align: middle;">
+						<ul class="pagination">
+							<c:if test="${map.prevPage <= 0}">
+								<li class="page-item disabled"><a class="page-link">&laquo;</a>
+								</li>
+							</c:if>
+							<c:if test="${map.prevPage > 0}">
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?action=getBoard&page=${map.prevPage}&category=select&field=${map.field }">&laquo;</a>
+								</li>
+							</c:if>
+							<c:if test="${map.pageCount <= 5}">
+								<c:forEach begin="${map.beginPage}"
+									end="${map.beginPage + map.pageCount - 1}" var="page">
+									<c:choose>
+										<c:when test="${map.currentPage == page}">
+											<li class="page-item active"><a class="page-link"
+												href="#">${page}</a>
+										</c:when>
+										<c:otherwise>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?action=getBoard&page=${page}&field=${map.field}&category=select">${page}</a></li>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</c:if>
+							<c:if test="${map.pageCount > 5}">
+								<c:forEach begin="${map.beginPage}" end="${map.endPage}"
+									var="page">
+									<c:choose>
+										<c:when test="${map.currentPage == page}">
+											<li class="page-item active"><a class="page-link"
+												href="#">${page}</a>
+										</c:when>
+										<c:otherwise>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?action=getBoard&page=${page}&field=${map.field}&category=select">${page}</a></li>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</c:if>
+							<c:if test="${map.nextPage <= 0}">
+								<li class="page-item disabled"><a class="page-link">&raquo;</a>
+								</li>
+							</c:if>
+							<c:if test="${map.nextPage > 0}">
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?action=getBoard&page=${map.nextPage}&field=${map.field }&category=select">&raquo;</a>
+								</li>
+							</c:if>
+						</ul>
+					</div>
 				<!-- /.Table -->
 				<!-- Table -->
 				<label for="exampleInputEmail1">&nbsp;</label> <br> <label

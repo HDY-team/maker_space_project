@@ -32,7 +32,7 @@ $(document).ready(function(){
 	      $.ajax({
 	         "url" : 'membercontroller',
 	         "method" : 'post',
-	         "data" : "email=" + email + "&action=createNewPassword",
+	         "data" : "email=" + email + "&action=confirmEmail",
 	         success : function(data) {
 	        	alert('Success send a code'); 
 	            

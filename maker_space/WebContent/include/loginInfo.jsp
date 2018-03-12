@@ -11,6 +11,7 @@
 			<form method="post" action="membercontroller"class="form-inline my-2 my-lg-0">
          	<input type="hidden" name="action" value="logout">
             <button type="submit" class="btn btn-secondary my-2 my-sm-0">Logout</button>
+            </form>
 			<% 	}else { %>
 			<form class="form-inline my-2 my-lg-0">
 				<button type="button" class="btn btn-secondary my-2 my-sm-0"
