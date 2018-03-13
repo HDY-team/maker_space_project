@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 
 import work.model.dto.IdeaBoard;
 import work.model.dto.Member;
+import work.model.dto.TipIdeaBoard;
 import work.model.interfaces.InterfaceBoard;
 import work.model.service.MemberService;
 
@@ -79,16 +80,15 @@ public class BusinessDao implements InterfaceBoard {
 				} else if (category.equals("media")) {
 					sql = "insert into business_boards "
 							+ "(business_idx, title, content, result, files, hits, email, write_date, name)"
-							+ "values(2, ?, ?, ?, ?, ?, ?, ?, ?)";
-				} else if (category.equals("maket")) {
+							+ "values(3, ?, ?, ?, ?, ?, ?, ?, ?)";
+				} else if (category.equals("market")) {
 					sql = "insert into business_boards "
 							+ "(business_idx, title, content, result, files, hits, email, write_date, name)"
-							+ "values(3, ?, ?, ?, ?, ?, ?, ?, ?)";
+							+ "values(2, ?, ?, ?, ?, ?, ?, ?, ?)";
 				} else if (category.equals("etc")) {
 					sql = "insert into business_boards "
-							+ "(business_idx, title, content, result, files, hits, email, write_date)"
+							+ "(business_idx, title, content, result, files, hits, email, write_date, name)"
 							+ "values(4, ?, ?, ?, ?, ?, ?, ?, ?)";
-
 				} else {
 					return 0;
 				}
@@ -174,54 +174,9 @@ public class BusinessDao implements InterfaceBoard {
 	}
 
 	/**
-	 * 글 조회 기능 명세서 1) 추가 2) 수정 3) 삭제 4) 조회
-	 * 
-	 * @param name,
-	 *            title, content, hashTag
-	 * @return
+	 * 제목으로 게시판 검색
 	 */
-	@SuppressWarnings("resource")
-	public ArrayList<IdeaBoard> findBoardName(String name) {
-		ResultSet rs = null;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-
-		try {
-			conn = factory.getConnection();
-			String sql = "select email from members where name=?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, name);
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				String email = rs.getString(name);
-				sql = "select * from business_boards where email like '%?%'";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, name);
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					int index = rs.getInt("business_boards_idx");
-					String title = rs.getString("title");
-					String content = rs.getString("content");
-					String result = rs.getString("result");
-					String files = rs.getString("files");
-					int hits = rs.getInt("hits");
-					String writeDate = rs.getString("write_date");
-					list.add(new IdeaBoard(index, title, content, result, files, hits, email, writeDate, name));
-				}
-				return list;
-			}
-		} catch (SQLException e) {
-			System.out.println("Error : 글 이름 검색 오류");
-			e.printStackTrace();
-		} finally {
-			factory.close(conn, pstmt, rs);
-		}
-		return null;
-	}
-
-	@SuppressWarnings("unused")
-	public ArrayList<IdeaBoard> findBoardTitle(int currentPage, int listSize, String title, String category) {
+	public ArrayList<IdeaBoard> findBoardName(int currentPage, int listSize, String searchContent, String category) {
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -229,19 +184,22 @@ public class BusinessDao implements InterfaceBoard {
 		try {
 			conn = factory.getConnection();
 			if (category.equals("it")) {
-				String sql = "select * from business_boards where business_idx=1 and title like ? order by business_boards_idx desc ";
+				String sql = "select * from business_boards where business_idx=1 and name like ? order by business_boards_idx desc";
 				pstmt = conn.prepareStatement(sql);
-			} else if (category.equals("media")) {
-				String sql = "select * from business_boards where business_idx=2 and title like ? order by business_boards_idx desc";
-				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + searchContent + "%");
 			} else if (category.equals("market")) {
-				String sql = "select * from business_boards where business_idx=3 and title like ? order by business_boards_idx desc";
+				String sql = "select * from business_boards where business_idx=2 and name like ? order by business_boards_idx desc";
 				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + searchContent + "%");
+			} else if (category.equals("media")) {
+				String sql = "select * from business_boards where business_idx=3 and name like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + searchContent + "%");
 			} else {
 				String sql = "select * from business_boards where business_idx=4 and title like ? order by business_boards_idx desc";
 				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + searchContent + "%");
 			}
-			pstmt.setString(1, "%" + title + "%");
 			rs = pstmt.executeQuery();
 			int abPage = (currentPage - 1) * listSize + 1;
 			if (!rs.next()) {
@@ -250,21 +208,24 @@ public class BusinessDao implements InterfaceBoard {
 				rs.absolute(abPage);
 			}
 			for (int i = 0; i < listSize; i++) {
+				int businessBoardsIdx = rs.getInt("business_boards_idx");
+				int businessIdx = rs.getInt("business_idx");
+				String title = rs.getString("title");
+				String content = rs.getString("content");
+				String result = rs.getString("result");
+				String files = rs.getString("files");
+				int hits = rs.getInt("hits");
+				String email = rs.getString("email");
+				String writeDate = rs.getString("write_date");
+				String name = rs.getString("name");
+				lists.add(new IdeaBoard(businessIdx, businessBoardsIdx, title, content, result, files, hits, email,
+						writeDate, name));
 				if (!rs.next()) {
 					break;
-				} else {
-					
-					int businessBoardsIdx = rs.getInt("business_boards_idx");
-					String content = rs.getString("content");
-					String result = rs.getString("result");
-					String files = rs.getString("files");
-					int hits = rs.getInt("hits");
-					String email = rs.getString("email");
-					String writeDate = rs.getString("write_date");
-					String name = rs.getString("name");
-					lists.add(
-							new IdeaBoard(businessBoardsIdx, title, content, result, files, hits, email, writeDate, name));
 				}
+			}
+			for (int i = 0; i < lists.size(); i++) {
+				System.out.println("!!!" + lists.get(i).toString());
 			}
 			return lists;
 		} catch (SQLException e) {
@@ -275,32 +236,127 @@ public class BusinessDao implements InterfaceBoard {
 		return null;
 	}
 
-	public ArrayList<IdeaBoard> findBoardContent(String content) {
+	/**
+	 * 제목으로 게시판 검색
+	 */
+	@SuppressWarnings("unused")
+	public ArrayList<IdeaBoard> findBoardContent(int currentPage, int listSize, String searchContent, String category) {
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-
+		ArrayList<IdeaBoard> lists = new ArrayList<IdeaBoard>();
 		try {
 			conn = factory.getConnection();
-			String sql = "select * from business_boards where content like '%?%'";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, content);
+			if (category.equals("it")) {
+				String sql = "select * from business_boards where business_idx=1 and content like ? order by business_boards_idx desc ";
+				pstmt = conn.prepareStatement(sql);
+			} else if (category.equals("media")) {
+				String sql = "select * from business_boards where business_idx=3 and content like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			} else if (category.equals("market")) {
+				String sql = "select * from business_boards where business_idx=2 and content like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			} else {
+				String sql = "select * from business_boards where business_idx=4 and content like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			}
+			pstmt.setString(1, "%" + searchContent + "%");
 			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				int index = rs.getInt("business_boards_idx");
+			int abPage = (currentPage - 1) * listSize + 1;
+			if (!rs.next()) {
+				listSize = 0;
+			} else {
+				rs.absolute(abPage);
+			}
+			for (int i = 0; i < listSize; i++) {
+				int businessBoardsIdx = rs.getInt("business_boards_idx");
+				int businessIdx = rs.getInt("business_idx");
 				String title = rs.getString("title");
+				String content = rs.getString("content");
 				String result = rs.getString("result");
 				String files = rs.getString("files");
 				int hits = rs.getInt("hits");
 				String email = rs.getString("email");
 				String writeDate = rs.getString("write_date");
 				String name = rs.getString("name");
-				list.add(new IdeaBoard(index, title, content, result, files, hits, email, writeDate, name));
+				// public IdeaBoard(int businessIdx, int index, String title, String content,
+				// String result, String files, int hits, String email, String writeDate, String
+				// name)
+				lists.add(new IdeaBoard(businessIdx, businessBoardsIdx, title, content, result, files, hits, email,
+						writeDate, name));
+				if (!rs.next()) {
+					break;
+				}
 			}
-			return list;
+			for (int i = 0; i < lists.size(); i++) {
+				System.out.println("!!!" + lists.get(i).toString());
+			}
+			return lists;
 		} catch (SQLException e) {
-			System.out.println("Error : 글 내용 검색 오류");
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt, rs);
+		}
+		return null;
+	}
+
+	/**
+	 * 제목으로 게시판 검색
+	 */
+	@SuppressWarnings("unused")
+	public ArrayList<IdeaBoard> findBoardTitle(int currentPage, int listSize, String searchContent, String category) {
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ArrayList<IdeaBoard> lists = new ArrayList<IdeaBoard>();
+		try {
+			conn = factory.getConnection();
+			if (category.equals("it")) {
+				String sql = "select * from business_boards where business_idx=1 and title like ? order by business_boards_idx desc ";
+				pstmt = conn.prepareStatement(sql);
+			} else if (category.equals("media")) {
+				String sql = "select * from business_boards where business_idx=3 and title like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			} else if (category.equals("market")) {
+				String sql = "select * from business_boards where business_idx=2 and title like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			} else {
+				String sql = "select * from business_boards where business_idx=4 and title like ? order by business_boards_idx desc";
+				pstmt = conn.prepareStatement(sql);
+			}
+			pstmt.setString(1, "%" + searchContent + "%");
+			rs = pstmt.executeQuery();
+			int abPage = (currentPage - 1) * listSize + 1;
+			if (!rs.next()) {
+				listSize = 0;
+			} else {
+				rs.absolute(abPage);
+			}
+			for (int i = 0; i < listSize; i++) {
+				int businessBoardsIdx = rs.getInt("business_boards_idx");
+				int businessIdx = rs.getInt("business_idx");
+				String title = rs.getString("title");
+				String content = rs.getString("content");
+				String result = rs.getString("result");
+				String files = rs.getString("files");
+				int hits = rs.getInt("hits");
+				String email = rs.getString("email");
+				String writeDate = rs.getString("write_date");
+				String name = rs.getString("name");
+				// public IdeaBoard(int businessIdx, int index, String title, String content,
+				// String result, String files, int hits, String email, String writeDate, String
+				// name)
+				lists.add(new IdeaBoard(businessIdx, businessBoardsIdx, title, content, result, files, hits, email,
+						writeDate, name));
+				if (!rs.next()) {
+					break;
+				}
+			}
+			for (int i = 0; i < lists.size(); i++) {
+				System.out.println("!!!" + lists.get(i).toString());
+			}
+			return lists;
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			factory.close(conn, pstmt, rs);
@@ -376,10 +432,10 @@ public class BusinessDao implements InterfaceBoard {
 				String sql = "select * from business_boards where business_idx=1 order by business_boards_idx desc ";
 				pstmt = conn.prepareStatement(sql);
 			} else if (category.equals("media")) {
-				String sql = "select * from business_boards where business_idx=2 order by business_boards_idx desc";
+				String sql = "select * from business_boards where business_idx=3 order by business_boards_idx desc";
 				pstmt = conn.prepareStatement(sql);
 			} else if (category.equals("market")) {
-				String sql = "select * from business_boards where business_idx=3 order by business_boards_idx desc";
+				String sql = "select * from business_boards where business_idx=2 order by business_boards_idx desc";
 				pstmt = conn.prepareStatement(sql);
 			} else {
 				String sql = "select * from business_boards where business_idx=4 order by business_boards_idx desc";
@@ -421,21 +477,21 @@ public class BusinessDao implements InterfaceBoard {
 	}
 
 	/**
-	 * boards count 메서드
+	 * boards it count 메서드
 	 * 
 	 * @return
 	 */
-	public int getTotalCount() {
+	public int getTotalItCount() {
 		ResultSet result;
-
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 
 		try {
 			conn = factory.getConnection();
 
-			String sql = "select count(*) from business_boards";
+			String sql = "select count(*) from business_boards where business_idx=?";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 1);
 			result = pstmt.executeQuery();
 			if (result.next()) {
 				return result.getInt(1);
@@ -449,11 +505,193 @@ public class BusinessDao implements InterfaceBoard {
 	}
 
 	/**
-	 * boards count 메서드
+	 * boards it count 메서드
 	 * 
 	 * @return
 	 */
-	public int getSearchTitleCount(String title) {
+	public int getTotalMarketCount() {
+		ResultSet result;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = factory.getConnection();
+
+			String sql = "select count(*) from business_boards where business_idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 2);
+			result = pstmt.executeQuery();
+			if (result.next()) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	/**
+	 * boards it count 메서드
+	 * 
+	 * @return
+	 */
+	public int getTotalMediaCount() {
+		ResultSet result;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = factory.getConnection();
+
+			String sql = "select count(*) from business_boards where business_idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 3);
+			result = pstmt.executeQuery();
+			if (result.next()) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	/**
+	 * boards it count 메서드
+	 * 
+	 * @return
+	 */
+	public int getTotalEtcCount() {
+		ResultSet result;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = factory.getConnection();
+
+			String sql = "select count(*) from business_boards where business_idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 4);
+			result = pstmt.executeQuery();
+			if (result.next()) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	/**
+	 * boards title count 메서드
+	 * 
+	 * @return
+	 */
+	public int getSearchTitleCount(String title, String category) {
+		ResultSet result;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = factory.getConnection();
+			String sql;
+			if(category.equals("it")) {
+				sql = "select count(*) from business_boards where title like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + title + "%");
+				pstmt.setInt(2, 1);
+			} else if(category.equals("market")) {
+				sql = "select count(*) from business_boards where title like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + title + "%");
+				pstmt.setInt(2, 2);
+			} else if(category.equals("media")) {
+				sql = "select count(*) from business_boards where title like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + title + "%");
+				pstmt.setInt(2, 3);
+			} else if(category.equals("etc")) {
+				sql = "select count(*) from business_boards where title like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + title + "%");
+				pstmt.setInt(2, 4);
+			} else {
+				return 0;
+			}
+			result = pstmt.executeQuery();
+			if (result.next()) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	/**
+	 * boards content count 메서드
+	 * 
+	 * @param title
+	 * @return
+	 */
+	public int getSearchContentCount(String content, String category) {
+		ResultSet result;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			String sql;
+			conn = factory.getConnection();
+			if(category.equals("it")) {
+				sql = "select count(*) from business_boards where content like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + content + "%");
+				pstmt.setInt(2, 1);
+			} else if(category.equals("market")) {
+				sql = "select count(*) from business_boards where content like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + content + "%");
+				pstmt.setInt(2, 2);
+			} else if(category.equals("media")) {
+				sql = "select count(*) from business_boards where content like ? and business_idx";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + content + "%");
+				pstmt.setInt(2, 3);
+			} else if(category.equals("etc")) {
+				sql = "select count(*) from business_boards where content like ? and business_idx";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + content + "%");
+				pstmt.setInt(2, 4);
+			} else {
+				return 0;
+			}
+			result = pstmt.executeQuery();
+			if (result.next()) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	/**
+	 * boards name count 메서드
+	 * 
+	 * @param title
+	 * @return
+	 */
+	public int getSearchNameCount(String name, String category) {
 		ResultSet result;
 
 		Connection conn = null;
@@ -461,9 +699,30 @@ public class BusinessDao implements InterfaceBoard {
 
 		try {
 			conn = factory.getConnection();
-			String sql = "select count(*) from business_boards where title like '%?%'";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, title);
+			String sql;
+			if(category.equals("it")) {
+				sql = "select count(*) from business_boards where name like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + name + "%");
+				pstmt.setInt(2, 1);
+			} else if(category.equals("market")) {
+				sql = "select count(*) from business_boards where name like ? and business_idx=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + name + "%");
+				pstmt.setInt(2, 2);
+			} else if(category.equals("media")) {
+				sql = "select count(*) from business_boards where name like ? and business_idx";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + name + "%");
+				pstmt.setInt(2, 3);
+			} else if(category.equals("etc")) {
+				sql = "select count(*) from business_boards where name like ? and business_idx";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + name + "%");
+				pstmt.setInt(2, 4);
+			} else {
+				return 0;
+			}
 			result = pstmt.executeQuery();
 			if (result.next()) {
 				return result.getInt(1);
@@ -508,10 +767,10 @@ public class BusinessDao implements InterfaceBoard {
 					return new IdeaBoard(1, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
 							name);
 				} else if (category.equals("media")) {
-					return new IdeaBoard(2, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
+					return new IdeaBoard(3, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
 							name);
 				} else if (category.equals("market")) {
-					return new IdeaBoard(3, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
+					return new IdeaBoard(2, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
 							name);
 				} else if (category.equals("etc")) {
 					return new IdeaBoard(4, businessBoardsIdx, title, content, result, files, hits, email, writeDate,
@@ -563,6 +822,110 @@ public class BusinessDao implements InterfaceBoard {
 			factory.close(conn, pstmt, rs);
 		}
 		return 0;
+	}
+
+	public int registerMySelect(String category, int boardIdx) {
+		String sql;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = factory.getConnection();
+			System.out.println("쿼리시도 : boardIdx = " + boardIdx);
+			if (category.equals("select")) {
+				sql = "insert into select_boards" + "(business_boards_idx)" + "values (?)";
+
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, boardIdx);
+			}
+			int result = pstmt.executeUpdate();
+			return result;
+
+		} catch (SQLException e) {
+			System.out.println("Error : BusinessDao registerMySelect 에러");
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	public int getTotalTipCount() {
+		ResultSet result;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = factory.getConnection();
+
+			String sql = "select count(*) from tip_boards";
+			pstmt = conn.prepareStatement(sql);
+			result = pstmt.executeQuery();
+			if (result.next()) {
+				return result.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt);
+		}
+		return 0;
+	}
+
+	public ArrayList<TipIdeaBoard> getTipBoards(int currentPage, int listSize, String category) {
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ArrayList<TipIdeaBoard> lists = new ArrayList<TipIdeaBoard>();
+		try {
+			conn = factory.getConnection();
+
+			if (category.equals("myTips")) { // 내가 작성한 꿀팁 모아보기 게시판
+				String sql = "select tip_boards.* from tip_boards inner join tip_my_boards on tip_boards.tip_idx = tip_my_boards.tip_idx";
+				pstmt = conn.prepareStatement(sql);
+				System.out.println("쿼리 실행 끝");
+			} else if (category.equals("tips")) { // 꿀팁 전체확인 게시판
+				String sql = "select * from tip_boards order by tip_idx desc ";
+				pstmt = conn.prepareStatement(sql);
+				System.out.println("쿼리 실행 끝");
+			}
+			rs = pstmt.executeQuery();
+
+			int abPage = (currentPage - 1) * listSize + 1;
+			if (!rs.next()) {
+				listSize = 0;
+			} else {
+				rs.absolute(abPage);
+			}
+			if (!category.equals("etc")) {
+				for (int i = 0; i < listSize; i++) {
+					{
+						int tipBoardsIdx = rs.getInt("tip_idx");
+						String title = rs.getString("title");
+						String content = rs.getString("content");
+						String result = rs.getString("result");
+						String files = rs.getString("files");
+						int hits = rs.getInt("hits");
+						int scraps = rs.getInt("scrpas");
+						String email = rs.getString("email");
+						String writeDate = rs.getString("write_date");
+						String name = rs.getString("name");
+						lists.add(new TipIdeaBoard(tipBoardsIdx, title, content, result, files, hits, writeDate, email,
+								scraps, name));
+						if (!rs.next()) {
+							break;
+						}
+					}
+				}
+			}
+			return lists;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			factory.close(conn, pstmt, rs);
+		}
+		return lists;
+
 	}
 
 }

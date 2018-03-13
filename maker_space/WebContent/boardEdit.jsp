@@ -71,7 +71,7 @@
 		String content = (String) request.getAttribute("content");
 		String files = (String) request.getAttribute("files");
 	%>
-	<!-- Writig Form -->
+	<!-- edit Form -->
 	<div class="container">
 		<label for="exampleInputEmail1">&nbsp;</label> <br> <label
 			for="exampleInputEmail1">&nbsp;</label> <br>

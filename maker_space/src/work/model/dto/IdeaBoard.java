@@ -98,23 +98,34 @@ public class IdeaBoard {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
+		builder.append("businessIdx:");
 		builder.append(businessIdx);
 		builder.append(", ");
+		builder.append(" index:");
 		builder.append(index);
 		builder.append(", ");
+		builder.append(" title:");
 		builder.append(title);
 		builder.append(", ");
+		builder.append(" content:");
 		builder.append(content);
 		builder.append(", ");
+		builder.append(" result:");
 		builder.append(result);
 		builder.append(", ");
+		builder.append(" files:");
 		builder.append(files);
 		builder.append(", ");
+		builder.append(" hits:");
 		builder.append(hits);
 		builder.append(", ");
+		builder.append(" email:");
 		builder.append(email);
 		builder.append(", ");
+		builder.append(" writeDate:");
 		builder.append(writeDate);
+		builder.append(" name:");
+		builder.append(name);
 		return builder.toString();
 	}
 	/**

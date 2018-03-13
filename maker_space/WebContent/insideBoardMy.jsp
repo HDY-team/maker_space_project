@@ -121,10 +121,11 @@
 							type="submit" class="btn btn-block-lg btn-lg btn-primary"
 							style="display: inline-block;" value="Edit" />
 					</form>
+					
 					<form method="post" action="boardcontroller">
 						<input type="hidden" name="businessBoardsIdx"
 							value=<%=request.getAttribute("businessBoardsIdx")%>> <input
-							type="hidden" name="category" value="it"> <input
+							type="hidden" name="category" value=<%=request.getAttribute("category") %>> <input
 							type="hidden" name="action" value="delete"> <input
 							type="submit" class="btn btn-block-lg btn-lg btn-primary"
 							style="display: inline-block;" value="Delete" />
@@ -178,40 +179,8 @@
 						</fieldset>
 					</div>
 				</div>
-
 			</div>
-			<!-- Search bar -->
-			<form>
-				<div class="form-row">
-					<div class="col-12 col-md-2">
-						<select name="select" class="btn btn-secondary my-2 my-sm-0">
-							<option selected value=0>Select
-							<option value=1>제목
-							<option value=2>내용
-						</select>
-					</div>
-
-					<div class="col-12 col-md-8 mb-2 mb-md-0">
-						<input type="text" class="form-control form-control-lg"
-							placeholder="# 5G # 1등 KT ... ">
-					</div>
-					<div class="col-12 col-md-2">
-						<button type="button" class="btn btn-secondary my-2 my-sm-0"
-							onclick="location.href='search.jsp'">Search</button>
-					</div>
-				</div>
-			</form>
-			<div class="form-row">
-				<div class="float-right">
-					<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
-						Tag</button>
-				</div>
-			</div>
-
-			<!-- /.Search -->
 		</div>
-	</div>
-
 	</div>
 
 

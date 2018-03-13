@@ -38,7 +38,8 @@
    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script
    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
+<!-- Include jQuery Popup Overlay -->
+<link href="./Resource/popup/jquery.popupoverlay.js" rel="stylesheet">
 </head>
 
 <body class="" id="">
@@ -212,8 +213,10 @@
                </div>
                <div class="col-lg-3">
                   <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                  <a href="login.jsp">
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/sales&marketing.png" alt="">
+                        </a>
                      <h3>
                         <a href="login.jsp" class="alert-link">SALES
                            & MARKETING</a>
@@ -222,8 +225,10 @@
                </div>
                <div class="col-lg-3">
                   <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                   <a href="login.jsp">
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/media.png" alt="">
+                        </a>
                      <h3>
                         <a href="login.jsp" class="alert-link">MEDIA</a>
                      </h3>
@@ -231,8 +236,10 @@
                </div>
                <div class="col-lg-3">
                   <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                   <a href="login.jsp">
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/plus.png" alt="">
+                        </a>
                      <h3>
                         <a href="login.jsp" class="alert-link">PLUS</a>
                      </h3>

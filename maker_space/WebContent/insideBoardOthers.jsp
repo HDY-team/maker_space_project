@@ -116,13 +116,13 @@
 
 					<div class="container">
 						<fieldset>
-						<div class="floatRight">
-							<form method="post" action="write.jsp">
-								<input type="hidden" name="category" value="it"> <input
-									type="submit" class="btn btn-block-lg btn-lg btn-primary"
-									style="display: inline-block;" value="Scrap" />
-							</form>
-						</div>
+							<div class="floatRight">
+								<form method="post" action="write.jsp">
+									<input type="hidden" name="category" value="it"> <input
+										type="submit" class="btn btn-block-lg btn-lg btn-primary"
+										style="display: inline-block;" value="Scrap" />
+								</form>
+							</div>
 							<div class="form-group">
 								<label for="exampleSelect1">Title</label> <input type="text"
 									readonly="readonly" class="form-control" name="title"
@@ -152,46 +152,10 @@
 						</fieldset>
 					</div>
 				</div>
-
 			</div>
-			<!-- Search bar -->
-			<form>
-				<div class="form-row">
-					<div class="col-12 col-md-2">
-						<select name="select" class="btn btn-secondary my-2 my-sm-0">
-							<option selected value=0>Select
-							<option value=1>제목
-							<option value=2>내용
-						</select>
-					</div>
-
-					<div class="col-12 col-md-8 mb-2 mb-md-0">
-						<input type="text" class="form-control form-control-lg"
-							placeholder="# 5G # 1등 KT ... ">
-					</div>
-					<div class="col-12 col-md-2">
-						<button type="button" class="btn btn-secondary my-2 my-sm-0"
-							onclick="location.href='search.jsp'">Search</button>
-					</div>
-				</div>
-			</form>
-			<div class="form-row">
-				<div class="float-right">
-					<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
-						Tag</button>
-				</div>
-			</div>
-
-			<!-- /.Search -->
 		</div>
 	</div>
-
-	</div>
-
-
 	<%@include file="./include/footer.jsp"%>
-
-
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
 	<script src="./Resource/mms/vendor/jquery/jquery.slim.min.js"></script>

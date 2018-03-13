@@ -56,8 +56,6 @@
 	float: right;
 }
 </style>
-
-
 </head>
 <body>
 	<!-- Navigation -->
@@ -103,7 +101,7 @@
 				<div class="container">
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item">Business</li>
-						<li class="breadcrumb-item active">IT</li>
+						<li class="breadcrumb-item active"><%=request.getAttribute("category")%></li>
 					</ol>
 				</div>
 				<div class="floatRight">
@@ -141,7 +139,7 @@
 							<c:forEach items="${map.lists}" var="dto" varStatus="status">
 								<tr>
 									<td width="5"><c:out
-											value="${fn:length(map.lists) - status.index}" /></td>
+											value="${map.pageTotalCount - status.index}" /></td>
 									<td width="250"><a
 										href="boardcontroller?action=getBoard&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.businessIdx}"><c:out
 												value="${dto.title}" /></a></td>
@@ -210,7 +208,10 @@
 
 				</div>
 				<!-- Search bar -->
-				<form id="searchForm" name="searchForm" method="post" action="boardcontroller">
+				<form id="searchForm" name="searchForm" method="post"
+					action="boardcontroller">
+					<input type="hidden" name="action" value="find">
+					<input type="hidden" name="category" value=<%=request.getAttribute("category") %>>
 					<div class="form-row">
 						<div class="col-12 col-md-2">
 							<select id="searchMethod" name="searchMethod"
@@ -222,22 +223,22 @@
 						</div>
 
 						<div class="col-12 col-md-8 mb-2 mb-md-0">
-							<input id="searchContent" type="text"
+							<input id="searchContent" type="text" name="searchContent"
 								class="form-control form-control-lg"
 								placeholder="# 5G # 1µî KT ... ">
 						</div>
 						<div class="col-12 col-md-2">
-							<button id="searchBtn" type="button" onClick="search();"
+							<button id="searchBtn" type="submit"
 								class="btn btn-secondary my-2 my-sm-0">Search</button>
 						</div>
 					</div>
-					<div class="form-row">
-						<div class="float-right">
-							<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
-								Tag</button>
-						</div>
-					</div>
 				</form>
+				<div class="form-row">
+					<div class="float-right">
+						<button class="btn btn-block btn-lg btn-primary">Hash Tag</button>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>

@@ -332,5 +332,15 @@ public class TipDao implements InterfaceBoard{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public ArrayList<IdeaBoard> findBoardName(int currentPage, int listSize, String title, String category) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public ArrayList<IdeaBoard> findBoardContent(int currentPage, int listSize, String title, String category) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -5,7 +5,6 @@
 
 <head>
 
-<meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
@@ -208,29 +207,35 @@
                </div>
                <div class="col-lg-3">
                   <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                  <a href="boardcontroller?action=getBoards&category=market">
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/sales&marketing.png" alt="">
+                        </a>
                      <h3>
-                        <a href="businessSalesMarketing.jsp" class="alert-link">SALES
+                        <a href="boardcontroller?action=getBoards&category=market" class="alert-link">SALES
                            & MARKETING</a>
                      </h3>
                   </div>
                </div>
                <div class="col-lg-3">
                   <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                  <a href="boardcontroller?action=getBoards&category=media">
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/media.png" alt="">
+                       </a>
                      <h3>
-                        <a href="businessMedia.jsp" class="alert-link">MEDIA</a>
+                        <a href="boardcontroller?action=getBoards&category=media">MEDIA</a>
                      </h3>
                   </div>
                </div>
                <div class="col-lg-3">
                   <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                  <a href="boardcontroller?action=getBoards&category=etc">
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/plus.png" alt="">
+                        </a>
                      <h3>
-                        <a href="businessPlus.jsp" class="alert-link">PLUS</a>
+                        <a href="boardcontroller?action=getBoards&category=etc">PLUS</a>
                      </h3>
                   </div>
                </div>

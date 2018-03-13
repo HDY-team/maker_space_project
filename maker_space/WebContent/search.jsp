@@ -40,7 +40,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-	
+
 <style>
 .a {
 	white-space: nowrap;
@@ -57,25 +57,6 @@
 }
 </style>
 
-<script type="text/javascript">
-	$(document).ready(function(){
-		
-		$("#searchBtn").click(function(){
-			alert('hi');
-			$searchMethod = $('#searchMethod').val();
-			$searchContent = $('#searchContent');
-			console.log($searchMethod);
-			
-			$.ajax({
-				"type":"post",
-				"url":"boardcontroller",
-				"data":"action=find&searchMethod="+$searchMethod+"&serchContent="+$searchContent.val(),
-				success: function(data){
-				}
-			});
-		});
-	});
-</script>
 </head>
 <body>
 	<%
@@ -154,9 +135,9 @@
 							<c:forEach items="${map.lists}" var="dto" varStatus="status">
 								<tr>
 									<td width="5"><c:out
-											value="${fn:length(map.lists) - status.index}" /></td>
+											value="${map.pageTotalCount - status.index}" /></td>
 									<td width="250"><a
-										href="boardcontroller?action=find&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.businessIdx}"><c:out
+										href="boardcontroller?action=getBoard&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.index}"><c:out
 												value="${dto.title}" /></a></td>
 									<td width="50"><c:out value="${dto.name}" /></td>
 									<td width="10"><c:out value="${dto.writeDate}" /></td>
@@ -175,9 +156,37 @@
 								</li>
 							</c:if>
 							<c:if test="${map.prevPage > 0}">
+								<%
+									if ((int) request.getAttribute("searchMethod") == 1) {
+								%>
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=find&page=${map.prevPage}&category=<%=request.getAttribute("category")%>>&field=${map.field }">&laquo;</a>
+									href="boardcontroller?action=find&searchMethod=1&searchContent=<%=request.getAttribute("searchContent")%>&page=${map.prevPage}&category=<%=request.getAttribute("category")%>&field=${map.field }">&laquo;</a>
 								</li>
+								<%
+									} else if ((int) request.getAttribute("searchMethod") == 2) {
+								%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?action=find&searchMethod=2&searchContent=<%=request.getAttribute("searchContent")%>&page=${map.prevPage}&category=<%=request.getAttribute("category")%>&field=${map.field }">&laquo;</a>
+								</li>
+								<%
+									} else if ((int) request.getAttribute("searchMethod") == 3) {
+								%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?action=find&searchMethod=3&searchContent=<%=request.getAttribute("searchContent")%>&page=${map.prevPage}&category=<%=request.getAttribute("category")%>&field=${map.field }">&laquo;</a>
+								</li>
+								<%
+									} else if ((int) request.getAttribute("searchMethod") == 4) {
+								%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?action=find&searchMethod=4&searchContent=<%=request.getAttribute("searchContent")%>&page=${map.prevPage}&category=<%=request.getAttribute("category")%>>&field=${map.field }">&laquo;</a>
+								</li>
+								<%
+									} else{
+								%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?action=find&page=${map.prevPage}&category=<%=request.getAttribute("category")%>&field=${map.field }">&laquo;</a>
+								</li>
+								<%} %>
 							</c:if>
 							<c:if test="${map.pageCount <= 5}">
 								<c:forEach begin="${map.beginPage}"
@@ -188,8 +197,32 @@
 												href="#">${page}</a>
 										</c:when>
 										<c:otherwise>
+											<%
+												if ((int) request.getAttribute("searchMethod") == 1) {
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?searchMethod=1&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%
+												} else if ((int) request.getAttribute("searchMethod") == 2) {
+													System.out.println(request.getAttribute("searchContent"));
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>&searchMethod=2&searchContent=<%=request.getAttribute("searchContent")%>">${page}</a></li>
+											<%
+												} else if ((int) request.getAttribute("searchMethod") == 3) {
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?searchMethod=3&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%
+												} else if ((int) request.getAttribute("searchMethod") == 4) {
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?searchMethod=4&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%
+												} else{%>
 											<li class="page-item"><a class="page-link"
 												href="boardcontroller?action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%} %>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -203,8 +236,31 @@
 												href="#">${page}</a>
 										</c:when>
 										<c:otherwise>
+											<%
+												if ((int) request.getAttribute("searchMethod") == 1) {
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?searchMethod=1&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%
+												} else if ((int) request.getAttribute("searchMethod") == 2) {
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?searchMethod=2&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%
+												} else if ((int) request.getAttribute("searchMethod") == 3) {
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?searchMethod=3&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%
+												} else if ((int) request.getAttribute("searchMethod") == 4) {
+											%>
+											<li class="page-item"><a class="page-link"
+												href="boardcontroller?searchMehod=4	&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%
+												} else{%>
 											<li class="page-item"><a class="page-link"
 												href="boardcontroller?action=find&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+											<%} %>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -214,39 +270,38 @@
 								</li>
 							</c:if>
 							<c:if test="${map.nextPage > 0}">
+								<%
+												if ((int) request.getAttribute("searchMethod") == 1) {
+											%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?searchMehod=1&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
+								</li>
+								<%
+												} else if ((int) request.getAttribute("searchMethod") == 2) {
+											%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?searchMehod=2&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
+								</li>
+								<%
+												} else if ((int) request.getAttribute("searchMethod") == 3) {
+											%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?searchMehod=3&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
+								</li>
+								<%
+												} else if ((int) request.getAttribute("searchMethod") == 4) {
+											%>
+								<li class="page-item"><a class="page-link"
+									href="boardcontroller?searchMehod=4&searchContent=<%=request.getAttribute("searchContent")%>&action=find&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
+								</li>
+								<%
+												} else{%>
 								<li class="page-item"><a class="page-link"
 									href="boardcontroller?action=find&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
 								</li>
+								<%} %>
 							</c:if>
 						</ul>
-					</div>
-
-				</div>
-				<!-- Search bar -->
-				<div class="form-row">
-					<div class="col-12 col-md-2">
-						<select id="searchMethod" name="searchMethod"
-							class="btn btn-secondary my-2 my-sm-0">
-							<option selected value=0>title
-							<option value=1>content
-							<option value=2>name
-						</select>
-					</div>
-
-					<div class="col-12 col-md-8 mb-2 mb-md-0">
-						<input id="searchContent" type="text"
-							class="form-control form-control-lg"
-							placeholder="# 5G # 1µî KT ... ">
-					</div>
-					<div class="col-12 col-md-2">
-						<button id="searchBtn" type="button"
-							class="btn btn-secondary my-2 my-sm-0">Search</button>
-					</div>
-				</div>
-				<div class="form-row">
-					<div class="float-right">
-						<button type="submit" class="btn btn-block btn-lg btn-primary">Hash
-							Tag</button>
 					</div>
 				</div>
 			</div>

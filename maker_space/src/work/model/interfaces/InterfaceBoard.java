@@ -50,8 +50,8 @@ public interface InterfaceBoard {
 	 * @param name
 	 * @return
 	 */
-	public ArrayList<IdeaBoard> findBoardName(String name);
 	public ArrayList<IdeaBoard> findBoardTitle(int currentPage, int listSize, String title, String category);
-	public ArrayList<IdeaBoard> findBoardContent(String content);
+	public ArrayList<IdeaBoard> findBoardName(int currentPage, int listSize, String title, String category);
+	public ArrayList<IdeaBoard> findBoardContent(int currentPage, int listSize, String title, String category);
 	public ArrayList<IdeaBoard> findBoardHashTag(String hashTag);
 }

@@ -8,8 +8,8 @@
 package work.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
@@ -20,9 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import work.model.dto.IdeaBoard;
-import work.model.dto.Member;
 import work.model.service.BoardService;
-import work.model.service.MemberService;
 import work.util.MyUtility;
 
 /**
@@ -30,10 +28,7 @@ import work.util.MyUtility;
  */
 public class BoardServiceController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final int SEARCH_TITLE = 0;
-	private static final int SEARCH_CONTENT = 1;
-	private static final int SEARCH_NAME = 2;
-	
+
 	private BoardService boardService;
 
 	/**
@@ -45,6 +40,8 @@ public class BoardServiceController extends HttpServlet {
 
 	protected void process(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.setCharacterEncoding("EUC-KR");
+		response.setContentType("text/html;charset=EUC-KR");
 		try {
 			String action = request.getParameter("action");
 			System.out.println("Controller proccess action: " + action);
@@ -61,15 +58,6 @@ public class BoardServiceController extends HttpServlet {
 			case "find":
 				find(request, response);
 				break;
-			case "findName":
-				// findName(request, response);
-				break;
-			case "findTitle":
-				findTitle(request, response);
-				break;
-			case "findContent":
-				// findContent(request, response);
-				break;
 			case "findHashTag":
 				// findHashTag(request, response);
 				break;
@@ -82,6 +70,13 @@ public class BoardServiceController extends HttpServlet {
 			case "getBoardEdit":
 				getBoardEdit(request, response);
 				break;
+			case "select":
+				select(request, response);
+				break;
+			case "getTipBoards":
+				getTipBoards(request, response);
+				break;
+
 			default:
 				System.out.println("\n## 서비스 준비중입니다. 제공되지 않는 서비스입니다.");
 				break;
@@ -129,9 +124,45 @@ public class BoardServiceController extends HttpServlet {
 				request.setAttribute("message", "글 쓰기에 오류가 생겼습니다!");
 				request.getRequestDispatcher("error.jsp").forward(request, response);
 			}
+		} else if (category.equals("market")) {
+			businessBoardsIdx = boardService.businessWrite("market", new IdeaBoard(title, content, result, files, 0,
+					email, MyUtility.dateGenerator(), (String) session.getAttribute("name")));
+			if (businessBoardsIdx != 0) {
+				System.out.println("BoardService market boards 글쓰기 성공");
+				boardService.businssRegisterHashTag(businessBoardsIdx, hashTag);
+				getBoards(request, response);
+			} else {
+				System.out.println("BoardService market boards 글쓰기 실패");
+				request.setAttribute("message", "글 쓰기에 오류가 생겼습니다!");
+				request.getRequestDispatcher("error.jsp").forward(request, response);
+			}
+		} else if (category.equals("media")) {
+			businessBoardsIdx = boardService.businessWrite("media", new IdeaBoard(title, content, result, files, 0,
+					email, MyUtility.dateGenerator(), (String) session.getAttribute("name")));
+			if (businessBoardsIdx != 0) {
+				System.out.println("BoardService media boards 글쓰기 성공");
+				boardService.businssRegisterHashTag(businessBoardsIdx, hashTag);
+				getBoards(request, response);
+			} else {
+				System.out.println("BoardService it boards 글쓰기 실패");
+				request.setAttribute("message", "글 쓰기에 오류가 생겼습니다!");
+				request.getRequestDispatcher("error.jsp").forward(request, response);
+			}
+		} else if (category.equals("etc")) {
+			businessBoardsIdx = boardService.businessWrite("etc", new IdeaBoard(title, content, result, files, 0, email,
+					MyUtility.dateGenerator(), (String) session.getAttribute("name")));
+			if (businessBoardsIdx != 0) {
+				System.out.println("BoardService etc boards 글쓰기 성공");
+				boardService.businssRegisterHashTag(businessBoardsIdx, hashTag);
+				getBoards(request, response);
+			} else {
+				System.out.println("BoardService it boards 글쓰기 실패");
+				request.setAttribute("message", "글 쓰기에 오류가 생겼습니다!");
+				request.getRequestDispatcher("error.jsp").forward(request, response);
+			}
 		}
-
 	}
+
 	/**
 	 * find 종합 서블릿
 	 * 
@@ -140,28 +171,35 @@ public class BoardServiceController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected void find(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
+	protected void find(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("\n## 검색 요청 서비스");
-		/**
-		 * 1) 제목
-		 * 2) 내용
-		 * 3) 작성자
-		 */
+		System.out.println("searchMethod:" + request.getParameter("searchMethod"));
+		System.out.println("searchContent:" + request.getParameter("searchContent"));
 		int searchMethod = Integer.parseInt(request.getParameter("searchMethod"));
-		System.out.println("searchMethod: " + searchMethod);
-		if(searchMethod == SEARCH_TITLE) {
-			findTitle(request, response);
-		} else if(searchMethod == SEARCH_CONTENT) {
-			//findContent(request, response);
-		} else if(searchMethod == SEARCH_NAME) {
-			//findName(request, response);
-		} 
+		String category = request.getParameter("category");
+		String searchContent = request.getParameter("searchContent");
+
+		HttpSession session = request.getSession(false);
+		int page = 1;
+		if (request.getParameter("page") != null && request.getParameter("page").trim().equals("") == false) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		if (errorGenerate(request, response, searchContent, "검색어를 입력해주세요!") != true) {
+			return;
+		}
+		if (category == null) {
+			System.out.println("category is Null");
+			return;
+		}
+		Map<String, Object> map = boardService.businessFind(page, searchMethod, searchContent, category);
+		map.put("sessionName", session.getAttribute("name"));
+		request.setAttribute("map", map);
+		request.setAttribute("searchMethod", searchMethod);
+		request.setAttribute("searchContent", searchContent);
+		request.setAttribute("category", category);
+		request.getRequestDispatcher("search.jsp").forward(request, response);
 		return;
 	}
-
-	
 
 	/**
 	 * 글삭제 서블렛
@@ -214,47 +252,55 @@ public class BoardServiceController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	
+
 	/**
 	 * 제목 글검색 서블렛
 	 */
-	protected void findTitle(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		System.out.println("\n## 제목글검색 요청 서비스");
-		String category = request.getParameter("category");
-		String title =  request.getParameter("searchContent");
-		HttpSession session = request.getSession(false);
-		System.out.println("//serchContent: " + title);
-		int page = 1;
-		if (request.getParameter("page") != null && request.getParameter("page").trim().equals("") == false) {
-			page = Integer.parseInt(request.getParameter("page"));
-		}
-		if (errorGenerate(request, response, title, "제목 검색어를 입력해주세요!") != true) {
-			return;
-		}
-		if (category == null) {
-			System.out.println("category is Null");
-			return;
-		}
-		Map<String, Object> map =boardService.businessFindByTitle(page, title, category);
-		System.out.println("!!!!!!!!!!!!!!!!controller:" + map);
-		map.put("sessionName", session.getAttribute("name"));
-		request.setAttribute("category", category);
-		request.setAttribute("map", map);
-		request.getRequestDispatcher("search.jsp").forward(request, response);
-		return;
-	}
+	// protected void findTitle(HttpServletRequest request, HttpServletResponse
+	// response)
+	// throws ServletException, IOException {
+	// System.out.println("\n## 제목글검색 요청 서비스");
+	// String category = request.getParameter("category");
+	// String searchContent = request.getParameter("searchContent");
+	// HttpSession session = request.getSession(false);
+	// int page = 1;
+	// if (request.getParameter("page") != null &&
+	// request.getParameter("page").trim().equals("") == false) {
+	// page = Integer.parseInt(request.getParameter("page"));
+	// }
+	// if (errorGenerate(request, response, searchContent, "제목 검색어를 입력해주세요!") !=
+	// true) {
+	// return;
+	// }
+	// if (category == null) {
+	// System.out.println("category is Null");
+	// return;
+	// }
+	// Map<String, Object> map =boardService.businessFindByTitle(page,
+	// searchContent, category);
+	// map.put("sessionName", session.getAttribute("name"));
+	// request.setAttribute("category", category);
+	// request.setAttribute("map", map);
+	// request.getRequestDispatcher("search.jsp").forward(request, response);
+	// return;
+	// }
 	protected void getBoards(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("\n## getBoards 요청 서비스");
 		String category = request.getParameter("category");
+		System.out.println("??" + category);
 		HttpSession session = request.getSession(false);
+		System.out.println("category:" + category);
 		int page = 1;
 		if (request.getParameter("page") != null && request.getParameter("page").trim().equals("") == false) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		if (category == null) {
 			System.out.println("category is Null");
+			return;
+		}
+		if (session == null) {
+			System.out.println("session is Null");
 			return;
 		}
 		Map<String, Object> map = boardService.getBoards(page, category);
@@ -279,10 +325,10 @@ public class BoardServiceController extends HttpServlet {
 		String category = request.getParameter("category");
 		HttpSession session = request.getSession(false);
 		int businessBoardsIdx = Integer.parseInt(request.getParameter("businessBoardsIdx"));
-
+		System.out.println("getBoard category: " + category);
+		System.out.println("getBoard businessBoardsIdx: " + businessBoardsIdx);
 		IdeaBoard ideaBoard = boardService.getBoard(businessBoardsIdx, category);
 		if (ideaBoard != null) {
-			System.out.println(">>>getBoard: " + ideaBoard.getIndex());
 			request.setAttribute("businessBoardsIdx", ideaBoard.getIndex());
 			request.setAttribute("title", ideaBoard.getTitle());
 			request.setAttribute("content", ideaBoard.getTitle());
@@ -296,10 +342,11 @@ public class BoardServiceController extends HttpServlet {
 			System.out.println("BoardController getBoard 메서드 Null error");
 			return;
 		}
-
-		int hits = boardService.updateHits(businessBoardsIdx);
-		request.setAttribute("hits", hits);
 		if (!session.getAttribute("name").equals(ideaBoard.getName())) {
+			int hits = boardService.updateHits(businessBoardsIdx);
+			request.setAttribute("hits", hits);
+			request.setAttribute("category", category);
+			System.out.println("hits: " + hits);
 			request.getRequestDispatcher("insideBoardOthers.jsp").forward(request, response);
 		} else {
 			request.getRequestDispatcher("insideBoardMy.jsp").forward(request, response);
@@ -325,7 +372,6 @@ public class BoardServiceController extends HttpServlet {
 
 		IdeaBoard ideaBoard = boardService.getBoard(businessBoardsIdx, category);
 		if (ideaBoard != null) {
-			System.out.println(">>>getBoard: " + ideaBoard.getIndex());
 			request.setAttribute("businessBoardsIdx", ideaBoard.getIndex());
 			request.setAttribute("title", ideaBoard.getTitle());
 			request.setAttribute("content", ideaBoard.getTitle());
@@ -347,6 +393,70 @@ public class BoardServiceController extends HttpServlet {
 			} else {
 				request.getRequestDispatcher("insideBoardMy.jsp").forward(request, response);
 			}
+		}
+		return;
+	}
+
+	/**
+	 * 글 채택 서블렛
+	 * 
+	 * @param request
+	 * @param response
+	 */
+
+	private void select(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("\n## 글 채택 요청 서비스");
+		String category = request.getParameter("category");
+
+		int boardIdx = Integer.parseInt(request.getParameter("index"));
+		System.out.println(" 스크랩 서비스  컨트롤러 :: boardIdx : " + boardIdx);
+		if (boardIdx == 0) {
+			System.out.println("보드인덱스  0");
+			return;
+		}
+
+		int isResult = boardService.registerMySelect(category, boardIdx);
+		if (isResult != 0) {
+			System.out.println("글 채택 성공");
+			// request.getRequestDispatcher("myProcess.jsp").forward(request, response);
+			PrintWriter out = response.getWriter();
+			response.resetBuffer();
+			response.setContentType("text/html;charset=euc-kr");
+			out.println("<script language='javascript'>");
+			out.print("alert(\"");
+			out.print("채택 되었습니다.");
+			out.println("\");");
+			out.println("history.go(-1)");
+			out.println("</script>");
+			response.flushBuffer();
+
+		} else {
+			System.out.println("글 채택 실패");
+			request.setAttribute("message", "이미 가입된 회원입니다.");
+			request.getRequestDispatcher("error.jsp").forward(request, response);
+		}
+	}
+
+	protected void getTipBoards(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("\n## getTipBoards 요청 서비스");
+		HttpSession session = request.getSession(false);
+		String category = request.getParameter("category");
+		int page = 1;
+		if (request.getParameter("page") != null && request.getParameter("page").trim().equals("") == false) {
+			page = Integer.parseInt(request.getParameter("page"));
+			System.out.println(">>>" + page);
+		}
+
+		Map<String, Object> map = boardService.getTipBoards(page, category);
+		map.put("sessionName", session.getAttribute("name"));
+		request.setAttribute("map2", map);
+
+		if (category.equals("myTips")) {
+			request.getRequestDispatcher("myIdea.jsp").forward(request, response);
+		}
+		if (category.equals("tips")) {
+			request.getRequestDispatcher("coolTips.jsp").forward(request, response);
 		}
 		return;
 	}
