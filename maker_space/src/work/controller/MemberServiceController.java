@@ -287,6 +287,7 @@ public class MemberServiceController extends HttpServlet {
 			session.setAttribute("email", email);
 			session.setAttribute("grade", grade);
 			Member member = memberService.getMyInfo(email);
+			session.setAttribute("name", member.getName());
 			if(member != null) {
 				session.setAttribute("name", member.getName());
 				session.setAttribute("company", member.getCompany());

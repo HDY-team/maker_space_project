@@ -68,13 +68,16 @@ public class TipDao implements InterfaceBoard{
 		int scraps = dto.getScraps();
 		String email = dto.getEmail();
 		String writeDate = dto.getWriteDate();
+		String name = dto.getName();
+		System.out.println(dto.toString());
 		ResultSet rs = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 	      try {
+	    	  System.out.println("TIPDAO :: 쿼리시도 :");
 	         conn = factory.getConnection();
-	         String sql = "insert into business_boarfactory "
-		         		+ "(title, content, result, files, hits, scraps, email, write_date)"
+	         String sql = "insert into tip_boards "
+		         		+ "(title, content, result, files, hits, scraps, email, write_date , name)"
 		         		+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	         pstmt = conn.prepareStatement(sql);
 	         pstmt.setString(1, title);
@@ -85,21 +88,24 @@ public class TipDao implements InterfaceBoard{
 	         pstmt.setInt(6, scraps);
 	         pstmt.setString(7, email);
 	         pstmt.setString(8, writeDate);
+	         pstmt.setString(9, name);
 	         pstmt.executeUpdate();
-	         sql = "select last_insert_id() 'business_boards_idx'"; 
+	         
+	         sql = "select last_insert_id() 'tip_idx'"; 
 	         pstmt = conn.prepareStatement(sql);
 	         rs = pstmt.executeQuery();
 	         if(rs.next()) {
-	        	 return rs.getInt("business_boards_idx");
+	        	 return rs.getInt("tip_idx");
 	         }
 	      }catch (SQLException e){
-	         System.out.println("Error : 글 등록 오류");
+	         System.out.println("Error : TipDao registerTipBoard 에러");
 	         e.printStackTrace();
 	      }finally {
 	    	  factory.close(conn, pstmt, rs);
 	      }
 	      return 0;
 	}
+	
    /**
     * 글 수정 메서드
     * 변경 될 수 있는 부분
@@ -162,170 +168,175 @@ public class TipDao implements InterfaceBoard{
 	    * @param name, title, content, hashTag
 	    * @return
 	    */
-	@SuppressWarnings("resource")
-	public ArrayList<IdeaBoard> findBoardName(String name) {
-		ResultSet rs = null;
-        Connection conn =null;
-        PreparedStatement pstmt = null;
-        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-        
-        try {
-           conn = factory.getConnection();
-           String sql = "select email from members where name=?";
-           pstmt = conn.prepareStatement(sql);
-           pstmt.setString(1, name);
-           rs = pstmt.executeQuery();
-           if(rs.next()) {
-        	   String email = rs.getString(name);
-        	   sql = "select * from tip_boarfactory where email like '%?%'";
-               pstmt = conn.prepareStatement(sql);
-               pstmt.setString(1, name);
-               rs = pstmt.executeQuery();	
-               while(rs.next()) {
-            	  int index = rs.getInt("tip_idx");
-                  String title = rs.getString("title");
-                  String content = rs.getString("content");
-                  String result = rs.getString("result");
-                  String files = rs.getString("files");
-                  int hits = rs.getInt("hits");
-                  int scraps = rs.getInt("scraps");
-                  String writeDate = rs.getString("write_date");
-                  
-                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
-               }
-               return list;
-           }
-        }catch (SQLException e){
-           System.out.println("Error : 글 이름 검색 오류");
-           e.printStackTrace();
-        }finally {
-        	factory.close(conn, pstmt, rs);
-        }
-        return null;
-	}
-
-	public ArrayList<IdeaBoard> findBoardTitle(String title) {
-		ResultSet rs = null;
-        Connection conn =null;
-        PreparedStatement pstmt = null;
-        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-        
-        try {
-           conn = factory.getConnection();
-           String sql = "select * from tip_boarfactory where title like '%?%'";
-           pstmt = conn.prepareStatement(sql);
-           pstmt.setString(1, title);
-           rs = pstmt.executeQuery();	
-           while(rs.next()) {
-        	   int index = rs.getInt("tip_idx");
-              String content = rs.getString("content");
-              String result = rs.getString("result");
-              String files = rs.getString("files");
-              int hits = rs.getInt("hits");
-              int scraps = rs.getInt("scraps");
-              String email = rs.getString("email");
-              String writeDate = rs.getString("write_date");
-              String name = rs.getString("name");
-              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
-           }
-           return list;
-        }catch (SQLException e){
-           System.out.println("Error : 글 제목 검색 오류");
-           e.printStackTrace();
-        }finally {
-        	factory.close(conn, pstmt, rs);
-        }
-        return null;
-	}
-	public ArrayList<IdeaBoard> findBoardContent(String content) {
-		ResultSet rs = null;
-        Connection conn =null;
-        PreparedStatement pstmt = null;
-        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-        
-        try {
-           conn = factory.getConnection();
-           String sql = "select * from business_boarfactory where content like '%?%'";
-           pstmt = conn.prepareStatement(sql);
-           pstmt.setString(1, content);
-           rs = pstmt.executeQuery();	
-           while(rs.next()) {
-        	   int index = rs.getInt("tip_idx");
-              String title = rs.getString("title");
-              String result = rs.getString("result");
-              String files = rs.getString("files");
-              int hits = rs.getInt("hits");
-              int scraps = rs.getInt("scraps");
-              String email = rs.getString("email");
-              String writeDate = rs.getString("write_date");
-              String name = rs.getString("name");
-              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
-           }
-           return list;
-        }catch (SQLException e){
-           System.out.println("Error : 글 내용 검색 오류");
-           e.printStackTrace();
-        }finally {
-        	factory.close(conn, pstmt, rs);
-        }
-        return null;
-	}
-	
-	public ArrayList<IdeaBoard> findBoardHashTag(String hashTag) {
-		ResultSet rs = null;
-        Connection conn =null;
-        PreparedStatement pstmt = null;
-        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
-        ArrayList<Integer> indexBoarfactory = new ArrayList<Integer>();
-        Integer integer;
-        String sql;
-        try {
-           conn = factory.getConnection();
-           for(int i = 1 ; i <= 5 ; i++) {
-        	   sql = "select tip_idx from tip_hashtags where hash_tag'" + i + "'=? like '%?%'";
-               
-               pstmt = conn.prepareStatement(sql);
-               pstmt.setString(1, hashTag);
-               rs = pstmt.executeQuery();	
-               while(rs.next()) {
-            	   integer = new Integer(rs.getInt("tip_idx"));
-            	   indexBoarfactory.add(integer);
-               }
-           }
-           for(int i = 0 ; i < indexBoarfactory.size(); i++) {
-        	   sql = "select * from tip_boarfactory where tip_idx =?";
-               pstmt = conn.prepareStatement(sql);
-               pstmt.setInt(1, indexBoarfactory.get(i).intValue());
-               rs = pstmt.executeQuery();	
-               while(rs.next()) {
-                  int index = rs.getInt("tip_idx");
-                  String title = rs.getString("title");
-                  String content = rs.getString("content");
-                  String result = rs.getString("result");
-                  String files = rs.getString("files");
-                  int hits = rs.getInt("hits");
-                  int scraps = rs.getInt("scraps");
-                  String email = rs.getString("email");
-                  String writeDate = rs.getString("write_date");
-                  String name = rs.getString("name");
-                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, scraps, name));
-               }
-           }
-           if(list.size() != 0) {
-        	   return list;
-           }
-        }catch (SQLException e){
-           System.out.println("Error : 글 해시태그  이름 검색 오류");
-           e.printStackTrace();
-        }finally {
-        	factory.close(conn, pstmt, rs);
-        }
-        return null;
-	}
+//	@SuppressWarnings("resource")
+//	public ArrayList<IdeaBoard> findBoardName(String name) {
+//		ResultSet rs = null;
+//        Connection conn =null;
+//        PreparedStatement pstmt = null;
+//        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
+//        
+//        try {
+//           conn = factory.getConnection();
+//           String sql = "select email from members where name=?";
+//           pstmt = conn.prepareStatement(sql);
+//           pstmt.setString(1, name);
+//           rs = pstmt.executeQuery();
+//           if(rs.next()) {
+//        	   String email = rs.getString(name);
+//        	   sql = "select * from tip_boarfactory where email like '%?%'";
+//               pstmt = conn.prepareStatement(sql);
+//               pstmt.setString(1, name);
+//               rs = pstmt.executeQuery();	
+//               while(rs.next()) {
+//            	  int index = rs.getInt("tip_idx");
+//                  String title = rs.getString("title");
+//                  String content = rs.getString("content");
+//                  String result = rs.getString("result");
+//                  String files = rs.getString("files");
+//                  int hits = rs.getInt("hits");
+//                  int scraps = rs.getInt("scraps");
+//                  String writeDate = rs.getString("write_date");
+//                  
+//                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, name,scraps));
+//               }
+//               return list;
+//           }
+//        }catch (SQLException e){
+//           System.out.println("Error : 글 이름 검색 오류");
+//           e.printStackTrace();
+//        }finally {
+//        	factory.close(conn, pstmt, rs);
+//        }
+//        return null;
+//	}
+//
+//	public ArrayList<IdeaBoard> findBoardTitle(String title) {
+//		ResultSet rs = null;
+//        Connection conn =null;
+//        PreparedStatement pstmt = null;
+//        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
+//        
+//        try {
+//           conn = factory.getConnection();
+//           String sql = "select * from tip_boarfactory where title like '%?%'";
+//           pstmt = conn.prepareStatement(sql);
+//           pstmt.setString(1, title);
+//           rs = pstmt.executeQuery();	
+//           while(rs.next()) {
+//        	   int index = rs.getInt("tip_idx");
+//              String content = rs.getString("content");
+//              String result = rs.getString("result");
+//              String files = rs.getString("files");
+//              int hits = rs.getInt("hits");
+//              int scraps = rs.getInt("scraps");
+//              String email = rs.getString("email");
+//              String writeDate = rs.getString("write_date");
+//              String name = rs.getString("name");
+//              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, name,scraps));
+//           }
+//           return list;
+//        }catch (SQLException e){
+//           System.out.println("Error : 글 제목 검색 오류");
+//           e.printStackTrace();
+//        }finally {
+//        	factory.close(conn, pstmt, rs);
+//        }
+//        return null;
+//	}
+//	public ArrayList<IdeaBoard> findBoardContent(String content) {
+//		ResultSet rs = null;
+//        Connection conn =null;
+//        PreparedStatement pstmt = null;
+//        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
+//        
+//        try {
+//           conn = factory.getConnection();
+//           String sql = "select * from business_boarfactory where content like '%?%'";
+//           pstmt = conn.prepareStatement(sql);
+//           pstmt.setString(1, content);
+//           rs = pstmt.executeQuery();	
+//           while(rs.next()) {
+//        	   int index = rs.getInt("tip_idx");
+//              String title = rs.getString("title");
+//              String result = rs.getString("result");
+//              String files = rs.getString("files");
+//              int hits = rs.getInt("hits");
+//              int scraps = rs.getInt("scraps");
+//              String email = rs.getString("email");
+//              String writeDate = rs.getString("write_date");
+//              String name = rs.getString("name");
+//              list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, name,scraps));
+//           }
+//           return list;
+//        }catch (SQLException e){
+//           System.out.println("Error : 글 내용 검색 오류");
+//           e.printStackTrace();
+//        }finally {
+//        	factory.close(conn, pstmt, rs);
+//        }
+//        return null;
+//	}
+//	
+//	public ArrayList<IdeaBoard> findBoardHashTag(String hashTag) {
+//		ResultSet rs = null;
+//        Connection conn =null;
+//        PreparedStatement pstmt = null;
+//        ArrayList<IdeaBoard> list = new ArrayList<IdeaBoard>();
+//        ArrayList<Integer> indexBoarfactory = new ArrayList<Integer>();
+//        Integer integer;
+//        String sql;
+//        try {
+//           conn = factory.getConnection();
+//           for(int i = 1 ; i <= 5 ; i++) {
+//        	   sql = "select tip_idx from tip_hashtags where hash_tag'" + i + "'=? like '%?%'";
+//               
+//               pstmt = conn.prepareStatement(sql);
+//               pstmt.setString(1, hashTag);
+//               rs = pstmt.executeQuery();	
+//               while(rs.next()) {
+//            	   integer = new Integer(rs.getInt("tip_idx"));
+//            	   indexBoarfactory.add(integer);
+//               }
+//           }
+//           for(int i = 0 ; i < indexBoarfactory.size(); i++) {
+//        	   sql = "select * from tip_boarfactory where tip_idx =?";
+//               pstmt = conn.prepareStatement(sql);
+//               pstmt.setInt(1, indexBoarfactory.get(i).intValue());
+//               rs = pstmt.executeQuery();	
+//               while(rs.next()) {
+//                  int index = rs.getInt("tip_idx");
+//                  String title = rs.getString("title");
+//                  String content = rs.getString("content");
+//                  String result = rs.getString("result");
+//                  String files = rs.getString("files");
+//                  int hits = rs.getInt("hits");
+//                  int scraps = rs.getInt("scraps");
+//                  String email = rs.getString("email");
+//                  String writeDate = rs.getString("write_date");
+//                  String name = rs.getString("name");
+//                  list.add(new TipIdeaBoard(index, title, content, result, files, hits, email, writeDate, name,scraps));
+//               }
+//           }
+//           if(list.size() != 0) {
+//        	   return list;
+//           }
+//        }catch (SQLException e){
+//           System.out.println("Error : 글 해시태그  이름 검색 오류");
+//           e.printStackTrace();
+//        }finally {
+//        	factory.close(conn, pstmt, rs);
+//        }
+//        return null;
+//	}
 	@Override
 	public int registerBoard(String category, IdeaBoard dto) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	@Override
+	public ArrayList<IdeaBoard> findBoardHashTag(String hashTag) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	@Override
 	public ArrayList<IdeaBoard> findBoardTitle(int currentPage, int listSize, String title, String category) {

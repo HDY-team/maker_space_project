@@ -117,11 +117,15 @@
 					<div class="container">
 						<fieldset>
 							<div class="floatRight">
-								<form method="post" action="write.jsp">
-									<input type="hidden" name="category" value="it"> <input
-										type="submit" class="btn btn-block-lg btn-lg btn-primary"
-										style="display: inline-block;" value="ì±„íƒ" />
-								</form>
+							<form method="post" action="tipboardcontroller">
+							<input
+							type="hidden" name="category" value="scrap">
+								<input type="hidden" name="tipBoardsIdx"
+									value=<%=request.getAttribute("tipBoardsIdx")%>> <input
+									type="hidden" name="action" value="scrap"><input
+									type="submit" class="btn btn-block-lg btn-lg btn-primary"
+									style="display: inline-block;" value="½ºÅ©·¦ ÇÏ±â" />
+							</form>
 							</div>
 							<div class="form-group">
 								<label for="exampleSelect1">Title</label> <input type="text"

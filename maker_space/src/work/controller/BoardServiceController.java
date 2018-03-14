@@ -288,8 +288,9 @@ public class BoardServiceController extends HttpServlet {
 			throws ServletException, IOException {
 		System.out.println("\n## getBoards 요청 서비스");
 		String category = request.getParameter("category");
-		System.out.println("??" + category);
+		System.out.println("getBoards category:" + category);
 		HttpSession session = request.getSession(false);
+		
 		System.out.println("category:" + category);
 		int page = 1;
 		if (request.getParameter("page") != null && request.getParameter("page").trim().equals("") == false) {
@@ -303,11 +304,22 @@ public class BoardServiceController extends HttpServlet {
 			System.out.println("session is Null");
 			return;
 		}
-		Map<String, Object> map = boardService.getBoards(page, category);
+		String email = session.getAttribute("email").toString();
+		Map<String, Object> map = boardService.getBoards(page, category, email);
 		map.put("sessionName", session.getAttribute("name"));
 		request.setAttribute("category", category);
 		request.setAttribute("map", map);
-		request.getRequestDispatcher("businessBoard.jsp").forward(request, response);
+		if(category.equals("myIdea") ) {
+			getTipBoards(request, response);
+		} else if(category.equals("select")) {
+			request.getRequestDispatcher("myProcess.jsp").forward(request, response);
+		} else if(category.equals("tips")) {
+			request.getRequestDispatcher("coolTips.jsp").forward(request, response);
+		} else if(category.equals("scraps")) {
+			request.getRequestDispatcher("myScraps.jsp").forward(request, response);
+		} else {
+			request.getRequestDispatcher("businessBoard.jsp").forward(request, response);
+		} 
 		return;
 	}
 
@@ -342,14 +354,38 @@ public class BoardServiceController extends HttpServlet {
 			System.out.println("BoardController getBoard 메서드 Null error");
 			return;
 		}
-		if (!session.getAttribute("name").equals(ideaBoard.getName())) {
+		if(category.equals("it") || category.equals("market")||category.equals("media")||category.equals("etc")) {
 			int hits = boardService.updateHits(businessBoardsIdx);
-			request.setAttribute("hits", hits);
-			request.setAttribute("category", category);
-			System.out.println("hits: " + hits);
-			request.getRequestDispatcher("insideBoardOthers.jsp").forward(request, response);
+	         request.setAttribute("hits", hits);
+	         request.setAttribute("category", category);
+	         System.out.println("hits: " + hits);
+			if (!session.getAttribute("name").equals(ideaBoard.getName())) {
+				request.getRequestDispatcher("insideBoardOthers.jsp").forward(request, response);
+			} else {
+				request.getRequestDispatcher("insideBoardMy.jsp").forward(request, response);
+		} 
+		} else if(category.equals("myIdea")) {
+			if(session.getAttribute("name").equals(ideaBoard.getName())) {
+				request.getRequestDispatcher("insideBoardMy.jsp").forward(request, response);
+			}
+		} else if(category.equals("myTips")) {
+			if(session.getAttribute("name").equals(ideaBoard.getName())) {
+				request.getRequestDispatcher("tipBoardMy.jsp").forward(request, response);
+			} 
+		}else if(category.equals("tips")) {
+			if(session.getAttribute("name").equals(ideaBoard.getName())) {
+				request.getRequestDispatcher("tipBoardMy.jsp").forward(request, response);
+			} else {
+				request.getRequestDispatcher("tipBoardOthers.jsp").forward(request, response);
+			}
+				
+		} else if(category.equals("select")) {
+			if(session.getAttribute("name").equals(ideaBoard.getName())) {
+				request.getRequestDispatcher("insideBoardOthers.jsp").forward(request, response);
+			} 
 		} else {
-			request.getRequestDispatcher("insideBoardMy.jsp").forward(request, response);
+			System.out.println("BoardController getBoard 메서드 category null error");
+			return;
 		}
 		return;
 	}
@@ -442,14 +478,15 @@ public class BoardServiceController extends HttpServlet {
 		System.out.println("\n## getTipBoards 요청 서비스");
 		HttpSession session = request.getSession(false);
 		String category = request.getParameter("category");
+		String email = (String) session.getAttribute("email");
 		int page = 1;
 		if (request.getParameter("page") != null && request.getParameter("page").trim().equals("") == false) {
 			page = Integer.parseInt(request.getParameter("page"));
 			System.out.println(">>>" + page);
 		}
 
-		Map<String, Object> map = boardService.getTipBoards(page, category);
-		map.put("sessionName", session.getAttribute("name"));
+		Map<String, Object> map = boardService.getTipBoards(page, category, email);
+		map.put("sessionName", (String) session.getAttribute("name"));
 		request.setAttribute("map2", map);
 
 		if (category.equals("myTips")) {

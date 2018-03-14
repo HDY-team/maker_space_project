@@ -45,34 +45,37 @@
 <body class="" id="">
 
    <!-- Navigation -->
-   <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="">
-      
-   <% if(session.getAttribute("name")!=null) { %>
-      <a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
-      <%    }else { %>
-      <a class="navbar-brand" href="index.jsp">MakerSpace</a>
-      <%   }  %>
-      <button class="navbar-toggler" type="button" data-toggle="collapse"
-         data-target="#navbarColor01" aria-controls="navbarColor01"
-         aria-expanded="false" aria-label="Toggle navigation">
-         <span class="navbar-toggler-icon"></span>
-      </button>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="">
 
-      <div class="collapse navbar-collapse" id="navbarColor01">
-         <ul class="navbar-nav mr-auto">
-         </ul>
-         <form class="form-inline my-2 my-lg-0">
-            <button type="button" class="btn btn-secondary my-2 my-sm-0"
-               onclick="location.href='login.jsp'">Sign in</button>
-         </form>
-         &nbsp; &nbsp;
-         <form class="form-inline my-2 my-lg-0">
-            <button type="button" class="btn btn-secondary my-2 my-sm-0"
-               onclick="location.href='register.jsp'">Sign up</button>
-         </form>
-      </div>
-   </nav>
+		<%
+			if (session.getAttribute("name") != null) {
+		%>
+		<a class="navbar-brand" href="mainService.jsp">MakerSpace</a>
+		<%
+			} else {
+		%>
+		<a class="navbar-brand" href="index.jsp">MakerSpace</a>
+		<%
+			}
+		%>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarColor01" aria-controls="navbarColor01"
+			aria-expanded="false" aria-label="Toggle navigation"></button>
 
+		<div class="collapse navbar-collapse" id="navbarColor01">
+			<ul class="navbar-nav mr-auto">
+			</ul>
+			<form class="form-inline my-2 my-lg-0">
+				<button type="button" class="btn btn-secondary my-2 my-sm-0"
+					onclick="location.href='login.jsp'">Sign in</button>
+			</form>
+			&nbsp; &nbsp;
+			<form class="form-inline my-2 my-lg-0">
+				<button type="button" class="btn btn-secondary my-2 my-sm-0"
+					onclick="location.href='register.jsp'">Sign up</button>
+			</form>
+		</div>
+	</nav>
 
    <nav class="navbar navbar-expand-lg navbar-dark bg-primary2" id="">
       <div class="container">
@@ -204,8 +207,10 @@
             <div class="row">
                <div class="col-lg-3">
                   <div class="testimonial-item mx-auto mb-8 mb-lg-0">
+                  <a href="login.jsp">
                      <img class="img-fluid rounded-circle mb-5"
                         src="./Resource/mms/img/it.png" alt="">
+                        </a>
                      <h3>
                         <a href="login.jsp" class="alert-link">IT</a>
                      </h3>

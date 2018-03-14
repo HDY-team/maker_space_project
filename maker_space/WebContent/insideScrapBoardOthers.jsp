@@ -116,13 +116,6 @@
 
 					<div class="container">
 						<fieldset>
-							<div class="floatRight">
-								<form method="post" action="write.jsp">
-									<input type="hidden" name="category" value="it"> <input
-										type="submit" class="btn btn-block-lg btn-lg btn-primary"
-										style="display: inline-block;" value="채택" />
-								</form>
-							</div>
 							<div class="form-group">
 								<label for="exampleSelect1">Title</label> <input type="text"
 									readonly="readonly" class="form-control" name="title"

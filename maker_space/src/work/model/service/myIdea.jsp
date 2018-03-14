@@ -89,6 +89,9 @@
             <%@include file="./include/sideMenu.jsp" %>
          </div>
          <!-- /.Side Menu -->
+
+
+
          <!-- Table -->
          <div class="col-lg-9">
             <h1 class="my-4">&nbsp;</h1>
@@ -123,11 +126,12 @@
 							</tfoot>
 						</c:if>
 						<tbody>
-							<c:forEach items="${map.lists}" var="dto">
+							<c:forEach items="${map.lists}" var="dto" varStatus="status">
+							
 								<tr>
-									<td width="5"><c:out value="${dto.businessIdx}" /></td>
+									<td width="5"><c:out value="${map.pageTotalCount - status.index}" /></td>
 									<td width="250"><a
-										href="boardcontroller?action=getBoard&category=myIdea&boardIndex=${dto.businessIdx}"><c:out
+										href="boardcontroller?action=getBoard&category=myIdea&businessBoardsIdx=${dto.businessIdx}"><c:out
 												value="${dto.title}" /></a></td>
 									<td width="50"><c:out value="${dto.name}" /></td>
 									<td width="10"><c:out value="${dto.writeDate}" /></td>
@@ -147,7 +151,7 @@
 							</c:if>
 							<c:if test="${map.prevPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoard&page=${map.prevPage}&category=myIdea&field=${map.field }">&laquo;</a>
+									href="boardcontroller?action=getBoards&page=${map.prevPage}&category=myIdea&field=${map.field }">&laquo;</a>
 								</li>
 							</c:if>
 							<c:if test="${map.pageCount <= 5}">
@@ -160,7 +164,7 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoard&page=${page}&field=${map.field}&category=myIdea">${page}</a></li>
+												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=myIdea">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -175,7 +179,7 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoard&page=${page}&field=${map.field}&category=myIdea">${page}</a></li>
+												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=myIdea">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -186,7 +190,7 @@
 							</c:if>
 							<c:if test="${map.nextPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoard&page=${map.nextPage}&field=${map.field }&category=myIdea">&raquo;</a>
+									href="boardcontroller?action=getBoards&page=${map.nextPage}&field=${map.field }&category=myIdea">&raquo;</a>
 								</li>
 							</c:if>
 						</ul>
@@ -208,7 +212,7 @@
 							</tr>
 						</thead>
 
-						<c:if test="${map2.lists.size()==0 }">
+						<c:if test="${tipMap.lists.size()==0 }">
 							<tfoot>
 								<tr align="center">
 									<td width="5"></td>
@@ -220,11 +224,11 @@
 							</tfoot>
 						</c:if>
 						<tbody>
-							<c:forEach items="${map2.lists}" var="dto">
+							<c:forEach items="${tipMap.lists}" var="dto">
 								<tr>
-									<td width="5"><c:out value="${dto.businessIdx}" /></td>
+									<td width="5"><c:out value="${tipMap.pageTotalCount - status.index}" /></td>
 									<td width="250"><a
-										href="boardcontroller?action=getBoard&category=myTips&boardIndex=${dto.businessIdx}"><c:out
+										href="tipboardcontroller?action=getBoard&category=myTips&tipBoardsIndex=${dto.tipIdx}"><c:out
 												value="${dto.title}" /></a></td>
 									<td width="50"><c:out value="${dto.name}" /></td>
 									<td width="10"><c:out value="${dto.writeDate}" /></td>
@@ -238,52 +242,52 @@
 					<!-- Paginatoin -->
 					<div style="display: inline-block; vertical-align: middle;">
 						<ul class="pagination">
-							<c:if test="${map2.prevPage <= 0}">
+							<c:if test="${tipMap.prevPage <= 0}">
 								<li class="page-item disabled"><a class="page-link">&laquo;</a>
 								</li>
 							</c:if>
-							<c:if test="${map2.prevPage > 0}">
+							<c:if test="${tipMap.prevPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoard&page=${map2.prevPage}&category=myTips&field=${map2.field }">&laquo;</a>
+									href="boardcontroller?action=getBoards&page=${tipMap.prevPage}&category=myTips&field=${tipMap.field }">&laquo;</a>
 								</li>
 							</c:if>
-							<c:if test="${map2.pageCount <= 5}">
-								<c:forEach begin="${map2.beginPage}"
-									end="${map2.beginPage + map2.pageCount - 1}" var="page">
+							<c:if test="${tipMap.pageCount <= 5}">
+								<c:forEach begin="${tipMap.beginPage}"
+									end="${tipMap.beginPage + tipMap.pageCount - 1}" var="page">
 									<c:choose>
-										<c:when test="${map2.currentPage == page}">
+										<c:when test="${tipMap.currentPage == page}">
 											<li class="page-item active"><a class="page-link"
 												href="#">${page}</a>
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoard&page=${page}&field=${map2.field}&category=myTips">${page}</a></li>
+												href="boardcontroller?action=getBoards&page=${page}&field=${tipMap.field}&category=myTips">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
 							</c:if>
-							<c:if test="${map2.pageCount > 5}">
-								<c:forEach begin="${map2.beginPage}" end="${map2.endPage}"
+							<c:if test="${tipMap.pageCount > 5}">
+								<c:forEach begin="${tipMap.beginPage}" end="${tipMap.endPage}"
 									var="page">
 									<c:choose>
-										<c:when test="${map2.currentPage == page}">
+										<c:when test="${tipMap.currentPage == page}">
 											<li class="page-item active"><a class="page-link"
 												href="#">${page}</a>
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoard&page=${page}&field=${map2.field}&category=myTips">${page}</a></li>
+												href="boardcontroller?action=getBoards&page=${page}&field=${tipMap.field}&category=myTips">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
 							</c:if>
-							<c:if test="${map2.nextPage <= 0}">
+							<c:if test="${tipMap.nextPage <= 0}">
 								<li class="page-item disabled"><a class="page-link">&raquo;</a>
 								</li>
 							</c:if>
-							<c:if test="${map2.nextPage > 0}">
+							<c:if test="${tipMap.nextPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoard&page=${map2.nextPage}&field=${map2.field }&category=myTips">&raquo;</a>
+									href="boardcontroller?action=getBoards&page=${tipMap.nextPage}&field=${tipMap.field }&category=myTips">&raquo;</a>
 								</li>
 							</c:if>
 						</ul>

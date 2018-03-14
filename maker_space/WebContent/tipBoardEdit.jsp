@@ -76,11 +76,13 @@
 		<label for="exampleInputEmail1">&nbsp;</label> <br> <label
 			for="exampleInputEmail1">&nbsp;</label> <br>
 
-		<form id="writeForm" method="post" action="boardcontroller">
-			<input type="hidden" name="businessBoardsIdx"
-				value=<%=request.getAttribute("businessBoardsIdx")%>> <input
+		<form id="writeForm" method="post" action="tipboardcontroller">
+			<input type="hidden" name="tipBoardsIdx"
+				value=<%=request.getAttribute("tipBoardsIdx")%>> 
+				<input
+				type="hidden" name="category" value="tips">
+				<input
 				type="hidden" name="action" value="edit"> <input
-				type="hidden" name="category" value="it"> <input
 				type="submit" class="btn btn-block-lg btn-lg btn-primary"
 				style="display: inline-block;" value="Complete" />
 			<button type="button" class="btn btn-secondary my-2 my-sm-0"
@@ -122,8 +124,6 @@
 
 	<!-- Footer -->
 	<%@include file="./include/footer.jsp"%>
-
-
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
 	<script src="./Resource/mms/vendor/jquery/jquery.slim.min.js"></script>

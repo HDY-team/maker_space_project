@@ -42,7 +42,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <style>
-.a {
+/* .a {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -54,12 +54,12 @@
 
 .floatRight {
 	float: right;
-}
+} */
 </style>
 </head>
 <body>
 	<!-- Navigation -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-dark fixed-top">
 		<%
 			if (session.getAttribute("name") != null) {
 		%>
@@ -73,10 +73,8 @@
 		%>
 
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			data-target="#navbarResponsive" aria-controls="navbarResponsive"
-			aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
+			data-target="#navbarColor01" aria-controls="navbarColor01"
+			aria-expanded="false" aria-label="Toggle navigation"></button>
 		<div class="collapse navbar-collapse" id="navbarColor01">
 			<ul class="navbar-nav mr-auto">
 			</ul>
@@ -225,7 +223,7 @@
 						<div class="col-12 col-md-8 mb-2 mb-md-0">
 							<input id="searchContent" type="text" name="searchContent"
 								class="form-control form-control-lg"
-								placeholder="# 5G # 1µî KT ... ">
+								>
 						</div>
 						<div class="col-12 col-md-2">
 							<button id="searchBtn" type="submit"

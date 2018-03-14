@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
 <% if(session.getAttribute("grade").equals("G") && session.getAttribute("name")!=null) { %>
-<h5 class="navbar-brand"><%=session.getAttribute("company")%> <%=session.getAttribute("name")%></h5>
+<body3> <h5 class="navbar-brand"><%=session.getAttribute("company")%> <%=session.getAttribute("name")%></h5></body3>
 <% 	}else if(session.getAttribute("grade").equals("A") && session.getAttribute("name")!=null) { %>
-<h5 class="navbar-brand"> 관리자 <%=session.getAttribute("name")%></h5>
+<body3> <h5 class="navbar-brand"> 관리자 <%=session.getAttribute("name")%></h5></body3>
 <%	} else {}  %>
 
 <% if(session.getAttribute("name")!=null) { %>
