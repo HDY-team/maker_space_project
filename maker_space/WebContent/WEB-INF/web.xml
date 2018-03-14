@@ -39,4 +39,14 @@
     <servlet-name>TipBoardServiceController</servlet-name>
     <url-pattern>/tipboardcontroller</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ProcessServiceController</display-name>
+    <servlet-name>ProcessServiceController</servlet-name>
+    <servlet-class>work.controller.ProcessServiceController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessServiceController</servlet-name>
+    <url-pattern>/processcontroller</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -33,9 +33,10 @@
 	My tips</a></li>
 	<br>
 	<li class="nav-item"><a class="nav-link active">MyPage</a>
-	<li class="table-active"><a class="nav-link" href="myPage.jsp">My Page</a></li>
 	<li class="table-active"><a class="nav-link" href="boardcontroller?action=getBoards&category=myIdea" >My Idea</a></li>
-	<li class="table-active"><a class="nav-link" href="boardcontroller?action=getBoards&category=select">My Process</a></li>
+	<li class="table-active"><a class="nav-link" href="processcontroller?action=getProcessBoards&category=mySelected">채택대기</a></li>
+	<li class="table-active"><a class="nav-link" href="processcontroller?action=getProcessBoards&category=mySelect">승인대기</a></li>
+	<li class="table-active"><a class="nav-link" href="processcontroller?action=getProcessBoards&category=selectComplete">채택완료</a></li>
 	<li class="table-active"><a class="nav-link"href="membercontroller?action=getMyInfo">My Account</a>
 </ul>
 

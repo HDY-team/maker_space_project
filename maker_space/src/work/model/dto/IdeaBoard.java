@@ -10,7 +10,7 @@ package work.model.dto;
 import work.util.MyUtility;
 
 /**
- * Idea 게시판 dto 부모클래스
+ * Idea 게시판 dto
  */
 public class IdeaBoard {
 	private int businessIdx;
@@ -34,6 +34,11 @@ public class IdeaBoard {
 	private String email;
 	private String writeDate;
 	private String name;
+	private int process;
+	// 0: 일반
+	// 1: 채택 (보여줌)
+	// 2: 승인(사라짐)
+	// 3. 채택완료(사라짐)
 	/**
 	 * 기본 생성자
 	 */
@@ -51,7 +56,7 @@ public class IdeaBoard {
 	 * @param email
 	 * @param writeDate
 	 */
-	public IdeaBoard(String title, String content, String result, String files, int hits, String email, String writeDate, String name) {
+	public IdeaBoard(String title, String content, String result, String files, int hits, String email, String writeDate, String name, int process) {
 		this.title = title;
 		this.content = content;
 		this.result = result;
@@ -60,6 +65,7 @@ public class IdeaBoard {
 		this.email = email;
 		this.writeDate = writeDate;
 		this.name = name;
+		this.process = process;
 	}
 	/**
 	 * 게시판 생성 시 생성자
@@ -71,8 +77,8 @@ public class IdeaBoard {
 	 * @param email
 	 * @param writeDate
 	 */
-	public IdeaBoard(int businessIdx, String title, String content, String result, String files, int hits, String email, String writeDate, String name) {
-		this(title, content, result, files, hits, email, writeDate, name);
+	public IdeaBoard(int businessIdx, String title, String content, String result, String files, int hits, String email, String writeDate, String name, int process) {
+		this(title, content, result, files, hits, email, writeDate, name, process);
 		this.businessIdx = businessIdx;
 	}
 
@@ -87,8 +93,8 @@ public class IdeaBoard {
 	 * @param email
 	 * @param write_date
 	 */
-	public IdeaBoard(int businessIdx, int index, String title, String content, String result, String files, int hits, String email, String writeDate, String name) {
-		this(businessIdx, title, content, result, files, hits, email, writeDate, name);
+	public IdeaBoard(int businessIdx, int index, String title, String content, String result, String files, int hits, String email, String writeDate, String name, int process) {
+		this(businessIdx, title, content, result, files, hits, email, writeDate, name, process);
 		this.index = index;
 	}
 	
@@ -126,11 +132,14 @@ public class IdeaBoard {
 		builder.append(writeDate);
 		builder.append(" name:");
 		builder.append(name);
+		builder.append(" process:");
+		builder.append(process);
 		return builder.toString();
 	}
 	/**
 	 * get/set 메서드
 	 */
+	
 	public int getBusinessIdx() {
 		return businessIdx;
 	}
@@ -142,6 +151,12 @@ public class IdeaBoard {
 	}
 	public void setBusinessIdx(int businessIdx) {
 		this.businessIdx = businessIdx;
+	}
+	public int getProcess() {
+		return process;
+	}
+	public void setProcess(int process) {
+		this.process = process;
 	}
 	public int getIndex() {
 		return index;

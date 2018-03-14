@@ -339,7 +339,9 @@ public class BoardService {
 	public IdeaBoard getBoard(int businessBoardsIdx, String category) {
 		return businessDao.getBoard(businessBoardsIdx, category);
 	}
-
+	public IdeaBoard getMyBoard(int businessBoardsIdx, String category, String email) {
+		return businessDao.getMyBoard(businessBoardsIdx, category, email);
+	}
 	public int updateHits(int businessBoardsIdx) {
 		return businessDao.updateHits(businessBoardsIdx);
 	}
@@ -424,8 +426,8 @@ public class BoardService {
 	public TipIdeaBoard getTipBoard(int TipBoardsIndex) {
 		return businessDao.getTipBoard(TipBoardsIndex);
 	}
-	public int registerMySelect(String category, int boardIdx) {
-		return businessDao.registerMySelect(category, boardIdx);
+	public int registerMySelect(String category, int boardIdx, String email) {
+		return businessDao.registerMySelect(category, boardIdx, email);
 	}
 	public int registerMyScraps(String category ,int tipBoardsIndex, String email) {
 		return businessDao.registerMyScraps(category, tipBoardsIndex, email);

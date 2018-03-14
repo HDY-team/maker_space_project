@@ -129,7 +129,7 @@
 									<td width="5"><c:out
 											value="${tipMap.pageTotalCount - status.index}" /></td>
 									<td width="240"><a
-										href="tipboardcontroller?action=getTipBoard&category=myTips&tipBoardsIndex=${dto.tipIdx}"><c:out
+										href="tipboardcontroller?action=getTipBoard&category=myTips&tipBoardsIdx=${dto.tipIdx}"><c:out
 												value="${dto.title}" /></a></td>
 									<td width="50"><c:out value="${dto.name}" /></td>
 									<td width="10"><c:out value="${dto.writeDate}" /></td>

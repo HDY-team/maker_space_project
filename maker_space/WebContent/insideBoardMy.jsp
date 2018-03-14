@@ -125,7 +125,7 @@
 					<form method="post" action="boardcontroller">
 						<input type="hidden" name="businessBoardsIdx"
 							value=<%=request.getAttribute("businessBoardsIdx")%>> <input
-							type="hidden" name="category" value=<%=request.getAttribute("category") %>> <input
+							type="hidden" name="category" value=<%=request.getAttribute("category")%>> <input
 							type="hidden" name="action" value="delete"> <input
 							type="submit" class="btn btn-block-lg btn-lg btn-primary"
 							style="display: inline-block;" value="Delete" />

@@ -59,8 +59,7 @@
 </head>
 <body>
 	<!-- Navigation -->
-	<nav
-		class="navbar navbar-expand-lg navbar-dark bg-primary bg-dark fixed-top">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-dark fixed-top">
 		<%
 			if (session.getAttribute("name") != null) {
 		%>
@@ -120,7 +119,6 @@
 								<th scope="col">Name</th>
 								<th scope="col">Write date</th>
 								<th scope="col">Hits</th>
-								<td width="5">채택여부</td>
 							</tr>
 						</thead>
 
@@ -132,58 +130,21 @@
 									<td width="50"></td>
 									<td width="10"></td>
 									<td width="5"></td>
-									<td width="5"></td>
 								</tr>
 							</tfoot>
 						</c:if>
 						<tbody>
 							<c:forEach items="${map.lists}" var="dto" varStatus="status">
-								<c:if test="${dto.process==0}">
-									<tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><a
-											href="boardcontroller?action=getBoard&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.businessIdx}"><c:out
-													value="${dto.title}" /></a></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5"></td>
-									</tr>
-								</c:if>
-								<c:if test="${dto.process==1}">
-									<tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><c:out value="${dto.title}" /></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5">채택 대기중</td>
-									</tr>
-								</c:if>
-								<c:if test="${dto.process==2}">
-									<tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><c:out value="${dto.title}" /></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5">승인 완료</td>
-									</tr>
-								</c:if>
-								<c:if test="${dto.process==3}">
-									<%-- <tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><c:out value="${dto.title}" /></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5">승인 완료</td>
-									</tr> --%>
-								</c:if>
+								<tr>
+									<td width="5"><c:out
+											value="${map.pageTotalCount - status.index}" /></td>
+									<td width="250"><a
+										href="boardcontroller?action=getBoard&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.businessIdx}"><c:out
+												value="${dto.title}" /></a></td>
+									<td width="50"><c:out value="${dto.name}" /></td>
+									<td width="10"><c:out value="${dto.writeDate}" /></td>
+									<td width="5"><c:out value="${dto.hits}" /></td>
+								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
@@ -247,9 +208,8 @@
 				<!-- Search bar -->
 				<form id="searchForm" name="searchForm" method="post"
 					action="boardcontroller">
-					<input type="hidden" name="action" value="find"> <input
-						type="hidden" name="category"
-						value=<%=request.getAttribute("category")%>>
+					<input type="hidden" name="action" value="find">
+					<input type="hidden" name="category" value=<%=request.getAttribute("category") %>>
 					<div class="form-row">
 						<div class="col-12 col-md-2">
 							<select id="searchMethod" name="searchMethod"
@@ -262,7 +222,8 @@
 
 						<div class="col-12 col-md-8 mb-2 mb-md-0">
 							<input id="searchContent" type="text" name="searchContent"
-								class="form-control form-control-lg" placeholder="">
+								class="form-control form-control-lg"
+								>
 						</div>
 						<div class="col-12 col-md-2">
 							<button id="searchBtn" type="submit"

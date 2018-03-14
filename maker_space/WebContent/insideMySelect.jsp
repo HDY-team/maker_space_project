@@ -56,9 +56,10 @@
 }
 
 .floatRight {
-	float: right;
+	float: right
 }
 </style>
+
 </head>
 <body>
 	<%
@@ -107,52 +108,54 @@
 				<div class="container">
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item">Business</li>
-						<li class="breadcrumb-item active">IT</li>
+						<li class="breadcrumb-item active">√§≈√ ¥Î±‚¡ﬂ</li>
 					</ol>
 				</div>
+				<div class="floatRight">
+				</div>
+				<%
+					String title = (String) request.getAttribute("title");
+					String hashTag = (String) request.getAttribute("hashTag");
+					String result = (String) request.getAttribute("result");
+					String content = (String) request.getAttribute("content");
+					String files = (String) request.getAttribute("files");
+				%>
 
 				<div class="container">
 					<!-- writed form -->
-
 					<div class="container">
 						<fieldset>
-							<div class="floatRight">
-								<form method="post" action="boardcontroller">
-									<input type="hidden" name="businessBoardsIdx"
-										value=<%=request.getAttribute("businessBoardsIdx")%>><input
-										type="hidden" name="category"
-										value=<%=request.getAttribute("category")%>> <input
-										type="hidden" name="action"
-										value=select> <input
-										type="submit" class="btn btn-block-lg btn-lg btn-primary"
-										style="display: inline-block;" value="Ï±ÑÌÉùÌïòÍ∏∞" />
-								</form>
-								
-							</div>
+
 							<div class="form-group">
 								<label for="exampleSelect1">Title</label> <input type="text"
 									readonly="readonly" class="form-control" name="title"
-									value=<%=request.getAttribute("title")%>>
+									value=<c:if test="${!empty requestScope.title}"> 
+									 <%=title%>
+									 </c:if>>
 							</div>
 							<div class="form-group">
 								<label for="exampleSelect1">Hash Tag</label> <input type="text"
 									readonly="readonly" class="form-control" name="hash_tag"
-									value=<%=request.getAttribute("hashTag")%>>
+									value=<c:if test="${!empty requestScope.hashTag}"> 
+									 <%=hashTag%>
+									 </c:if>>
 							</div>
 							<div class="form-group">
 								<label for="exampleTextarea">Expectation Effectiveness</label>
 								<textarea class="form-control" name="result" rows="6"
-									readonly="readonly"><%=request.getAttribute("title")%></textarea>
+									readonly="readonly"><c:if
+										test="${!empty requestScope.result}"><%=result%></c:if></textarea>
 							</div>
 							<div class="form-group">
 								<label for="exampleTextarea">Content</label>
 								<textarea class="form-control" name="content" rows="10"
-									readonly="readonly"><%=request.getAttribute("content")%></textarea>
+									readonly="readonly"><c:if
+										test="${!empty requestScope.content}"><%=content%></c:if></textarea>
 							</div>
 							<div class="form-group">
-								<label for="exampleInputFile">File</label> <input type="file"
+								<label for="exampleInputFile">File</label><input type="file"
 									class="form-control-file" name="file" readonly="readonly"
-									aria-describedby="fileHelp"> <small id="fileHelp"
+									aria-describedby="fileHelp"><small id="fileHelp"
 									class="form-text text-muted">File max capacity</small>
 							</div>
 						</fieldset>
@@ -162,6 +165,8 @@
 		</div>
 	</div>
 	<%@include file="./include/footer.jsp"%>
+
+
 	<!-- Bootstrap core JavaScript -->
 	<script src="./Resource/mms/vendor/jquery/jquery.min.js"></script>
 	<script src="./Resource/mms/vendor/jquery/jquery.slim.min.js"></script>

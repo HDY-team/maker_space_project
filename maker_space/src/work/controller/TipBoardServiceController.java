@@ -87,7 +87,7 @@ public class TipBoardServiceController extends HttpServlet {
 		if (tipBoard != null) {
 			request.setAttribute("tipBoardsIdx", tipBoard.getTipIdx());
 			request.setAttribute("title", tipBoard.getTitle());
-			request.setAttribute("content", tipBoard.getTitle());
+			request.setAttribute("content", tipBoard.getContent());
 			request.setAttribute("result", tipBoard.getResult());
 			request.setAttribute("files", tipBoard.getFiles());
 			request.setAttribute("hits", tipBoard.getHits());
@@ -134,6 +134,7 @@ public class TipBoardServiceController extends HttpServlet {
 	protected void getTipBoardDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("\n## getTipBoardDelete 요청 서비스");
+		System.out.println("category: " + (String) request.getParameter("category"));
 		int tipBoardsIdx = Integer.parseInt(request.getParameter("tipBoardsIdx"));
 		int isResult = tipBoardService.tipDelete(tipBoardsIdx);
 		if (isResult != 0) {
@@ -217,7 +218,7 @@ public class TipBoardServiceController extends HttpServlet {
 		if (tipBoard != null) {
 			request.setAttribute("tipBoardsIdx", tipBoardsIdx);
 			request.setAttribute("title", tipBoard.getTitle());
-			request.setAttribute("content", tipBoard.getTitle());
+			request.setAttribute("content", tipBoard.getContent());
 			request.setAttribute("result", tipBoard.getResult());
 			request.setAttribute("files", tipBoard.getFiles());
 			request.setAttribute("hits", tipBoard.getHits());
@@ -229,6 +230,7 @@ public class TipBoardServiceController extends HttpServlet {
 			System.out.println("BoardController getTipBoard 메서드 Null error");
 			return;
 		}
+		request.setAttribute("category", category);
 		if (category.equals("tips")) {
 			if (session.getAttribute("name").equals(tipBoard.getName())) {
 				request.getRequestDispatcher("InsideTipBoardMy.jsp").forward(request, response);
@@ -278,7 +280,7 @@ public class TipBoardServiceController extends HttpServlet {
 		if (tipBoard != null) {
 			request.setAttribute("tipBoardsIdx", tipBoardsIdx);
 			request.setAttribute("title", tipBoard.getTitle());
-			request.setAttribute("content", tipBoard.getTitle());
+			request.setAttribute("content", tipBoard.getContent());
 			request.setAttribute("result", tipBoard.getResult());
 			request.setAttribute("files", tipBoard.getFiles());
 			request.setAttribute("hits", tipBoard.getHits());
@@ -301,14 +303,15 @@ public class TipBoardServiceController extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		String email = session.getAttribute("email").toString();
 		String category = request.getParameter("category");
+		System.out.println("!!!!!!!!!!category: " + category);
 		int page = 1;
 		if (request.getParameter("page") != null && request.getParameter("page").trim().equals("") == false) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		Map<String, Object> map = tipBoardService.getTipBoards(page, category, email);
-		map.put("sessionName", session.getAttribute("name"));
+		//map.put("sessionName", (String) session.getAttribute("name"));
 		request.setAttribute("tipMap", map);
-
+		request.setAttribute("category", category);
 		if (category.equals("myTips")) {
 			request.getRequestDispatcher("myTips.jsp").forward(request, response);
 		} else if (category.equals("tips")) {

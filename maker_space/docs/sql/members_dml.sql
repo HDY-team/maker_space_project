@@ -99,6 +99,8 @@ insert into members values
 
 insert into members values 
 ('yeong.hwangbo@kt.com','yeong123','황보영','01036666666','kt', 'G',0);
+insert into members values 
+('hana.jeong@kt.com','jeong123','정하나','01036666665','ktds', 'G',0);
 commit;
 /*
 	각각의 서비스 쿼리

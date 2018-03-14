@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS members;
 DROP TABLE IF EXISTS business;
 SET foreign_key_checks = 0;
 DROP TABLE IF EXISTS business_boards;
-DROP TABLE IF EXISTS select_boards;
+DROP TABLE IF EXISTS my_selected_boards;
+DROP TABLE IF EXISTS my_select_boards;
 DROP TABLE IF EXISTS select_complete_boards;
 DROP TABLE IF EXISTS hashtags;
 
@@ -57,12 +58,13 @@ create table business_boards (
     email varchar(40) NOT NULL,
     write_date varchar(20) NOT NULL,
     name varchar(50) NOT NULL,
+    process int NOT NULL,
   	INDEX(business_idx),
   	FOREIGN KEY(business_idx) REFERENCES business(business_idx) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
--- 사업 나의 채택진행중 게시판 테이블
-create table select_boards (
+-- 사업 나의 채택받은 게시판 테이블
+create table my_selected_boards (
 
     business_boards_idx int NOT NULL,
     email varchar(40) NOT NULL,
@@ -72,6 +74,17 @@ create table select_boards (
   	FOREIGN KEY(email) REFERENCES members(email) ON DELETE CASCADE ON UPDATE CASCADE
 
 ) ENGINE = InnoDB;
+-- 사업 내가 채택한 게시판 테이블
+create table my_select_boards (
+
+    business_boards_idx int NOT NULL,
+    email varchar(40) NOT NULL,
+    INDEX(business_boards_idx),
+  	FOREIGN KEY(business_boards_idx) REFERENCES business_boards(business_boards_idx) ON DELETE CASCADE ON UPDATE CASCADE,
+ 	 INDEX(email),
+  	FOREIGN KEY(email) REFERENCES members(email) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB; 
+
 -- 사업 채택완료 게시판 테이블
 create table select_complete_boards (
 
@@ -82,6 +95,7 @@ create table select_complete_boards (
  	 INDEX(email),
   	FOREIGN KEY(email) REFERENCES members(email) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB; 
+
 
 -- 사업 해시테그 테이블
 create table hashtags (
@@ -94,14 +108,6 @@ create table hashtags (
   	 INDEX(email),
   	FOREIGN KEY(email) REFERENCES members(email) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB; 
-
-
-
-
-
-
-
-
 
 
 

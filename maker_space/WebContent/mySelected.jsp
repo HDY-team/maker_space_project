@@ -103,14 +103,6 @@
 						<li class="breadcrumb-item active"><%=request.getAttribute("category")%></li>
 					</ol>
 				</div>
-				<div class="floatRight">
-					<form method="post" action="write.jsp">
-						<input type="hidden" name="category"
-							value=<%=request.getAttribute("category")%>> <input
-							type="submit" class="btn btn-lg btn-primary"
-							style="display: inline-block;" value="Write" />
-					</form>
-				</div>
 				<div class="container">
 					<table class="table table-hover" style="border: solid 2px #cccccc">
 						<thead>
@@ -120,7 +112,7 @@
 								<th scope="col">Name</th>
 								<th scope="col">Write date</th>
 								<th scope="col">Hits</th>
-								<td width="5">채택여부</td>
+								<th scope="col">취소</th>
 							</tr>
 						</thead>
 
@@ -138,52 +130,40 @@
 						</c:if>
 						<tbody>
 							<c:forEach items="${map.lists}" var="dto" varStatus="status">
-								<c:if test="${dto.process==0}">
-									<tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><a
-											href="boardcontroller?action=getBoard&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.businessIdx}"><c:out
-													value="${dto.title}" /></a></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5"></td>
-									</tr>
-								</c:if>
-								<c:if test="${dto.process==1}">
-									<tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><c:out value="${dto.title}" /></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5">채택 대기중</td>
-									</tr>
-								</c:if>
-								<c:if test="${dto.process==2}">
-									<tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><c:out value="${dto.title}" /></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5">승인 완료</td>
-									</tr>
-								</c:if>
-								<c:if test="${dto.process==3}">
-									<%-- <tr>
-										<td width="5"><c:out
-												value="${map.pageTotalCount - status.index}" /></td>
-										<td width="250"><c:out value="${dto.title}" /></td>
-										<td width="50"><c:out value="${dto.name}" /></td>
-										<td width="10"><c:out value="${dto.writeDate}" /></td>
-										<td width="5"><c:out value="${dto.hits}" /></td>
-										<td width="5">승인 완료</td>
-									</tr> --%>
-								</c:if>
+								<tr>
+									<td width="5"><c:out
+											value="${map.pageTotalCount - status.index}" /></td>
+									<td width="250"><a
+										href="processcontroller?action=getProcessBoard&category=<%=request.getAttribute("category")%>&businessBoardsIdx=${dto.businessIdx}"><c:out
+												value="${dto.title}" /></a></td>
+									<td width="50"><c:out value="${dto.name}" /></td>
+									<td width="10"><c:out value="${dto.writeDate}" /></td>
+									<td width="5"><c:out value="${dto.hits}" /></td>
+									<td width="5">
+									<c:if test="${dto.process==1}">
+										<form method="post" action="processcontroller">
+											<input type="hidden" name="businessBoardsIdx"
+												value= <c:out value="${dto.businessIdx}"/> >
+											<input type="hidden" name="action" value="mySelectedCancel">
+											<input type="hidden" name="category" value="mySelected">
+											<input type="submit"
+												class="btn btn-block-lg btn-lg btn-primary"
+												style="display: inline-block;" value="취소하기" />
+										</form>
+									</c:if>
+									<c:if test="${dto.process==2}">
+										<form method="post" action="processcontroller">
+											<input type="hidden" name="businessBoardsIdx"
+												value= <c:out value="${dto.businessIdx}"/> >
+											<input type="hidden" name="action" value="complete">
+											<input type="hidden" name="category" value="selectComplete">
+											<input type="submit"
+												class="btn btn-block-lg btn-lg btn-primary"
+												style="display: inline-block;" value="최종채택하기" />
+										</form>
+									</c:if>
+									</td>
+								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
@@ -198,7 +178,7 @@
 							</c:if>
 							<c:if test="${map.prevPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoards&page=${map.prevPage}&category=<%=request.getAttribute("category")%>>&field=${map.field }">&laquo;</a>
+									href="processcontroller?action=getProcessBoards&page=${map.prevPage}&category=<%=request.getAttribute("category")%>>&field=${map.field }">&laquo;</a>
 								</li>
 							</c:if>
 							<c:if test="${map.pageCount <= 5}">
@@ -211,7 +191,7 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+												href="procsscontroller?action=getProcessBoards&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -226,7 +206,7 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="boardcontroller?action=getBoards&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
+												href="processcontroller?action=getProcessBoards&page=${page}&field=${map.field}&category=<%=request.getAttribute("category")%>">${page}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -237,45 +217,12 @@
 							</c:if>
 							<c:if test="${map.nextPage > 0}">
 								<li class="page-item"><a class="page-link"
-									href="boardcontroller?action=getBoards&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
+									href="processcontroller?action=getProcessBoards&page=${map.nextPage}&field=${map.field }&category=<%=request.getAttribute("category")%>">&raquo;</a>
 								</li>
 							</c:if>
 						</ul>
 					</div>
-
 				</div>
-				<!-- Search bar -->
-				<form id="searchForm" name="searchForm" method="post"
-					action="boardcontroller">
-					<input type="hidden" name="action" value="find"> <input
-						type="hidden" name="category"
-						value=<%=request.getAttribute("category")%>>
-					<div class="form-row">
-						<div class="col-12 col-md-2">
-							<select id="searchMethod" name="searchMethod"
-								class="btn btn-secondary my-2 my-sm-0">
-								<option selected value=0>title
-								<option value=1>content
-								<option value=2>name
-							</select>
-						</div>
-
-						<div class="col-12 col-md-8 mb-2 mb-md-0">
-							<input id="searchContent" type="text" name="searchContent"
-								class="form-control form-control-lg" placeholder="">
-						</div>
-						<div class="col-12 col-md-2">
-							<button id="searchBtn" type="submit"
-								class="btn btn-secondary my-2 my-sm-0">Search</button>
-						</div>
-					</div>
-				</form>
-				<div class="form-row">
-					<div class="float-right">
-						<button class="btn btn-block btn-lg btn-primary">Hash Tag</button>
-					</div>
-				</div>
-
 			</div>
 		</div>
 	</div>
